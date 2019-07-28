@@ -1,0 +1,1 @@
+[{ "regexp":".*" , "tagets": [ "/sample.ttl"] }]

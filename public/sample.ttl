@@ -1,0 +1,310 @@
+#
+# Copyright (c) 2019 LinkedData.Center. All rights reserved.
+#
+# Please test before publishing with http://rdf-translator.appspot.com/
+#
+@prefix bgo: <http://linkeddata.center/lodmap-bgo/v1#> .
+@prefix resource: <http://mef.linkeddata.cloud/resource/> .
+
+resource:app a bgo:KnowledgeGraph ;
+    bgo:title "legge di Bilancio 2019"@it ;
+    bgo:description "Dati di spesa relativi alla Legge di Bilancio approvata per l'esercizio finanziario 2019" ;
+    bgo:richDescription "This use <b>html</b> and should be scrollable"@it ; 
+    
+    bgo:hasAccount
+        resource:account_1 ,
+        resource:account_2 ,
+        resource:account_3 ,
+        resource:account_4 , 
+        resource:account_5 , 
+        resource:account_6 
+    ;
+ 
+    bgo:hasPartitions (
+        resource:ministeri 
+        resource:missioni
+    ) ;
+
+    bgo:hasBigPicture resource:budget ; 
+    bgo:hasPartitionView resource:partition_view ; 
+    bgo:hasTableView resource:table_view 
+.
+
+
+##### BigPicture view #######
+resource:budget a bgo:BigPicture ; 
+	bgo:title "Vista d'insieme"@it;
+	
+    bgo:hasTotalizer resource:totalizer ;
+    bgo:hasTagCloud resource:tag_cloud ;
+    bgo:hasTrendColorScheme resource:trend_color_scheme ;
+    bgo:hasSearchWidget resource:search_widget ;
+    bgo:hasScalingParameters resource:scaling_parameter 
+.
+
+
+##### Partitions  view ################
+resource:partition_view a bgo:PartitionView ;
+	bgo:title "Partizioni"@it;
+	bgo:mainPartitionLabel "stato"@it;
+.
+
+##### Table view ################
+resource:table_view a bgo:TableView ;
+	bgo:title "Vista tabellare"@it;
+	
+    bgo:hasSearchWidget resource:search_widget ;
+    bgo:headerColumn1Label "Nome azione"@it ;
+    bgo:headerColumn2Label "Spesa"@it ;
+    bgo:headerColumn3Label "Var. dal bilancio precedente"@it ;
+    bgo:headerColumn4Label "Descrizione"@it ;
+.
+
+
+##### Totalizer #######
+resource:totalizer a bgo:Totalizer ;
+    bgo:totalPrintfTemplate "Totale: € %s"@it ;
+    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s%% del tot.)"@it 
+.
+
+
+### Search and tag clouds #######
+resource:search_widget a bgo:SearchWidget ;
+    bgo:label "Cerca"@it 
+.
+
+
+resource:tag_cloud a bgo:TagCloud ;
+	bgo:hasTag
+		[ bgo:label "Test1"; bgo:tagSize 1.0 ] ,
+		[ bgo:label "Test2"; bgo:tagSize 0.5 ] ,
+		[ bgo:label "Test3"; bgo:tagSize 1.0 ] ,
+		[ bgo:label "Test4"; bgo:tagSize 0.2 ] ,
+		[ bgo:label "Test5"; bgo:tagSize 0.7 ] ,
+		[ bgo:label "Test6"; bgo:tagSize 0.3 ] 
+.
+
+##### Color Scheme #######
+resource:trend_color_scheme a bgo:TrendColorScheme ;
+    bgo:title "Variazione rispetto alla precedente legge di bilancio"@it;
+    bgo:hasNATrend resource:trend_color_na;
+    bgo:hasVeryDecreasingTrend resource:trend_color_very_dec;
+    bgo:hasDecreasingTrend resource:trend_color_dec ;
+    bgo:hasStableTrend resource:trend_color_stable ;
+    bgo:hasIncreasingTrend resource:trend_color_inc ;
+    bgo:hasVeryIncreasingTrend resource:trend_color_very_inc ;
+.
+
+resource:trend_color_na a bgo:TrendColor ;
+	bgo:label "N.D." ;  
+	bgo:rgbColor "x00000"
+.
+resource:trend_color_very_dec a bgo:TrendColor ;
+	bgo:label "-25%" ;
+	bgo:threshold -0.25 ;
+	bgo:rgbColor "x00000"
+.
+resource:trend_color_dec a bgo:TrendColor ;
+	bgo:label "-5%" ;
+	bgo:threshold -0.05 ;
+	bgo:rgbColor "x00000"
+.
+resource:trend_color_stable a bgo:TrendColor ;
+	bgo:label "0%" ;
+	bgo:threshold 0.00 ;
+	bgo:rgbColor "x00000"
+.
+resource:trend_color_inc a bgo:TrendColor ;
+	bgo:label "5%" ;
+	bgo:threshold 0.05 ;
+	bgo:rgbColor "x00000"
+.
+resource:trend_color_very_inc a bgo:TrendColor ;
+	bgo:label "25%" ;
+	bgo:threshold 0.25 ;
+	bgo:rgbColor "x00000"
+.
+
+
+
+##### Scaling parameters #######
+resource:scaling_parameters a bgo:ScalingParameters ;
+	bgo:hasMinBubbleSize  4 ;  # in pixel
+	bgo:hasMaxBubbleSize  50  # in percentuale rispetto al canvass
+.
+
+
+#########################################################
+## Here resources just needed to display partitions 
+#########################################################
+
+#### MINISTERI ###########
+resource:ministeri a bgo:Partition ;
+	bgo:label "ministero"@it ; 
+	bgo:paritionId "ministeri" ; 
+    bgo:hasPart 
+        resource:economia ,
+        resource:istruzione ,
+        resource:interno
+.
+
+resource:economia a bgo:AccountSet ;
+    bgo:isPartOf resource:ministeri ;
+    bgo:label "economia"@it ;
+    bgo:title "Ministero Economia e Finanze" ;
+    bgo:description "Capitoli di spesa relativi al Ministero dell' Economia e delle Finanze"@it ;
+    bgo:richDescription "This use <b>html</b> and should be scrollable"@it ;
+    bgo:hasAccount
+        resource:account_1 ,
+        resource:account_2 
+.
+
+resource:istruzione a bgo:AccountSet ;
+    bgo:label "istruzione"@it ;
+    bgo:title "Ministero dell'istruzione"@it ;
+    bgo:hasAccount
+        resource:account_3 ,
+        resource:account_4 
+.
+
+resource:interno a bgo:AccountSet  ;
+    bgo:label "istruzione"@it ;
+    bgo:title "Ministero dell'istruzione"@it ;
+    bgo:hasAccount
+        resource:account_5 ,
+        resource:account_6  
+.
+
+
+#### MISSIONI ###########
+resource:missioni a bgo:Partition ;
+	bgo:label "missione"@it ;
+	bgo:paritionId "missioni" ;
+    bgo:hasPart 
+        resource:missione_1 
+.
+
+resource:missione_1 a bgo:AccountSet ;
+    bgo:label "missione 1"@it ;
+    bgo:title "Missione di esempio"@it ;
+    bgo:richDescription "Contiene solo due account, gli altri sono in una partzione 'altro'"@it ;
+    bgo:hasAccount
+        resource:account_1 ,
+        resource:account_2  
+.
+
+
+
+#############################################
+# Accounts view general data
+############################################# 
+resource:historical_perspective a bgo:HistoricalPerspective ;
+	bgo:title "Storico dell'azione"@it
+.
+
+resource:drildown_perspective a bgo:DrilldownPerspective ;
+	bgo:title "Dettaglio capitoli di spesa"@it 
+.
+
+
+
+#############################################
+# Accounts
+############################################# 
+
+## Account 1 with all the details
+resource:account_1 a bgo:Account ;
+	bgo:accountId "account_1" ;
+    bgo:amount 1000.00 ;
+    bgo:referenceAmount 950.00 ;
+    bgo:title "Rimborso debito pubbblico"@it ;
+    bgo:description "Rimborso titoli del debito statale"@it ;
+    
+    bgo:versionId "2019" ;
+    bgo:richDescription "Il rimborso dei titolo del debito statale tiene conto del: <ul><li>pagamento delle quote capitale sui titoli del debito statale</li><li>rimborso del capitale relativo a buoni postali fruttiferi</li><li>rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione</li><li>rimborso passività a carico dello Stato</li></ul>"@it ;
+	bgo:hasHistoryRec (
+        resource:account_1_rec1 
+        resource:account_1_rec2 
+    ) ;
+    bgo:hasPart
+    	resource:account_1_part1 ,
+    	resource:account_1_part2 ,
+    	resource:account_1_part3 
+    ;
+    
+    bgo:hasHistoricalPerspective resource:historical_perspective ;
+    bgo:hasDrilldownPerspective resource:drildown_perspective ;
+    
+   	# Labels
+   	bgo:notAvailableTrendAccountLabel "Non disponibile"@it 
+.
+
+## History recs ############
+resource:account_1_rec1 a bgo:HistoryRec ;
+    bgo:versionId "2018" ;
+    bgo:amount 980.00
+.
+resource:account_1_rec2 a bgo:HistoryRec ;
+    bgo:versionId "2017" ;
+    bgo:amount 1100.00
+.
+
+
+## Partial amounts ############
+resource:account_1_part1 a bgo:PartialAmount ;
+	bgo:title "account_1_part 1" ;
+    bgo:amount 110.00
+.
+resource:account_1_part2 a bgo:PartialAmount ;
+	bgo:title "account_1_part 2" ;
+    bgo:amount 120.00
+.
+resource:account_1_part3 a bgo:PartialAmount ;
+	bgo:title "account_1_part 3" ;
+    bgo:amount 130.00
+.
+
+##################################################
+## Other accounts without details
+###################################################
+resource:account_2
+	bgo:accountId "account_2" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_2"@it ;
+    bgo:description "descrizione account_2"@it 
+.
+
+
+resource:account_3 
+	bgo:accountId "account_3" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_3"@it ;
+    bgo:description "descrizione account_3"@it 
+.
+
+resource:account_4 
+	bgo:accountId "account_4" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_4"@it ;
+    bgo:description "descrizione account_4"@it 
+.
+
+resource:account_5 
+	bgo:accountId "account_5" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_5"@it ;
+    bgo:description "descrizione account_5"@it 
+.
+
+resource:account_6 
+	bgo:accountId "account_6" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_6"@it ;
+    bgo:description "descrizione account_6"@it 
+.
+

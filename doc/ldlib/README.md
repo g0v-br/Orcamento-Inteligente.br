@@ -6,9 +6,9 @@ La libreria ldlib estende la libreria rdflib aggiungendo alcune features:
 - dereferenziazione e  ingestion dei dataset 
 - gestione automatica della autenticazione tramite webid o basic http auth
 
-rdflib aggiunge la classe *Dereferencer* che si configura come un decoratore della classe fetcher in rdflib.
+ldlib aggiunge la classe *Dereferencer* che si configura come un decoratore della classe fetcher in rdflib.
 
-il costruttore di dereferencer accetta come parametri un fetcher e un array regole di dereferenziazione
+Il costruttore di dereferencer accetta come parametri un fetcher e un array regole di dereferenziazione
 
 
 ## dereferencing rules

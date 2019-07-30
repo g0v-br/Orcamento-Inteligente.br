@@ -8,7 +8,7 @@ export const ns = {
     bgo: Namespace('http://linkeddata.center/lodmap-bgo/v1#')
 };
 
+//TO DO
 export function dref(uri){
-
-
+    return "http://localhost:8080/sample.ttl"
 }

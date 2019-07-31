@@ -42,7 +42,7 @@ Le funzioni di LODMAP2D sono richiamabili attraverso un alcune rotte gestite dir
 
 | url template | azione |
 |------------- |------- |
-| /{?s} | visualizza un soggetto di tipo bgo:BigPicture come un insieme di bolle |
+| /{?s} | visualizza un soggetto di tipo bgo:Overview come un insieme di bolle |
 | /table{?s} | visualizza un soggetto di tipo bgo:TableView come tabella |
 | /account/{account_id} | visualizza un soggetto di tipo bgo:Account |
 | /credits | visualizza la pagina di crediti |

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019 LinkedData.Center. All rights reserved.
+# Copyright (c) 2019 LinkedData.Center.
 #
 # Please test before publishing with http://rdf-translator.appspot.com/
 #
@@ -11,57 +11,33 @@
 <> foaf:primaryTopic resource:domain .
 
 ################################################
-# Menu and nvigation data
+# Menues and navigation data
 ################################################
 resource:domain a bgo:Domain ;
-    bgo:hasNavigationMenu resource:navigation_menu ;
-    bgo:hasOptionMenu resource:option_menu ; 
-    bgo:hasFooterMenu resource:footer_menu ;  
-    bgo:hasCopyrigthMenu resource:copyright
+	bgo:title "Legge di Bilancio dello Stato 2019"@it ;
+    bgo:description "Dati di spesa relativi alla Legge di Bilancio approvata per l'esercizio finanziario 2019" ;
+    bgo:abstract "This use <b>html</b> and should be scrollable"@it ; 
+    bgo:hasNavigationMenu [
+		bgo:hasOverviewMenuIcon "fas fa-atom" ;
+		bgo:hasOverviewMenuLabel "Vista d'insieme"@it ;
+		bgo:hasUserMenuEntries (resource:ldc_menu_item )
+    ] ;
+    bgo:hasOptionMenu resource:option_menu [] ; 
+    bgo:hasFooterMenu resource:footer_menu [] ;  
+    bgo:hasCopyrigthMenu [ bgo:hasUserMenuEntries (resource:ldc_menu_item ) ]
 .
 
-resource:navigation_menu a bgo:NavigationMenu ;
-	bgo:hasOverviewMenuIcon "fas fa-atom" ;
-	bgo:hasOverviewMenuLabel "Vista d'insieme"@it ;
-	
-	bgo:hasTableMenuLabel "tabella"@it ;
-	bgo:hasUserEntryList (
-		[ 
-			bgo:icon "fas fa-atom" ;
-			bgo:title "Visit us" ;
-			bgo:menuLink <http://linkeddata.center>
-		]
-	)
+resource:ldc_menu_item a bgo:MenuItem ;
+	bgo:icon "fas fa-atom" ;
+	bgo:title "Visit us" ;
+	bgo:menuLink <http://linkeddata.center>
 .
 
-resource:option_menu a bgo:OptionMenu .
-
-resource:footer_menu a bgo:FooterMenu ;
-	bgo:hasUserEntryList (
-		[ 
-			bgo:title "Visit us" ;
-			bgo:menuLink <http://linkeddata.center>
-		]
-	)
-.
-
-resource:copyright a bgo:CopyrightMenu ;
-	bgo:hasUserEntryList (
-		[ 
-			bgo:title "(c) LinkedData.Center" ;
-			bgo:menuLink <http://linkeddata.center>
-		]
-	)
-.
 #######################################################
 # Views
 #######################################################
 resource:overview a bgo:Overview, bgo:DefaultAccountSet ;
-	bgo:label "stato"@it ; 
-	bgo:menuLabel "Vista d'insieme"@it ;
-	bgo:title "legge di Bilancio 2019"@it ;
-    bgo:description "Dati di spesa relativi alla Legge di Bilancio approvata per l'esercizio finanziario 2019" ;
-    bgo:abstract "This use <b>html</b> and should be scrollable"@it ; 
+	bgo:label "stato"@it ;	
     bgo:hasPartitionList (
         resource:ministeri
         resource:missioni
@@ -76,8 +52,6 @@ resource:overview a bgo:Overview, bgo:DefaultAccountSet ;
 resource:table_view a bgo:TableView ;
 	bgo:label "tabella"@it ;
 	bgo:menuLabel "Vista tabellare"@it;
-	bgo:title "Azioni legge di Bilancio 2019"@it ;
-	
     bgo:hasSearchPane resource:search_pane ;
      
     bgo:headerTitle "Nome azione"@it ;
@@ -93,8 +67,8 @@ resource:table_view a bgo:TableView ;
 ##### Ministeri
 resource:ministeri a bgo:Partition ;
 	bgo:partitionId "ministeri" ; 
+	bgo:label "ministero"@it ; 
 	bgo:menuLabel "Ministeri"@it ;
-	bgo:partitionLabel "ministero"@it ; 
     bgo:hasAccountSubSet 
         resource:economia ,
         resource:istruzione
@@ -104,7 +78,7 @@ resource:ministeri a bgo:Partition ;
 
 resource:economia a bgo:AccountSet ;
     bgo:label "economia"@it ;
-    bgo:title "Ministero Economia e Finanze" ;
+    bgo:title "Ministero Economia e Finanze"@it ;
     bgo:description "Capitoli di spesa relativi al Ministero dell' Economia e delle Finanze"@it ;
     bgo:abstract "This use <b>html</b> and should be scrollable"@it ;
     bgo:hasAccount
@@ -198,7 +172,7 @@ resource:historical_perspective a bgo:HistoricalPerspective ;
 	bgo:title "Storico dell'azione"@it
 .
 
-resource:Breakdown_perspective a bgo:BreakdownPerspective ;
+resource:breakdown_perspective a bgo:BreakdownPerspective ;
 	bgo:title "Dettaglio capitoli di spesa"@it 
 .
 

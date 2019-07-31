@@ -39,10 +39,14 @@ export default new Router({
         name: 'bigPicture',
         component: () => import('./views/BigPicture.vue')
     },
+    /* {
+        path: '/*',
+        name: '404',
+        component: () => import('./views/errors/404.vue')
+    },
     {
         path: '*',
-        redirect: { name: '404' },
-        component: () => import('./views/404.vue')
-    }
+        redirect: { name: '404' }
+    } */
 ]
 })

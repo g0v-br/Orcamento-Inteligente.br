@@ -1,4 +1,6 @@
 export default
 {
-	"dereferencingRules": [{ "regexp":".*" , "tagets": [ "/sample.ttl"] }]
+	"dereferencingRules": [
+		{ "regexp":".*" , "tagets": [ "/sample.ttl"] , "isLast": true }
+	]
 }

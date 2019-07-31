@@ -18,10 +18,7 @@ Le regole sono valutate in sequenza e solo la prima regola la cui espressione re
 
 ## gestione autenticazione
 
-
 Da discutere:
 
-
 Se l'accesso ad una delle risorse da caricare produce un error 401, il sistema deve 
-chiedere all'utente di loggarsi e poi riprova. Sarebbe ottimo se si capisse se è richiesta
-una
+chiedere all'utente di loggarsi e poi riprova.

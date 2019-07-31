@@ -31,22 +31,17 @@ export default new Router({
     {
         path: '/partition/:partitionId',
         name: 'accounts-partition',
-        component: () => import('./views/BigPicture.vue'),
+        component: () => import('./views/Overview.vue'),
         props: true
     },
     {
         path: '/',
-        name: 'bigPicture',
-        component: () => import('./views/BigPicture.vue')
-    },
-    /* {
-        path: '/*',
-        name: '404',
-        component: () => import('./views/errors/404.vue')
+        name: 'overview',
+        component: () => import('./views/Overview.vue')
     },
     {
         path: '*',
-        redirect: { name: '404' }
-    } */
+        redirect: { name: 'overview' }
+    }
 ]
 })

@@ -20,10 +20,10 @@ resource:domain a bgo:Domain ;
     bgo:hasNavigationMenu [
 		bgo:hasOverviewMenuIcon "fas fa-atom" ;
 		bgo:hasOverviewMenuLabel "Vista d'insieme"@it ;
-		bgo:hasUserMenuEntries (resource:ldc_menu_item )
+		bgo:hasUserMenuEntries ( resource:ldc_menu_item )
     ] ;
-    bgo:hasOptionMenu resource:option_menu [] ; 
-    bgo:hasFooterMenu resource:footer_menu [] ;  
+    bgo:hasOptionMenu [] ; 
+    bgo:hasFooterMenu [] ;  
     bgo:hasCopyrigthMenu [ bgo:hasUserMenuEntries (resource:ldc_menu_item ) ]
 .
 

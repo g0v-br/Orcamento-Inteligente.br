@@ -29,7 +29,7 @@ resource:domain a bgo:Domain ;
 
 resource:ldc_menu_item a bgo:MenuItem ;
 	bgo:icon "fas fa-atom" ;
-	bgo:title "Visit us" ;
+	bgo:title "Visit us"@it ;
 	bgo:menuLink <http://linkeddata.center>
 .
 
@@ -69,6 +69,10 @@ resource:ministeri a bgo:Partition ;
 	bgo:partitionId "ministeri" ; 
 	bgo:label "ministero"@it ; 
 	bgo:menuLabel "Ministeri"@it ;
+	bgo:sortOrder bgo:ascendent_sort ; # or bgo:descendent_sort (default)
+	bgo:sortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
+	bgo:groupFunction bgo:trend_average ; # or bgo:amounts_sum(default), bgo:accounts_count
+	## note only not filtered
     bgo:hasAccountSubSet 
         resource:economia ,
         resource:istruzione

@@ -20,11 +20,12 @@
             </VListTileContent>
           </VListTile>
         </VList>
-      </VMenu>-->
+      </VMenu> -->
       <v-toolbar-title class="headline text-uppercase">
-        <span>{{title}}</span>
+        <span>title</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+     
     </v-app-bar>
 
     <v-content>
@@ -34,31 +35,13 @@
 </template>
 
 <script>
-import { bgoStore, fetcher, ns } from "./models/bgo.js";
-
 export default {
   name: "App",
-  components: {},
-
+  components:{
+  },
+  
   data: () => ({
-    title: null,
-    links: []
-  }),
-  created() {
-    //console.log("store in APP:", bgoStore.toNT());
-    let app = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("Domain"));
-    this.title = bgoStore.any(app, ns.bgo("title")).value;
-    let menu = bgoStore.any(app, ns.bgo("hasNavigationMenu"));
-    // console.log("menu:", menu);
-    console.log(bgoStore.any(menu, ns.bgo("hasUserMenuEntries")));
-      /*.elements.forEach(element => {
-        //  console.log("element", element);
-        //console.log("title", bgoStore.any(element, ns.bgo("title")));
-        //console.log("icon", bgoStore.any(element, ns.bgo("icon")));
-        //console.log(bgoStore.each(null, ns.rdf("type"),ns.bgo("Account")));
-        this.links.push(bgoStore.any(element, ns.bgo("menuLink")));
-      });*/
-    //  console.log("LINKS: ",this.links);
-  }
+    //
+  })
 };
 </script>

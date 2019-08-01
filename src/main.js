@@ -7,9 +7,10 @@ import vuetify from './plugins/vuetify';
 import { bgoStore, fetcher, ns } from './models/bgo.js';
 try {
 
-  fetcher.load("http://localhost:8080/sample.ttl").then(
+  fetcher.load("http://localhost:8080/ccccc.ttl").then(
+
     response => {
-      // console.log("store in main.js:", bgoStore.toNT());
+      console.log("store:", bgoStore.toNT());
       new Vue({
         router,
         store,
@@ -24,7 +25,10 @@ try {
         render: h => h(Error)
       }).$mount('#app')
     }
-  );
+  ).catch(err=>{
+    console.log("errore")
+  })
+  ;
 
 } catch (error) {
 

@@ -1,0 +1,320 @@
+#
+# Copyright (c) 2019 LinkedData.Center.
+#
+# Please test before publishing with http://rdf-translator.appspot.com/
+#
+@prefix bgo: <http://linkeddata.center/lodmap-bgo/v1#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix resource: <http://example.com/resource/> .
+
+
+<> foaf:primaryTopic resource:domain .
+
+################################################
+# Menues and navigation data
+################################################
+resource:domain a bgo:Domain ;
+	bgo:title "Legge di Bilancio dello Stato 2019"@it ;
+    bgo:description "Dati di spesa relativi alla Legge di Bilancio approvata per l'esercizio finanziario 2019" ;
+<<<<<<< HEAD
+    bgo:abstract "This use **markdown** and could be truncated "^^bgo:MDString ; 
+=======
+    bgo:abstract "This use <b>html</b> and should be scrollable"@it ; 
+>>>>>>> branch 'dev' of https://github.com/linkeddatacenter/LODMAP2D.git
+    bgo:hasNavigationMenu [
+		bgo:hasOverviewMenuIcon "fas fa-atom" ;
+		bgo:hasOverviewMenuLabel "Vista d'insieme"@it ;
+		bgo:hasUserMenuEntries ( resource:ldc_menu_item )
+    ] ;
+    bgo:hasOptionMenu [] ; 
+    bgo:hasFooterMenu [] ;  
+    bgo:hasCopyrigthMenu [ bgo:hasUserMenuEntries (resource:ldc_menu_item ) ]
+.
+
+resource:ldc_menu_item a bgo:MenuItem ;
+	bgo:icon "fas fa-atom" ;
+	bgo:title "Visit us"@it ;
+	bgo:menuLink <http://linkeddata.center>
+.
+
+#######################################################
+# Views
+#######################################################
+resource:overview a bgo:Overview, bgo:DefaultAccountSet ;
+	bgo:label "stato"@it ;	
+    bgo:hasPartitionList (
+        resource:ministeri
+        resource:missioni
+    ) ;
+    bgo:hasPartitionButtonsPane resource:partition_buttons ;
+	bgo:hasTrendColorScheme resource:trend_color_scheme ;
+    bgo:hasTotalizer resource:totalizer ;
+    bgo:hasTagCloud resource:tag_cloud ;
+    bgo:hasSearchPane resource:search_pane ;
+.
+
+<<<<<<< HEAD
+### Credits page ##########
+resource:credits_page a bgo:CreditsView ;
+	bgo:title "Credits"@en ;
+	bgo:abstract 
+"""
+Grazie a
+--------
+ - x
+ - y 
+ - z
+"""^^bgo:MDString.
+
+
+### Term ans page ##########
+resource:terms_page a bgo:TermsView ;
+	bgo:title "Termini e condizioni di utilizzo"@it ;
+	bgo:abstract 
+"""
+qui i **termini** e le condizioni di chi pubblica il servizio.
+"""^^bgo:MDString.
+
+#### Table ###################
+=======
+>>>>>>> branch 'dev' of https://github.com/linkeddatacenter/LODMAP2D.git
+resource:table_view a bgo:TableView ;
+	bgo:label "tabella"@it ;
+	bgo:menuLabel "Vista tabellare"@it;
+    bgo:hasSearchPane resource:search_pane ;
+     
+    bgo:headerTitle "Nome azione"@it ;
+    bgo:headerAmount "Spesa"@it ;
+    bgo:headerTrend "Tendenza"@it ;
+    bgo:headerDescription "Descrizione"@it ;
+.
+
+#######################################################
+# Partitions
+#######################################################
+
+##### Ministeri
+resource:ministeri a bgo:Partition ;
+	bgo:partitionId "ministeri" ; 
+	bgo:label "ministero"@it ; 
+	bgo:menuLabel "Ministeri"@it ;
+	bgo:sortOrder bgo:ascendent_sort ; # or bgo:descendent_sort (default)
+	bgo:sortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
+	bgo:groupFunction bgo:trend_average ; # or bgo:amounts_sum(default), bgo:accounts_count
+	## note only not filtered
+    bgo:hasAccountSubSet 
+        resource:economia ,
+        resource:istruzione
+    ;
+    bgo:hasDefaultAccountSubSet resource:interno
+.
+
+resource:economia a bgo:AccountSet ;
+    bgo:label "economia"@it ;
+    bgo:title "Ministero Economia e Finanze"@it ;
+    bgo:description "Capitoli di spesa relativi al Ministero dell' Economia e delle Finanze"@it ;
+<<<<<<< HEAD
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+=======
+    bgo:abstract "This use <b>html</b> and should be scrollable"@it ;
+>>>>>>> branch 'dev' of https://github.com/linkeddatacenter/LODMAP2D.git
+    bgo:hasAccount
+        resource:account_1 ,
+        resource:account_2 
+.
+
+resource:istruzione a bgo:AccountSet ;
+    bgo:label "istruzione"@it ;
+    bgo:title "Ministero dell'istruzione"@it ;
+    bgo:hasAccount
+        resource:account_3 ,
+        resource:account_4 
+.
+
+resource:interno a bgo:DefaultAccountSet  ;
+    bgo:label "istruzione"@it ;
+    bgo:title "Ministero dell'istruzione"@it 
+.
+
+
+#### MISSIONI ###########
+resource:missioni a bgo:Partition;
+	bgo:partitionId "missioni" ;
+	bgo:menuLabel "Missioni"@it ;
+	bgo:partitionLabel "missione"@it ;
+    bgo:hasAccountSubSet 
+        resource:missione_1 
+    ;
+    bgo:hasDefaultAccountSubSet resource:altre_missioni
+.
+
+resource:missione_1 a bgo:AccountSet ;
+    bgo:title "Missione di esempio"@it ;
+    bgo:hasAccount
+        resource:account_1 ,
+        resource:account_2  
+.
+
+resource:altre_missioni a bgo:DefaultAccountSet ;
+    bgo:title "Altre missioni"@it 
+.
+
+
+
+
+#######################################################
+# Views options
+#######################################################
+
+###### Trend Color Scheme #######
+resource:trend_color_scheme a bgo:TrendColorScheme ;
+    bgo:title "Variazione rispetto alla precedente legge di bilancio"@it ;
+    bgo:noTrendColor "0xeeeeee" ;
+    bgo:maxTrendColor "green" ;
+    bgo:minTrendColor "red" ;
+.
+
+
+##### Totalizer #######
+resource:totalizer a bgo:Totalizer ;
+    bgo:totalPrintfTemplate "Totale: € %s"@it ;
+    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s%% del tot.)"@it 
+.
+
+
+### Search and tag clouds #######
+resource:search_pane a bgo:SearchWidget ;
+    bgo:label "Cerca"@it 
+.
+
+
+resource:tag_cloud a bgo:TagCloud ;
+	bgo:hasTag
+		[ bgo:label "Test1"; bgo:tagWeight 1.0 ] ,
+		[ bgo:label "Test2"; bgo:tagWeight 0.5 ] ,
+		[ bgo:label "Test3"; bgo:tagWeight 1.0 ] ,
+		[ bgo:label "Test4"; bgo:tagWeight 0.2 ] ,
+		[ bgo:label "Test5"; bgo:tagWeight 0.7 ] ,
+		[ bgo:label "Test6"; bgo:tagWeight 0.3 ] 
+.
+
+#############################################
+# Accounts perspectives
+############################################# 
+resource:metadata_perspective a bgo:MetadataPerspective ;
+   	bgo:notAvailableTrendAccountLabel "Non disponibile"@it 
+.
+
+resource:historical_perspective a bgo:HistoricalPerspective ;
+	bgo:title "Storico dell'azione"@it
+.
+
+resource:breakdown_perspective a bgo:BreakdownPerspective ;
+	bgo:title "Dettaglio capitoli di spesa"@it 
+.
+
+
+#############################################
+# Accounts
+############################################# 
+
+## Account 1 with all the details
+resource:account_1 a bgo:Account ;
+    bgo:title "Rimborso debito pubbblico"@it ;
+    bgo:description "Rimborso titoli del debito statale"@it ;
+<<<<<<< HEAD
+    bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: \n- pagamento delle quote capitale sui titoli del debito statale\n- rimborso del capitale relativo a buoni postali fruttiferi\n- rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione\n- rimborso passività a carico dello Stato"^^bgo:MDString ;
+=======
+    bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: <ul><li>pagamento delle quote capitale sui titoli del debito statale</li><li>rimborso del capitale relativo a buoni postali fruttiferi</li><li>rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione</li><li>rimborso passività a carico dello Stato</li></ul>"@it ;
+>>>>>>> branch 'dev' of https://github.com/linkeddatacenter/LODMAP2D.git
+    
+	bgo:accountId "account_1" ;
+    bgo:amount 1000.00 ;
+    bgo:referenceAmount 950.00 ;
+    
+    bgo:versionId "2019" ;
+	bgo:hasHistoryRec (
+        resource:account_1_rec1 
+        resource:account_1_rec2 
+    ) ;
+    bgo:hasBreakdown
+    	resource:account_1_part1 ,
+    	resource:account_1_part2 ,
+    	resource:account_1_part3 
+    ;
+    
+    bgo:usesHistoricalPerspective resource:historical_perspective ;
+    bgo:usesBreakdownPerspective resource:breakdown_perspective ;
+    bgo:usesMetadataPerspective resource:metadata_perspective ;
+    
+.
+
+## History recs ############
+resource:account_1_rec1 a bgo:HistoryRec ;
+    bgo:versionId "2018" ;
+    bgo:amount 980.00
+.
+resource:account_1_rec2 a bgo:HistoryRec ;
+    bgo:versionId "2017" ;
+    bgo:amount 1100.00
+.
+
+
+## Partial amounts ############
+resource:account_1_part1 a bgo:PartialAmount ;
+	bgo:title "account_1_part 1" ;
+    bgo:amount 110.00
+.
+resource:account_1_part2 a bgo:PartialAmount ;
+	bgo:title "account_1_part 2" ;
+    bgo:amount 120.00
+.
+resource:account_1_part3 a bgo:PartialAmount ;
+	bgo:title "account_1_part 3" ;
+    bgo:amount 130.00
+.
+
+##################################################
+## Other accounts without details
+###################################################
+resource:account_2 a bgo:Account ;
+	bgo:accountId "account_2" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_2"@it ;
+    bgo:description "descrizione account_2"@it 
+.
+
+
+resource:account_3 a bgo:Account ;
+	bgo:accountId "account_3" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_3"@it ;
+    bgo:description "descrizione account_3"@it 
+.
+
+resource:account_4 a bgo:Account ;
+	bgo:accountId "account_4" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_4"@it ;
+    bgo:description "descrizione account_4"@it 
+.
+
+resource:account_5 a bgo:Account ;
+	bgo:accountId "account_5" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_5"@it ;
+    bgo:description "descrizione account_5"@it 
+.
+
+resource:account_6 a bgo:Account ;
+	bgo:accountId "account_6" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_6"@it ;
+    bgo:description "descrizione account_6"@it 
+.
+

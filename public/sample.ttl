@@ -16,7 +16,7 @@
 resource:domain a bgo:Domain ;
 	bgo:title "Legge di Bilancio dello Stato 2019"@it ;
     bgo:description "Dati di spesa relativi alla Legge di Bilancio approvata per l'esercizio finanziario 2019" ;
-    bgo:abstract "This use <b>html</b> and should be scrollable"@it ; 
+    bgo:abstract "This use **markdown** and could be truncated "^^bgo:MDString ; 
     bgo:hasNavigationMenu [
 		bgo:hasOverviewMenuIcon "fas fa-atom" ;
 		bgo:hasOverviewMenuLabel "Vista d'insieme"@it ;
@@ -29,7 +29,7 @@ resource:domain a bgo:Domain ;
 
 resource:ldc_menu_item a bgo:MenuItem ;
 	bgo:icon "fas fa-atom" ;
-	bgo:title "Visit us" ;
+	bgo:title "Visit us"@it ;
 	bgo:menuLink <http://linkeddata.center>
 .
 
@@ -49,6 +49,28 @@ resource:overview a bgo:Overview, bgo:DefaultAccountSet ;
     bgo:hasSearchPane resource:search_pane ;
 .
 
+### Credits page ##########
+resource:credits_page a bgo:CreditsView ;
+	bgo:title "Credits"@en ;
+	bgo:abstract 
+"""
+Grazie a
+--------
+ - x
+ - y 
+ - z
+"""^^bgo:MDString.
+
+
+### Term ans page ##########
+resource:terms_page a bgo:TermsView ;
+	bgo:title "Termini e condizioni di utilizzo"@it ;
+	bgo:abstract 
+"""
+qui i **termini** e le condizioni di chi pubblica il servizio.
+"""^^bgo:MDString.
+
+#### Table ###################
 resource:table_view a bgo:TableView ;
 	bgo:label "tabella"@it ;
 	bgo:menuLabel "Vista tabellare"@it;
@@ -69,6 +91,10 @@ resource:ministeri a bgo:Partition ;
 	bgo:partitionId "ministeri" ; 
 	bgo:label "ministero"@it ; 
 	bgo:menuLabel "Ministeri"@it ;
+	bgo:sortOrder bgo:ascendent_sort ; # or bgo:descendent_sort (default)
+	bgo:sortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
+	bgo:groupFunction bgo:trend_average ; # or bgo:amounts_sum(default), bgo:accounts_count
+	## note only not filtered
     bgo:hasAccountSubSet 
         resource:economia ,
         resource:istruzione
@@ -80,6 +106,7 @@ resource:economia a bgo:AccountSet ;
     bgo:label "economia"@it ;
     bgo:title "Ministero Economia e Finanze"@it ;
     bgo:description "Capitoli di spesa relativi al Ministero dell' Economia e delle Finanze"@it ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:abstract "This use <b>html</b> and should be scrollable"@it ;
     bgo:hasAccount
         resource:account_1 ,
@@ -185,7 +212,8 @@ resource:breakdown_perspective a bgo:BreakdownPerspective ;
 resource:account_1 a bgo:Account ;
     bgo:title "Rimborso debito pubbblico"@it ;
     bgo:description "Rimborso titoli del debito statale"@it ;
-    bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: <ul><li>pagamento delle quote capitale sui titoli del debito statale</li><li>rimborso del capitale relativo a buoni postali fruttiferi</li><li>rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione</li><li>rimborso passività a carico dello Stato</li></ul>"@it ;
+    bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: \n- pagamento delle quote capitale sui titoli del debito statale\n- rimborso del capitale relativo a buoni postali fruttiferi\n- rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione\n- rimborso passività a carico dello Stato"^^bgo:MDString ;
+
     
 	bgo:accountId "account_1" ;
     bgo:amount 1000.00 ;

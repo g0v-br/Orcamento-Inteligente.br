@@ -1,6 +1,7 @@
+![ldc](http://linkeddata.center/resources/v4/logo/Logo-colori-trasp_oriz-640x220.png)
 # LODMAP2D
 
-LODMAP2D è una applicazione  per esplorare interattivamente una grande quantità di informazioni senza mai  perdere la visione d'insieme [vedi la presentazione](https://docs.google.com/presentation/d/14OPAIxZoxCuwYo7fmso2bL4TAMcFTFO5ryEXhdsOSus/edit?usp=sharing)
+LODMAP2D è una applicazione  per esplorare interattivamente una grande quantità di informazioni senza mai  perdere la visione d'insieme [vedi la presentazione](https://docs.google.com/presentation/d/e/2PACX-1vRLRVU0fE-nXQhsc-1NVCKmmRW4eYqcFUyDPTRUyyMl6oDhZ137FyTuNLQA1RMRaCUvM7Tb8iHi_qiF/pub?start=false&loop=false&delayms=3000)
 
 
 ## Build and run with node

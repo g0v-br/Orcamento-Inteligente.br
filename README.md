@@ -41,31 +41,34 @@ docker rm -f lodmap2d
 
 ## Usare LODMAP2D
 
-Le funzioni di LODMAP2D sono richiamabili attraverso un alcune rotte gestite direttamente dalla applicazione, ed in particolare:
+LODMAP2D può essere pensato come un browser semantico in grado di riconoscerealcuni concetti descritti
+nella [Bubble Graph Ontology(BGO)](http://linkeddata.center/lodmap-bgo/v1)
+
+Le funzioni di LODMAP2D sono richiamabili da un browser di nuova generazione richiamando un URL seguito da alcune rotte gestite direttamente dalla applicazione (i.e. senza accedere alla rete), ed in particolare:
 
 | url template | azione |
 |------------- |------- |
-| /{?s} | renderizza un soggetto di tipo bgo:Overview come un insieme di bolle |
+| /{?s} | renderizza un soggetto di tipo bgo:Overview  |
 | /table{?s} | renderizza un soggetto di tipo bgo:TableView  |
 | /credits | renderizza un soggetto di tipo bgo:CreditsView |
 | /terms | renderizza un soggetto di tipo bgo:TermsView |
-| /account/{account_id} | renderizza un soggetto di tipo bgo:Account |
+| /account/{account_id} | renderizza un soggetto di tipo bgo:ProfiledAccount |
 | /partition/{partition_id}{?s} | renderizza un soggetto di tipo bgo:Partition |
 
 
-Il parametro opzionale  *s* permette di filtrare nella visualizzazione gli account il cui titolo, la cui descrizione o la cui id contiene, anche parzialmente, la stringa passata come valore al parametro.
+Il parametro opzionale  *s* permette di filtrare nella visualizzazione gli oggetti il cui titolo, la cui descrizione o la cui id contiene, anche parzialmente, la stringa passata come valore al parametro.
 
 
 ## Development
 
-LODMAP2D è una single page application sviluppata nel framework [Vue](https://vuejs.org/) in accordo alle specifiche [SOLID](https://github.com/solid/solid-spec) basata sulla la libreria [Data Driven Document (d3)](https://d3js.org/)
+Dal punto di vista tecnico, LODMAP2D è una single page application sviluppata nel framework [Vue](https://vuejs.org/) in accordo alle specifiche [SOLID](https://github.com/solid/solid-spec) basata sulla la libreria [Data Driven Document (d3)](https://d3js.org/)
 
 Il modello dei dati adotta il [Resource Description Framework (RDF)](https://www.w3.org/RDF/) e gli standard del [Semanitic Web](https://www.w3.org/standards/semanticweb/data). 
-In particolare LODMAP2D in grado di riconoscere dati espressi con la [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).:
+In particolare LODMAP2D in grado di riconoscere dati espressi con la [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
 
-I dati sono ottenuti attraverso una pseudo-dereferenziazione delle rotte gestite internamente dalla applicazione attraverso la libreria bgolib, che a sua volta estende la libreria [rdflib](https://github.com/linkeddata/rdflib.js/)
+I dati sono ottenuti attraverso una dereferenziazione delle rotte gestite internamente dalla applicazione attraverso la libreria bgolib, che estende la libreria [rdflib](https://github.com/linkeddata/rdflib.js/)
 
-Nella configurazione di default alcuni dati di esempio sono contenuti nel file 
+Nella configurazione di default i dati di esempio sono contenuti nel file 
 [sample.ttl](public/sample.ttl)
 
 ## Security
@@ -88,38 +91,40 @@ E' possibile personalizzare l'applicazione sovrascrivendo i file contenuti nella
 - il file preview.png è usato come immagine di riferimento nei social
 - il file IE_alert gestisce l'alert visualizzato a fronte di un browser non compatibile
    
-Per non perdersi la possibilità di aggiornamento del LODMAP2D si consiglia fortemente di non sovrascrivere altri file oltre quelli indicati. L'utilizzo di docker semplifica enormemente le attività di personalizzazione. Vedi un esempio nel progetto https://github.com/g0v-it/web-budget.
+L'utilizzo di docker semplifica enormemente le attività di personalizzazione. Vedi un esempio nel progetto https://github.com/g0v-it/web-budget.
 
 
 ### Personalizzazione dei dati
 
-LODMAP2D è predisposto per deferenziare le rotte (e quindi caricare i dati) in due modalità differenti, pilotabile dalla variabile di ambiente LODMAP2D_DATA: se la variabile non esiste o è vuota, sono caricati dei dati di test, altrimenti si assume che la variabile LODMAP2D_DATA contenga un endAnche il point che fornisca le seguenti risorse serializzato in turtle:
+LODMAP2D è predisposto per dereferenziare le rotte (ovvero caricare i dati necessari a visualizzare una rotta) in due modalità differenti, pilotabile dalla variabile di ambiente LODMAP2D_DATA: se la variabile non esiste o è vuota, sono caricati dei dati di test, altrimenti si assume che la variabile LODMAP2D_DATA contenga un endpoint che fornisca le seguenti risorse serializzato in RDF turtle:
 
 risorsa | contenuto ritornato
 ------- | -------------------
-LODMAP2D_DATA/app.ttl | contiene dati relativi ai menu utilizzati da tutte le rotte.
-LODMAP2D_DATA/account/*account_id*  | contiene i dati relativi all'account *account_id*
-LODMAP2D_DATA/partition/*partition_id*  | contiene i dati specifici relativi alla partizione *partition_id*
-LODMAP2D_DATA/credits.ttl | contiene i dati specifici alla rotta /credits
-LODMAP2D_DATA/terms.ttl | contiene i dati  specifici alla rotta /terms 
-LODMAP2D_DATA/accounts.ttl | contiene un indice di tutte gli account, includendo solo
+*LODMAP2D_DATA*/app.ttl | contiene dati relativi ai menu utilizzati da tutte le rotte.
+*LODMAP2D_DATA*/account/*account_id*  | contiene i dati relativi all'account *account_id*
+*LODMAP2D_DATA*/partition/*partition_id*  | contiene i dati specifici relativi alla partizione *partition_id*
+*LODMAP2D_DATA*/credits.ttl | contiene i dati specifici alla rotta /credits
+*LODMAP2D_DATA*/terms.ttl | contiene i dati  specifici alla rotta /terms 
+*LODMAP2D_DATA*/accounts.ttl | contiene un indice di tutte gli account, includendo solo
 le un subset delle informazioni presenti in dettaglio anche nei file della directory account 
-LODMAP2D_DATA/overview.ttl | contiene  dati  specifici alla rotta principale (/)
+*LODMAP2D_DATA*/overview.ttl | contiene  dati  specifici alla rotta principale (/)
 
-Sono possibili altre configurazioni per l'endpoint, ottenibili modificando il file [config.js](config.js)
+Ricompilando l'applicazione, è possibile utilizzare altre configurazioni (usando risorse RestFUL, LDP, SPARQL endpoints, etc., etc.) ottenibili modificando il file [config.js](config.js)
 
-Il file [config.js](config.js) contiene le regole che sovraintendono alla dereferenziazione delle rotte; in particolare la proprietà *dereferencingRules* permette di specificare una serie di regole con cui riscrivere gli URI al fine della loro dereferenziazione.
+Il file [config.js](config.js) contiene le regole che sovraintendono alla dereferenziazione delle rotte
+e sono inspirate al [Apache mod_rewrite](https://httpd.apache.org/docs/current/rewrite/); in particolare l'array *dereferencingRules* permette di map routes onto a set of web resources in any way you like.
 
 
 Una regola di riscrittura è composta da tre attributi:
 
-- una espressione regolare (*regexp*) che viene applicata all'uri
-- un array di template (*targets*) che può riferire gruppi presenti nella regexp. I target sono le risorse che contengono i dati in una delle serializazioni di RDF riconosciute dalla libreria rdflib (e.g. turtle, xml, ntriple, html, etc).
-- un valore booleano (*isLast*) che dice se le regole successive devono essere ignorate.
+- una espressione regolare (*regexp*) che viene applicata all'uri, in caso di match la regla viene valutata.
+- un array di stringhe (*targets*) in cui ciascun elemento può contenere riferimenti (con "$1", "$2".."$n") a eventuali gruppi presenti nella regexp. 
+- un valore booleano (*isLast*) che dice se 'elaborazione delle regole deve considerarsi conclusa.
 
-Le regole sono valutate in sequenza. Se nessuna regola è applicabile viene usato il metodo standard di dereferenziazione degli uri.
+Le regole sono valutate in sequenza. Se nessuna regola è applicabile viene usato il metodo standard di dereferenziazione degli uri come implementato da rdflib.
+Quando una regola è applicabile i valori di eventuali gruppi sono espansi nei target e i valori risultanti sono aggiunti ad un array di risorse che verranno caricate dalla rete.
 
-Nella directory *doc/config* è possibile trovare alcuni esempi di di configurazione più articolati che consentono all'applicazione di usare remoti.
+Nella directory *doc/config* è possibile trovare alcuni esempi di di configurazione più articolati che consentono all'applicazione di usare dati da sorgenti esterni all'applicazione.
 
 # Thanks
 

@@ -16,8 +16,8 @@
 resource:domain a bgo:Domain ;
 	# Here write some thing about your project (ie the data driven document domain metadata)
 	
-	bgo:title "Demo live overview of LODMAP2D" ;
-    bgo:description "Here a short description of data domain" ;
+	bgo:title "Live test of LODMAP2D" ;
+    bgo:description "Here a short description of the data domain" ;
     bgo:abstract "These are **demo data** without a real meaning."^^bgo:MDString ; 
    
     
@@ -29,12 +29,12 @@ resource:domain a bgo:Domain ;
     		[
 				bgo:icon "far fa-building" ;
 				bgo:title "About this app..." ;
-				bgo:menuLink <http://bit.ly/lodmap2d_p>
+				bgo:link <http://bit.ly/lodmap2d_p>
 			]
     		[
 				bgo:icon "fas fa-shield-alt" ;
-				bgo:title "About WebId..." ;
-				bgo:menuLink <https://en.wikipedia.org/wiki/WebID>
+				bgo:title "About WebID-OIDC ..." ;
+				bgo:link <https://github.com/solid/webid-oidc-spec>
 			]
 		)
     ] ;
@@ -44,11 +44,11 @@ resource:domain a bgo:Domain ;
     	bgo:withUserMenuEntries ( 
     		[
 		    	bgo:icon "fas fa-table" ;
-				bgo:menuLink "/table"  # this is internal link example
+				bgo:link "/table"  # this is internal link example
 			]
     		[
 		    	bgo:icon "fab fa-github-square" ;
-				bgo:menuLink <https://github.com/linkeddatacenter/LODMAP2D>
+				bgo:link <https://github.com/linkeddatacenter/LODMAP2D>
 			]
 		)
     ] ;
@@ -100,7 +100,6 @@ here palace your **Terms & conditions** about published service.
 
 #### Table ###################
 resource:table_view a bgo:TableView ;
-	bgo:label "tabel" ;
 	bgo:title "Table view";
     bgo:hasSearchPane resource:search_pane ;
      
@@ -119,10 +118,10 @@ resource:p1 a bgo:Partition ;
 	bgo:partitionId "p1" ; 
 	bgo:label "partition1" ; 
 	bgo:title "Partition 1 title" ;
-	bgo:sortOrder bgo:ascendent_sort ; # or bgo:descendent_sort (default)
+	bgo:sortOrder bgo:ascending_sort ; # or bgo:descending_sort (default)
 	bgo:sortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
 	bgo:groupFunction bgo:trend_average ; # or bgo:amounts_sum(default), bgo:accounts_count
-	## note only not filtered
+
     bgo:hasAccountSubSet 
         resource:p1_1 ,
         resource:p1_2
@@ -135,9 +134,8 @@ resource:p1 a bgo:Partition ;
 
 
 resource:p1_1 a bgo:AccountSet ;
-    bgo:label "subset 1" ;
     bgo:title "Subset 1 title" ;
-    bgo:description "An acoount subset" ;
+    bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
         resource:account_1 ,
@@ -156,8 +154,8 @@ resource:p1_2 a bgo:AccountSet ;
 #### P2 ###########
 resource:p2 a bgo:Partition;
 	bgo:partitionId "2" ;
-	bgo:title "P2 title" ;
 	bgo:label "partition2" ;
+	bgo:title "P2 title" ;
     bgo:hasAccountSubSet 
 	    [
 		    bgo:title "Title for p2_1" ;
@@ -171,9 +169,6 @@ resource:p2 a bgo:Partition;
     
     # Note no default partition is present : a default one should be create with title "Unassigned"
 .
-
-
-
 
 
 #######################################################
@@ -233,99 +228,66 @@ resource:breakdown_perspective a bgo:BreakdownPerspective ;
 ############################################# 
 
 ## Account 1 with all the details
-resource:account_1 a bgo:Account ;
-    bgo:title "Rimborso debito pubbblico" ;
-    bgo:description "Rimborso titoli del debito statale" ;
-    bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: \n- pagamento delle quote capitale sui titoli del debito statale\n- rimborso del capitale relativo a buoni postali fruttiferi\n- rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione\n- rimborso passività a carico dello Stato"^^bgo:MDString ;
-
-    
+resource:account_1 a bgo:Account, bgo:ProfiledAccount ;	
 	bgo:accountId "account_1" ;
     bgo:amount 1000.00 ;
     bgo:referenceAmount 950.00 ;
+    bgo:title "titolo account_1" ;
+    bgo:description "descrizione account_1" ;
+    bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: \n- pagamento delle quote capitale sui titoli del debito statale\n- rimborso del capitale relativo a buoni postali fruttiferi\n- rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione\n- rimborso passività a carico dello Stato"^^bgo:MDString ;
+    bgo:background <http://bit.ly/2MxbJWQ> ;    
+    bgo:versionLabel "2019" ;
     
-    bgo:versionId "2019" ;
-	bgo:hasHistoryRec (
-        resource:account_1_rec1 
-        resource:account_1_rec2 
-    ) ;
+	bgo:hasHistoryRec
+		[ bgo:versionLabel "2018" ; bgo:amount 980.00 ],
+		[ bgo:versionLabel "2017" ; bgo:amount 1100.00 ]
+    ;
     bgo:hasBreakdown
-    	resource:account_1_part1 ,
-    	resource:account_1_part2 ,
-    	resource:account_1_part3 
+    	[ bgo:title "account_1_part 1" ; bgo:amount 110.00 ] ,
+    	[ bgo:title "account_1_part 2" ; bgo:amount 120.00 ] ,
+    	[ bgo:title "account_1_part 3" ; bgo:amount 130.00 ] 
     ;
     
     bgo:usesHistoricalPerspective resource:historical_perspective ;
     bgo:usesBreakdownPerspective resource:breakdown_perspective ;
-    bgo:usesMetadataPerspective resource:metadata_perspective ;
-    
+    bgo:usesMetadataPerspective resource:metadata_perspective ;  
 .
 
-## History recs ############
-resource:account_1_rec1 a bgo:HistoryRec ;
-    bgo:versionId "2018" ;
-    bgo:amount 980.00
-.
-resource:account_1_rec2 a bgo:HistoryRec ;
-    bgo:versionId "2017" ;
-    bgo:amount 1100.00
-.
-
-
-## Partial amounts ############
-resource:account_1_part1 a bgo:PartialAmount ;
-	bgo:title "account_1_part 1" ;
-    bgo:amount 110.00
-.
-resource:account_1_part2 a bgo:PartialAmount ;
-	bgo:title "account_1_part 2" ;
-    bgo:amount 120.00
-.
-resource:account_1_part3 a bgo:PartialAmount ;
-	bgo:title "account_1_part 3" ;
-    bgo:amount 130.00
-.
 
 ##################################################
-## Other accounts without details
+## Other accounts without detailef profile
 ###################################################
 resource:account_2 a bgo:Account ;
 	bgo:accountId "account_2" ;
     bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
     bgo:title "titolo account_2" ;
-    bgo:description "descrizione account_2" 
+    bgo:description "descrizione account_2" ;
+    bgo:background <http://bit.ly/2MxbJWQ>
 .
-
 
 resource:account_3 a bgo:Account ;
 	bgo:accountId "account_3" ;
     bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
     bgo:title "titolo account_3" ;
-    bgo:description "descrizione account_3" 
+    bgo:background "#fcba03"  # as RGB solid color
 .
 
 resource:account_4 a bgo:Account ;
 	bgo:accountId "account_4" ;
     bgo:amount 100.00 ;
-    bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_4" ;
-    bgo:description "descrizione account_4" 
+    bgo:referenceAmount 95.00 
 .
+
 
 resource:account_5 a bgo:Account ;
 	bgo:accountId "account_5" ;
-    bgo:amount 100.00 ;
-    bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_5" ;
-    bgo:description "descrizione account_5" 
+    bgo:amount 100.00  
 .
 
+# no amounts default to amount=0
 resource:account_6 a bgo:Account ;
-	bgo:accountId "account_6" ;
-    bgo:amount 100.00 ;
-    bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_6" ;
-    bgo:description "descrizione account_6" 
+	bgo:accountId "account_6" 
 .
 

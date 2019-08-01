@@ -16,11 +16,7 @@
 resource:domain a bgo:Domain ;
 	bgo:title "Legge di Bilancio dello Stato 2019"@it ;
     bgo:description "Dati di spesa relativi alla Legge di Bilancio approvata per l'esercizio finanziario 2019" ;
-<<<<<<< HEAD
     bgo:abstract "This use **markdown** and could be truncated "^^bgo:MDString ; 
-=======
-    bgo:abstract "This use <b>html</b> and should be scrollable"@it ; 
->>>>>>> branch 'dev' of https://github.com/linkeddatacenter/LODMAP2D.git
     bgo:hasNavigationMenu [
 		bgo:hasOverviewMenuIcon "fas fa-atom" ;
 		bgo:hasOverviewMenuLabel "Vista d'insieme"@it ;
@@ -53,7 +49,6 @@ resource:overview a bgo:Overview, bgo:DefaultAccountSet ;
     bgo:hasSearchPane resource:search_pane ;
 .
 
-<<<<<<< HEAD
 ### Credits page ##########
 resource:credits_page a bgo:CreditsView ;
 	bgo:title "Credits"@en ;
@@ -76,8 +71,6 @@ qui i **termini** e le condizioni di chi pubblica il servizio.
 """^^bgo:MDString.
 
 #### Table ###################
-=======
->>>>>>> branch 'dev' of https://github.com/linkeddatacenter/LODMAP2D.git
 resource:table_view a bgo:TableView ;
 	bgo:label "tabella"@it ;
 	bgo:menuLabel "Vista tabellare"@it;
@@ -113,11 +106,8 @@ resource:economia a bgo:AccountSet ;
     bgo:label "economia"@it ;
     bgo:title "Ministero Economia e Finanze"@it ;
     bgo:description "Capitoli di spesa relativi al Ministero dell' Economia e delle Finanze"@it ;
-<<<<<<< HEAD
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
-=======
     bgo:abstract "This use <b>html</b> and should be scrollable"@it ;
->>>>>>> branch 'dev' of https://github.com/linkeddatacenter/LODMAP2D.git
     bgo:hasAccount
         resource:account_1 ,
         resource:account_2 
@@ -222,11 +212,8 @@ resource:breakdown_perspective a bgo:BreakdownPerspective ;
 resource:account_1 a bgo:Account ;
     bgo:title "Rimborso debito pubbblico"@it ;
     bgo:description "Rimborso titoli del debito statale"@it ;
-<<<<<<< HEAD
     bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: \n- pagamento delle quote capitale sui titoli del debito statale\n- rimborso del capitale relativo a buoni postali fruttiferi\n- rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione\n- rimborso passività a carico dello Stato"^^bgo:MDString ;
-=======
-    bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: <ul><li>pagamento delle quote capitale sui titoli del debito statale</li><li>rimborso del capitale relativo a buoni postali fruttiferi</li><li>rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione</li><li>rimborso passività a carico dello Stato</li></ul>"@it ;
->>>>>>> branch 'dev' of https://github.com/linkeddatacenter/LODMAP2D.git
+
     
 	bgo:accountId "account_1" ;
     bgo:amount 1000.00 ;

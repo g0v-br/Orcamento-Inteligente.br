@@ -25,7 +25,7 @@ resource:domain a bgo:Domain ;
     
     # Use the Option menu with two external links
     bgo:hasOptionMenu [	
-    	bgo:withUserMenuEntries ( 
+    	bgo:withCustomMenuItems ( 
     		[
 				bgo:icon "far fa-building" ;
 				bgo:title "About this app..." ;
@@ -41,7 +41,7 @@ resource:domain a bgo:Domain ;
     
     # Add just a couple of short cuts icons to footer
     bgo:hasFooterMenu [
-    	bgo:withUserMenuEntries ( 
+    	bgo:withCustomMenuItems ( 
     		[
 		    	bgo:icon "fas fa-table" ;
 				bgo:link "/table"  # this is internal link example
@@ -70,7 +70,6 @@ resource:overview a bgo:Overview, bgo:DefaultAccountSet ;
         resource:p1
         resource:p2
     ) ;
-    bgo:hasPartitionButtonsPane resource:partition_buttons ;
 	bgo:hasTrendColorScheme resource:trend_color_scheme ;
     bgo:hasTotalizer resource:totalizer ;
     bgo:hasTagCloud resource:tag_cloud ;
@@ -90,7 +89,7 @@ Grazie a
 """^^bgo:MDString.
 
 
-### Term ans page ##########
+### Term and conditions page ##########
 resource:terms_page a bgo:TermsView ;
 	bgo:title "Terms & conditions" ;
 	bgo:abstract 

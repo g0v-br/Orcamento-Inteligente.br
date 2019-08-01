@@ -1,7 +1,7 @@
 ![ldc](http://linkeddata.center/resources/v4/logo/Logo-colori-trasp_oriz-640x220.png)
 # LODMAP2D
 
-LODMAP2D is a data driven web application to explore a lot of detailed information without loosing the big picture [see overview](https://docs.google.com/presentation/d/e/2PACX-1vRLRVU0fE-nXQhsc-1NVCKmmRW4eYqcFUyDPTRUyyMl6oDhZ137FyTuNLQA1RMRaCUvM7Tb8iHi_qiF/pub?start=false&loop=false&delayms=3000).
+LODMAP2D is a data driven web application to explore a lot of detailed information without loosing the big picture [see overview](http://bit.ly/lodmap2d_p).
 
 LODMAP2D uses the SOLID specifications and the Semantic Web standards to ensure an high level of security and privacy. Data can be centralized in a Knowledge Graph or distributed as Linked Data. LODMAP2D can be easily customized to match a specific data domain. See for example the [Italian Budget](https://budget.g0v.it) produced by the [g0v.it team](https://github.com/gov-it/) and published by the [Copernicani Association](http://copernicani.it)
 
@@ -45,12 +45,12 @@ Le funzioni di LODMAP2D sono richiamabili attraverso un alcune rotte gestite dir
 
 | url template | azione |
 |------------- |------- |
-| /{?s} | visualizza un soggetto di tipo bgo:Overview come un insieme di bolle |
-| /table{?s} | visualizza un soggetto di tipo bgo:TableView come tabella |
-| /account/{account_id} | visualizza un soggetto di tipo bgo:Account |
-| /credits | visualizza la pagina di crediti |
-| /terms  visualizza la pagina termini e condizioni |
-| /partition/{partition_id}{?s} | visualizza un soggetto di tipo bgo:Partition |
+| /{?s} | renderizza un soggetto di tipo bgo:Overview come un insieme di bolle |
+| /table{?s} | renderizza un soggetto di tipo bgo:TableView  |
+| /credits | renderizza un soggetto di tipo bgo:CreditsView |
+| /terms | renderizza un soggetto di tipo bgo:TermsView |
+| /account/{account_id} | renderizza un soggetto di tipo bgo:Account |
+| /partition/{partition_id}{?s} | renderizza un soggetto di tipo bgo:Partition |
 
 
 Il parametro opzionale  *s* permette di filtrare nella visualizzazione gli account il cui titolo, la cui descrizione o la cui id contiene, anche parzialmente, la stringa passata come valore al parametro.

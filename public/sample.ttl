@@ -14,34 +14,61 @@
 # Menues and navigation data
 ################################################
 resource:domain a bgo:Domain ;
-	bgo:title "Legge di Bilancio dello Stato 2019"@it ;
-    bgo:description "Dati di spesa relativi alla Legge di Bilancio approvata per l'esercizio finanziario 2019" ;
-    bgo:abstract "This use **markdown** and could be truncated "^^bgo:MDString ; 
-    bgo:hasNavigationMenu [
-		bgo:hasOverviewMenuIcon "fas fa-atom" ;
-		bgo:hasOverviewMenuLabel "Vista d'insieme"@it ;
-		bgo:hasUserMenuEntries ( resource:ldc_menu_item )
+	# Here write some thing about your project (ie the data driven document domain metadata)
+	
+	bgo:title "Demo live overview of LODMAP2D" ;
+    bgo:description "Here a short description of data domain" ;
+    bgo:abstract "These are **demo data** without a real meaning."^^bgo:MDString ; 
+   
+    
+    # Just use the default navigation menu
+    
+    # Use the Option menu with two external links
+    bgo:hasOptionMenu [	
+    	bgo:withUserMenuEntries ( 
+    		[
+				bgo:icon "far fa-building" ;
+				bgo:title "About this app..." ;
+				bgo:menuLink <http://bit.ly/lodmap2d_p>
+			]
+    		[
+				bgo:icon "fas fa-shield-alt" ;
+				bgo:title "About WebId..." ;
+				bgo:menuLink <https://en.wikipedia.org/wiki/WebID>
+			]
+		)
     ] ;
-    bgo:hasOptionMenu [] ; 
-    bgo:hasFooterMenu [] ;
+    
+    # Add just a couple of short cuts icons to footer
+    bgo:hasFooterMenu [
+    	bgo:withUserMenuEntries ( 
+    		[
+		    	bgo:icon "fas fa-table" ;
+				bgo:menuLink "/table"  # this is internal link example
+			]
+    		[
+		    	bgo:icon "fab fa-github-square" ;
+				bgo:menuLink <https://github.com/linkeddatacenter/LODMAP2D>
+			]
+		)
+    ] ;
+    
+    # This domain likes social
     bgo:hasSocialSharing  true;
-    bgo:hasCopyrigthMenu [ bgo:hasUserMenuEntries (resource:ldc_menu_item ) ]
-.
-
-resource:ldc_menu_item a bgo:MenuItem ;
-	bgo:icon "fas fa-atom" ;
-	bgo:title "Visit us"@it ;
-	bgo:menuLink <http://linkeddata.center>
+    
+    # This should be used if copyright is not present, to hide use the empty string
+    bgo:hasCopyrigth "(c) [LinkedData.Center](http://linkeddata.center)"^^bgo:MDString ;
 .
 
 #######################################################
 # Views
 #######################################################
 resource:overview a bgo:Overview, bgo:DefaultAccountSet ;
-	bgo:label "stato"@it ;	
+	bgo:label "stato" ;	
+	bgo:title "Overview" ;	
     bgo:hasPartitionList (
-        resource:ministeri
-        resource:missioni
+        resource:p1
+        resource:p2
     ) ;
     bgo:hasPartitionButtonsPane resource:partition_buttons ;
 	bgo:hasTrendColorScheme resource:trend_color_scheme ;
@@ -65,90 +92,86 @@ Grazie a
 
 ### Term ans page ##########
 resource:terms_page a bgo:TermsView ;
-	bgo:title "Termini e condizioni di utilizzo"@it ;
+	bgo:title "Terms & conditions" ;
 	bgo:abstract 
 """
-qui i **termini** e le condizioni di chi pubblica il servizio.
+here palace your **Terms & conditions** about published service.
 """^^bgo:MDString.
 
 #### Table ###################
 resource:table_view a bgo:TableView ;
-	bgo:label "tabella"@it ;
-	bgo:menuLabel "Vista tabellare"@it;
+	bgo:label "tabel" ;
+	bgo:title "Table view";
     bgo:hasSearchPane resource:search_pane ;
      
-    bgo:headerTitle "Nome azione"@it ;
-    bgo:headerAmount "Spesa"@it ;
-    bgo:headerTrend "Tendenza"@it ;
-    bgo:headerDescription "Descrizione"@it ;
+    bgo:headerTitle "Title" ;
+    bgo:headerAmount "Amount" ;
+    bgo:headerTrend "Trend" ;
+    bgo:headerDescription "Description" ;
 .
 
 #######################################################
 # Partitions
 #######################################################
 
-##### Ministeri
-resource:ministeri a bgo:Partition ;
-	bgo:partitionId "ministeri" ; 
-	bgo:label "ministero"@it ; 
-	bgo:menuLabel "Ministeri"@it ;
+##### P1
+resource:p1 a bgo:Partition ;
+	bgo:partitionId "p1" ; 
+	bgo:label "partition1" ; 
+	bgo:title "Partition 1 title" ;
 	bgo:sortOrder bgo:ascendent_sort ; # or bgo:descendent_sort (default)
 	bgo:sortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
 	bgo:groupFunction bgo:trend_average ; # or bgo:amounts_sum(default), bgo:accounts_count
 	## note only not filtered
     bgo:hasAccountSubSet 
-        resource:economia ,
-        resource:istruzione
+        resource:p1_1 ,
+        resource:p1_2
     ;
-    bgo:hasDefaultAccountSubSet resource:interno
+    bgo:hasDefaultAccountSubSet [ a bgo:DefaultAccountSet  ;
+	    bgo:label "default" ;
+	    bgo:title "Default subset for p1" 
+    ]
 .
 
-resource:economia a bgo:AccountSet ;
-    bgo:label "economia"@it ;
-    bgo:title "Ministero Economia e Finanze"@it ;
-    bgo:description "Capitoli di spesa relativi al Ministero dell' Economia e delle Finanze"@it ;
+
+resource:p1_1 a bgo:AccountSet ;
+    bgo:label "subset 1" ;
+    bgo:title "Subset 1 title" ;
+    bgo:description "An acoount subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
-    bgo:abstract "This use <b>html</b> and should be scrollable"@it ;
     bgo:hasAccount
         resource:account_1 ,
         resource:account_2 
 .
 
-resource:istruzione a bgo:AccountSet ;
-    bgo:label "istruzione"@it ;
-    bgo:title "Ministero dell'istruzione"@it ;
+resource:p1_2 a bgo:AccountSet ;
+    bgo:label "subset 2" ;
+    bgo:title "Subset 2 title" ;
     bgo:hasAccount
         resource:account_3 ,
         resource:account_4 
 .
 
-resource:interno a bgo:DefaultAccountSet  ;
-    bgo:label "istruzione"@it ;
-    bgo:title "Ministero dell'istruzione"@it 
-.
 
-
-#### MISSIONI ###########
-resource:missioni a bgo:Partition;
-	bgo:partitionId "missioni" ;
-	bgo:menuLabel "Missioni"@it ;
-	bgo:partitionLabel "missione"@it ;
+#### P2 ###########
+resource:p2 a bgo:Partition;
+	bgo:partitionId "2" ;
+	bgo:title "P2 title" ;
+	bgo:label "partition2" ;
     bgo:hasAccountSubSet 
-        resource:missione_1 
+	    [
+		    bgo:title "Title for p2_1" ;
+		    bgo:hasAccount
+		        resource:account_1 ,
+		        resource:account_4 , 
+		        resource:account_6 ,
+		        resource:account_8   # N: this not exists, so it will be ignored	          	    
+	    ]
     ;
-    bgo:hasDefaultAccountSubSet resource:altre_missioni
+    
+    # Note no default partition is present : a default one should be create with title "Unassigned"
 .
 
-resource:missione_1 a bgo:AccountSet ;
-    bgo:title "Missione di esempio"@it ;
-    bgo:hasAccount
-        resource:account_1 ,
-        resource:account_2  
-.
-
-resource:altre_missioni a bgo:DefaultAccountSet ;
-    bgo:title "Altre missioni"@it 
-.
 
 
 
@@ -159,7 +182,7 @@ resource:altre_missioni a bgo:DefaultAccountSet ;
 
 ###### Trend Color Scheme #######
 resource:trend_color_scheme a bgo:TrendColorScheme ;
-    bgo:title "Variazione rispetto alla precedente legge di bilancio"@it ;
+    bgo:title "Variazione rispetto alla precedente legge di bilancio" ;
     bgo:noTrendColor "0xeeeeee" ;
     bgo:maxTrendColor "green" ;
     bgo:minTrendColor "red" ;
@@ -168,14 +191,14 @@ resource:trend_color_scheme a bgo:TrendColorScheme ;
 
 ##### Totalizer #######
 resource:totalizer a bgo:Totalizer ;
-    bgo:totalPrintfTemplate "Totale: € %s"@it ;
-    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s%% del tot.)"@it 
+    bgo:totalPrintfTemplate "Totale: € %s" ;
+    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s%% del tot.)" 
 .
 
 
 ### Search and tag clouds #######
 resource:search_pane a bgo:SearchWidget ;
-    bgo:label "Cerca"@it 
+    bgo:label "Cerca" 
 .
 
 
@@ -193,15 +216,15 @@ resource:tag_cloud a bgo:TagCloud ;
 # Accounts perspectives
 ############################################# 
 resource:metadata_perspective a bgo:MetadataPerspective ;
-   	bgo:notAvailableTrendAccountLabel "Non disponibile"@it 
+   	bgo:notAvailableTrendAccountLabel "Non disponibile" 
 .
 
 resource:historical_perspective a bgo:HistoricalPerspective ;
-	bgo:title "Storico dell'azione"@it
+	bgo:title "Storico dell'azione"
 .
 
 resource:breakdown_perspective a bgo:BreakdownPerspective ;
-	bgo:title "Dettaglio capitoli di spesa"@it 
+	bgo:title "Dettaglio capitoli di spesa" 
 .
 
 
@@ -211,8 +234,8 @@ resource:breakdown_perspective a bgo:BreakdownPerspective ;
 
 ## Account 1 with all the details
 resource:account_1 a bgo:Account ;
-    bgo:title "Rimborso debito pubbblico"@it ;
-    bgo:description "Rimborso titoli del debito statale"@it ;
+    bgo:title "Rimborso debito pubbblico" ;
+    bgo:description "Rimborso titoli del debito statale" ;
     bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: \n- pagamento delle quote capitale sui titoli del debito statale\n- rimborso del capitale relativo a buoni postali fruttiferi\n- rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione\n- rimborso passività a carico dello Stato"^^bgo:MDString ;
 
     
@@ -269,8 +292,8 @@ resource:account_2 a bgo:Account ;
 	bgo:accountId "account_2" ;
     bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_2"@it ;
-    bgo:description "descrizione account_2"@it 
+    bgo:title "titolo account_2" ;
+    bgo:description "descrizione account_2" 
 .
 
 
@@ -278,31 +301,31 @@ resource:account_3 a bgo:Account ;
 	bgo:accountId "account_3" ;
     bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_3"@it ;
-    bgo:description "descrizione account_3"@it 
+    bgo:title "titolo account_3" ;
+    bgo:description "descrizione account_3" 
 .
 
 resource:account_4 a bgo:Account ;
 	bgo:accountId "account_4" ;
     bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_4"@it ;
-    bgo:description "descrizione account_4"@it 
+    bgo:title "titolo account_4" ;
+    bgo:description "descrizione account_4" 
 .
 
 resource:account_5 a bgo:Account ;
 	bgo:accountId "account_5" ;
     bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_5"@it ;
-    bgo:description "descrizione account_5"@it 
+    bgo:title "titolo account_5" ;
+    bgo:description "descrizione account_5" 
 .
 
 resource:account_6 a bgo:Account ;
 	bgo:accountId "account_6" ;
     bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_6"@it ;
-    bgo:description "descrizione account_6"@it 
+    bgo:title "titolo account_6" ;
+    bgo:description "descrizione account_6" 
 .
 

@@ -1,7 +1,7 @@
 ![ldc](http://linkeddata.center/resources/v4/logo/Logo-colori-trasp_oriz-640x220.png)
 # LODMAP2D
 
-LODMAP2D is web application to explore a lot data without loosing the big picture [see overview](https://docs.google.com/presentation/d/e/2PACX-1vRLRVU0fE-nXQhsc-1NVCKmmRW4eYqcFUyDPTRUyyMl6oDhZ137FyTuNLQA1RMRaCUvM7Tb8iHi_qiF/pub?start=false&loop=false&delayms=3000).
+LODMAP2D is a data driven web application to explore lot of detailed information without loosing the big picture [see overview](https://docs.google.com/presentation/d/e/2PACX-1vRLRVU0fE-nXQhsc-1NVCKmmRW4eYqcFUyDPTRUyyMl6oDhZ137FyTuNLQA1RMRaCUvM7Tb8iHi_qiF/pub?start=false&loop=false&delayms=3000).
 
 LODMAP2D use the SOLID specifications and the Semantic Web standards to ensure an high level of security and privacy on private data. Data can be centralized in a Knowledge Graph or distributed in the net Linked Data
 

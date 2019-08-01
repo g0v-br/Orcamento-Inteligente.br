@@ -1,4 +1,11 @@
+![ldc](http://linkeddata.center/resources/v4/logo/Logo-colori-trasp_oriz-640x220.png)
 # LODMAP2D
+
+LODMAP2D is a data driven web application to explore a lot of detailed information without loosing the big picture [see overview](https://docs.google.com/presentation/d/e/2PACX-1vRLRVU0fE-nXQhsc-1NVCKmmRW4eYqcFUyDPTRUyyMl6oDhZ137FyTuNLQA1RMRaCUvM7Tb8iHi_qiF/pub?start=false&loop=false&delayms=3000).
+
+LODMAP2D use the SOLID specifications and the Semantic Web standards to ensure an high level of security and privacy on private data. Data can be centralized in a Knowledge Graph or distributed in the net Linked Data
+
+LODMAP2D can be easily customized to match a specific data domain. See for example the [Italian Budget](https://budget.g0v.it) produced by the [g0v.it team](https://github.com/gov-it/) and published by the [Copernicani Association](http://copernicani.it)# LODMAP2D
 
 LODMAP2D è una applicazione per esplorare interattivamente una grande quantità di informazioni senza mai perdere la visione d'insieme [vedi la presentazione](https://docs.google.com/presentation/d/14OPAIxZoxCuwYo7fmso2bL4TAMcFTFO5ryEXhdsOSus/edit?usp=sharing)
 

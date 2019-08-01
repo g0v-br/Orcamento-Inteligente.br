@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
 
 Vue.use(Router)
 
@@ -9,17 +8,45 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: Home
+        path: '/credits',
+        name: 'credits',
+        component: () => import('./views/Credits.vue')
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-    }
-  ]
+        path: '/table',
+        name: 'table',
+        component: () => import('./views/Table.vue')
+    },
+    {
+        path: '/terms',
+        name: 'terms',
+        component: () => import('./views/TermsAndConditions.vue')
+    },
+    {
+        path: '/account/:accountId',
+        name: 'account',
+        component: () => import('./views/Account.vue'),
+        props: true
+    },
+    {
+        path: '/partition/:partitionId',
+        name: 'accounts-partition',
+        component: () => import('./views/BigPicture.vue'),
+        props: true
+    },
+    {
+        path: '/',
+        name: 'bigPicture',
+        component: () => import('./views/BigPicture.vue')
+    },
+    /* {
+        path: '/*',
+        name: '404',
+        component: () => import('./views/errors/404.vue')
+    },
+    {
+        path: '*',
+        redirect: { name: '404' }
+    } */
+]
 })

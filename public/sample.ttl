@@ -23,7 +23,8 @@ resource:domain a bgo:Domain ;
 		bgo:hasUserMenuEntries ( resource:ldc_menu_item )
     ] ;
     bgo:hasOptionMenu [] ; 
-    bgo:hasFooterMenu [] ;  
+    bgo:hasFooterMenu [] ;
+    bgo:hasSocialSharing  true;
     bgo:hasCopyrigthMenu [ bgo:hasUserMenuEntries (resource:ldc_menu_item ) ]
 .
 

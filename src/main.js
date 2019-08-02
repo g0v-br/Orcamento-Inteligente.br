@@ -10,7 +10,7 @@ try {
   fetcher.load("http://localhost:8080/sample.ttl").then(
 
     response => {
-      console.log("store:", bgoStore.toNT());
+    //   console.log("store:", bgoStore.toNT());
       new Vue({
         router,
         store,

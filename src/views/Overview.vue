@@ -4,19 +4,23 @@
       <div class="partitions">Bottoni partizioni</div>
       <div class="search">Barra di ricerca</div>
       <div class="meta">Metadata, sul cellulare solo il totale, per il resto c'è il popup</div>
-      <div class="chart">Grafico bolle</div>
+      <BubbleChart class="chart" />
       <div class="tools">Tools, tag cloud e legenda</div>
     </div>
   </div>
 </template>
 
 <script>
+import BubbleChart from "@/components/overview/BubbleChart";
 export default {
   props: {
     partitionId: {
       type: String,
       default: "overview"
     }
+  },
+  components:{
+      BubbleChart
   }
 };
 </script>
@@ -76,7 +80,7 @@ export default {
 }
 
 /* Landscape phones to portrait tablets and desktop */
-@media  (max-width: 979px) {
+@media (max-width: 979px) {
   .content-grid {
     grid-template-areas:
       "part part search"

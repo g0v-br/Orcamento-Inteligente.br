@@ -47,9 +47,9 @@
           <v-icon size="24px">{{ el.icon }}</v-icon>
           {{el.title}}
         </v-btn>
-  
+
     <v-spacer></v-spacer>
-    <p>{{copyright}}</p>
+    <span>{{copyright}}</span>
     </v-footer>
 
   </v-app>
@@ -79,7 +79,7 @@ export default {
       copyright: ""
     };
   },
-  
+
   mounted() {
     fetchData(this);
   }

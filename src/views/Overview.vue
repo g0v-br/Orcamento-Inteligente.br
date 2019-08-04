@@ -3,7 +3,7 @@
     <div class="content-grid">
       <div class="partitions">Bottoni partizioni</div>
       <div class="search">
-        <v-text-field class="search" label="Regular"></v-text-field>
+        <v-text-field append-icon="mdi-magnify" solo  placeholder="Filtra le bolle"></v-text-field>
       </div>
       <div class="meta">Metadata, sul cellulare solo il totale, per il resto c'è il popup</div>
       <BubbleChart class="chart"></BubbleChart>
@@ -24,14 +24,15 @@ export default {
   },
   components: {
     BubbleChart
-  }
+  },
+
 };
 </script>
 
 <style scoped>
 /* Large desktop */
 .container-fluid {
-  padding: 12px 12px;
+  padding: 24px 12px;
   height: 100%;
   position: relative;
 }

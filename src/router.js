@@ -42,6 +42,11 @@ export default new Router({
     {
         path: '*',
         redirect: { name: 'overview' }
+    },
+    {
+        path: '/error',
+        name: 'error',
+        component: () => import('./views/errors/500.vue')
     }
 ]
 })

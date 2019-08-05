@@ -7,6 +7,30 @@ export const ns = {
     rdfs: $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#'),
     bgo: $rdf.Namespace('http://linkeddata.center/lodmap-bgo/v1#')
 };
+/** 
+return an array og DefaultMenuItem
+@param a menu object
+*/ 
+export function getDefaultMenuItems(parent) {
+    let items = [];
+    if (parent) {
+      bgoStore
+        .any(parent, ns.bgo("withCustomMenuItems"))
+        .elements.forEach(element => {
+          let path = bgoStore.any(element, ns.bgo("link"));
+  
+          items.push({
+            title: bgoStore.any(element, ns.bgo("title")) || "",
+            icon: bgoStore.any(element, ns.bgo("icon")) || "fas fa-bullseye",
+            path: path.value,
+            external: path.termType == "NamedNode"
+          });
+        });
+      return items;
+    } else {
+      return undefined;
+    }
+}
 
 //TO DO
 export function dref(uri){

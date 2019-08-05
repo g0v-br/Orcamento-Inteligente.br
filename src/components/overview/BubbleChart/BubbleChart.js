@@ -40,24 +40,8 @@ function createNodes(store, ns, width, height) {
     return nodes;
 }
 
-function fillColor(val) {
-    const colorScale = scaleThreshold()
-        .domain([-0.25, -0.05, 0, 0.05, 0.25])
-        /* 0  .range(["#D84B2A", "#EE9586", "#E4B7B2", "#BECCAE", "#9CAF84", "#7AA25C"]); */
-        /* 1 .range(["#c51b7d", "#e9a3c9", "#fde0ef", "#e6f5d0", "#a1d76a", "#4d9221"]); */
-        /* 2 .range(["#b2182b", "#ef8a62", "#fddbc7", "#d1e5f0", "#67a9cf", "#2166ac"]); */
-        /* 3 .range(["#d73027", "#fc8d59", "#fee08b", "#d9ef8b", "#91cf60", "#1a9850"]); */
-        /* -1 .range(["#f0f9e8", "#ccebc5", "#a8ddb5", "#7bccc4", "#43a2ca", "#0868ac"]);
-        d3.scaleLinear()
-              .domain([-1, 1]).range(["salmon", "pink"]) */
-        /*  4.range(["#762a83", "#af8dc3", "#e7d4e8", "#d9f0d3", "#7fbf7b", "#1b7837"]); */
-        .range(["#762a83", "#af8dc3", "#e7d4e8", "#d9f0d3", "#7fbf7b", "#1b7837"]);
 
-    if (isFinite(val)) {
-        return colorScale(val);
-    }
-    return "#dedede";
-}
+
 export default class BubbleChart {
 
     constructor(el, bgolib, width, height) {
@@ -83,15 +67,15 @@ export default class BubbleChart {
         const noTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('noTrendColor'));
         const maxTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('maxTrendColor'));
         const minTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('minTrendColor'));
-        // console.log('colorScheme', noTrendColor);
 
-        // const minAmount = this.nodes[this.nodes.length - 1].amount;
         const radiusScale = d3.scalePow().exponent(0.5)
             .domain([0, maxAmount]).range([5, 100]);
 
         const colorScale = (val) => {
             let fill = d3.scaleLinear()
-                .domain([-1, 1]).range([minTrendColor, maxTrendColor]);
+                .domain([-1, 1])
+                .range([minTrendColor, maxTrendColor])
+                .clamp(true);
 
             if (isFinite(val)) {
                 return fill(val);
@@ -113,12 +97,17 @@ export default class BubbleChart {
             .attr("stroke", function (d) {
                 return d3.rgb(colorScale(d.rate)).darker();
             })
-            .on("mouseover", function (d) {
+            .on("mouseover", function () {
                 this.style["stroke-width"] = 4;
             })
-            .on("mouseout", function (d) {
+            .on("mouseout", function () {
                 this.style["stroke-width"] = 1;
             });
+
+        // native tooltip
+        bubbles.append('title').text(function (d) {
+            return `${d.title}\n${d.rate * 100}%`;
+        })
 
         bubbles
             .transition()
@@ -128,7 +117,7 @@ export default class BubbleChart {
             });
 
 
-        function ticked() {
+        const ticked = () => {
             bubbles
                 .attr("cx", function (d) {
                     return d.x;
@@ -137,7 +126,7 @@ export default class BubbleChart {
                     return d.y;
                 });
         }
-        let charge = (d) => {
+        const charge = (d) => {
             return -Math.pow(radiusScale(d.amount), 2.0) * this.forceStrength;
         }
 
@@ -149,14 +138,21 @@ export default class BubbleChart {
             .on("tick", ticked)
             .stop()
 
-        this.simulation.force("x", d3.forceX().strength(this.forceStrength).x(this.width / 2)
-        );
-        this.simulation.force("y", d3.forceY().strength(this.forceStrength).y(this.height / 2)
-        );
-        this.simulation.alpha(1).restart();
+        this.groupBubble();
 
     }
 
+    groupBubble() {
+        this.simulation.force("x", d3.forceX().strength(this.forceStrength).x(this.width / 2));
+        this.simulation.force("y", d3.forceY().strength(this.forceStrength).y(this.height / 2));
+        this.simulation.alpha(1).restart();
+    }
+
+    update(width, height) {
+        this.simulation.force("x", d3.forceX().strength(this.forceStrength).x(width / 2));
+        this.simulation.force("y", d3.forceY().strength(this.forceStrength).y(height / 2));
+        this.simulation.alpha(1).restart();
+    }
 
 
 }

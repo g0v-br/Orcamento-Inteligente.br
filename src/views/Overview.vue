@@ -1,18 +1,31 @@
 <template>
   <div class="container-fluid">
-    <div class="content-grid">
+    <!-- partitioned is used to remove the side content -->
+    <div :class="{'content-grid':true, 'partitioned': activePartitionId != 'overview'}">
       <div class="partitions">
         <v-btn-toggle v-model="activePartitionId" mandatory>
-          <!-- <v-btn  value="overview">Stato</v-btn> -->
-        <v-btn v-for="partition in partitions" :key="partition.id"
-             :value="partition.id" >{{partition.label}}</v-btn>
+          <v-btn
+            v-for="partition in partitions"
+            :key="partition.id"
+            :value="partition.id"
+            @click="onPartitionChange(partition.id)"
+          >{{partition.label}}</v-btn>
         </v-btn-toggle>
       </div>
+
       <div class="search">
-        <v-text-field append-icon="mdi-magnify" solo placeholder="Filtra le bolle"></v-text-field>
+        <v-text-field
+          append-icon="mdi-magnify"
+          outlined
+          v-model="search"
+          :placeholder="searchPaneLabel"
+        ></v-text-field>
       </div>
+
       <div class="meta">Metadata, sul cellulare solo il totale, per il resto c'è il popup</div>
+
       <BubbleChart class="chart"></BubbleChart>
+
       <div class="tools">Tools, tag cloud e legenda</div>
     </div>
   </div>
@@ -23,7 +36,7 @@ import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BubbleChart from "@/components/overview/BubbleChart";
 
 export default {
-  name:"overview",
+  name: "overview",
   props: {
     partitionId: {
       type: String,
@@ -33,30 +46,46 @@ export default {
   data() {
     return {
       activePartitionId: this.partitionId,
-      partitions:[]
+      partitions: [],
+      searchPaneLabel: "",
+      search: ""
     };
   },
   components: {
     BubbleChart
   },
-  beforeRouteUpdate (){
-    // this.activePartitionId = this.partitionId;
+  beforeRouteUpdate(to, from, next) {
+    this.activePartitionId = to.params.partitionId;
+    next();
   },
   mounted() {
     const overview = bgoStore.any(null, ns.rdf("type"), ns.bgo("Overview"));
+    // Partition metadata
+    // Push default partition with id 'overview'
     this.partitions.push({
-      id:"overview",
-      label:bgoStore.anyValue(overview, ns.bgo('label'))
+      id: "overview",
+      label: bgoStore.anyValue(overview, ns.bgo("label"))
     });
     const partitions = bgoStore.any(overview, ns.bgo("hasPartitionList"))
       .elements;
     for (const partition of partitions) {
-      const id = bgoStore.anyValue(partition, ns.bgo('partitionId'));
-      const label = bgoStore.anyValue(partition, ns.bgo('label'));
+      const id = bgoStore.anyValue(partition, ns.bgo("partitionId"));
+      const label = bgoStore.anyValue(partition, ns.bgo("label"));
       this.partitions.push({
         id,
         label
-      })
+      });
+    }
+    // Search metadata
+    const searchPane = bgoStore.any(overview, ns.bgo("hasSearchPane"));
+    this.searchPaneLabel = bgoStore.anyValue(searchPane, ns.bgo("label"));
+  },
+  methods: {
+    onPartitionChange(partitionId) {
+      this.$router.push({
+        name: "accounts-partition",
+        params: { partitionId }
+      });
     }
   }
 };

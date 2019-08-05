@@ -13,7 +13,7 @@
         :hashtags="hashtag"
         inline-template>
       <div >
-          <network network="email">
+          <network network="email" class="g0v-social-link">
             <i class="fas fa-envelope"></i>
           </network>
           <network network="facebook">
@@ -104,7 +104,14 @@ function fetchData(app){
 }
 </script>
 <style scoped>
-
+  .g0v-social-link {
+  width: 32px;
+  font-size: 20px;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.54)!important;
+}
 </style>
 
 

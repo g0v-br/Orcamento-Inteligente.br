@@ -24,10 +24,10 @@ try {
         render: h => h(Error)
       }).$mount('#app')
     }
-  ).catch(err=>{
+  ).catch(err => {
     console.log("errore")
   })
-  ;
+    ;
 
 } catch (error) {
 

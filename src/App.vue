@@ -47,7 +47,7 @@ export default {
       hasFooterMenu: false,
     };
   },
-  
+
   mounted() {
     fetchData(this);
   }

@@ -1,9 +1,15 @@
 <template>
   <div class="container-fluid">
     <div class="content-grid">
-      <div class="partitions">Bottoni partizioni</div>
+      <div class="partitions">
+        <v-btn-toggle v-model="activePartitionId" mandatory>
+          <!-- <v-btn  value="overview">Stato</v-btn> -->
+        <v-btn v-for="partition in partitions" :key="partition.id"
+             :value="partition.id" >{{partition.label}}</v-btn>
+        </v-btn-toggle>
+      </div>
       <div class="search">
-        <v-text-field append-icon="mdi-magnify" solo  placeholder="Filtra le bolle"></v-text-field>
+        <v-text-field append-icon="mdi-magnify" solo placeholder="Filtra le bolle"></v-text-field>
       </div>
       <div class="meta">Metadata, sul cellulare solo il totale, per il resto c'è il popup</div>
       <BubbleChart class="chart"></BubbleChart>
@@ -13,19 +19,46 @@
 </template>
 
 <script>
+import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BubbleChart from "@/components/overview/BubbleChart";
 
 export default {
+  name:"overview",
   props: {
     partitionId: {
       type: String,
       default: "overview"
     }
   },
+  data() {
+    return {
+      activePartitionId: this.partitionId,
+      partitions:[]
+    };
+  },
   components: {
     BubbleChart
   },
-
+  beforeRouteUpdate (){
+    // this.activePartitionId = this.partitionId;
+  },
+  mounted() {
+    const overview = bgoStore.any(null, ns.rdf("type"), ns.bgo("Overview"));
+    this.partitions.push({
+      id:"overview",
+      label:bgoStore.anyValue(overview, ns.bgo('label'))
+    });
+    const partitions = bgoStore.any(overview, ns.bgo("hasPartitionList"))
+      .elements;
+    for (const partition of partitions) {
+      const id = bgoStore.anyValue(partition, ns.bgo('partitionId'));
+      const label = bgoStore.anyValue(partition, ns.bgo('label'));
+      this.partitions.push({
+        id,
+        label
+      })
+    }
+  }
 };
 </script>
 
@@ -34,10 +67,10 @@ export default {
 .container-fluid {
   padding: 24px 12px;
   height: 100%;
-  position: relative;
 }
 
 .content-grid {
+  position: relative;
   height: 100%;
   display: grid;
   grid-gap: 0.5em;
@@ -101,8 +134,10 @@ export default {
 
 /* Landscape phones and down */
 @media (max-width: 768px) {
+  .container-fluid {
+    height: 120vh;
+  }
   .content-grid {
-    height: 120%;
     grid-template-areas:
       "part"
       "search"

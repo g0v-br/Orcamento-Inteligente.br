@@ -1,5 +1,5 @@
 <template>
-  <div class="bc-container">
+  <div ref="bound" class="bc-container">
     <!-- <div  class="partitions-grid"></div> -->
     <svg id="vis" />
   </div>
@@ -19,7 +19,8 @@ export default {
     //         .select("svg")
     //         .append('circle');
     //         console.log('bubbles', bubbles);
-    let chart = new BubbleChart("#vis", { bgoStore, ns }, 500, 770);
+    let chart = new BubbleChart("#vis", { bgoStore, ns },
+     this.$refs.bound.offsetWidth, this.$refs.bound.offsetHeight);
     chart.render();
   }
 };
@@ -35,4 +36,13 @@ export default {
   height: 100%;
   width: 100%;
 }
+
+
+#vis circle.bubble {
+  /* pointer-events: all; */
+  stroke-width: 1px;
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
 </style>

@@ -24,7 +24,7 @@
 
       <div class="meta">Metadata, sul cellulare solo il totale, per il resto c'è il popup</div>
 
-      <BubbleChart class="chart"></BubbleChart>
+      <BubbleChart class="chart" :active-partition="activePartitionId"></BubbleChart>
 
       <div class="tools">Tools, tag cloud e legenda</div>
     </div>
@@ -55,6 +55,7 @@ export default {
     BubbleChart
   },
   beforeRouteUpdate(to, from, next) {
+    // Update activePartition when the view is reused with new id
     this.activePartitionId = to.params.partitionId;
     next();
   },
@@ -109,6 +110,7 @@ export default {
     "meta chart tools";
   grid-template-rows: auto 11fr;
   grid-template-columns: 1fr 2fr 1fr;
+
 }
 
 /* Extends chart column to fill the screen */
@@ -118,6 +120,8 @@ export default {
     "chart chart chart"
     "chart chart chart";
 }
+
+
 /* remove meta and tools columns when partioned */
 .content-grid.partitioned .tools,
 .content-grid.partitioned .meta {
@@ -164,7 +168,7 @@ export default {
 /* Landscape phones and down */
 @media (max-width: 768px) {
   .container-fluid {
-    height: 120vh;
+    min-height: 120vh;
   }
   .content-grid {
     grid-template-areas:
@@ -182,7 +186,7 @@ export default {
       "part"
       "search"
       "chart";
-    grid-template-rows: 1fr 1fr 9fr;
+    grid-template-rows: 1fr 1fr auto;
   }
 
   .tools {

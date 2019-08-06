@@ -60,21 +60,35 @@ export default {
     next();
   },
   mounted() {
-    const overview = bgoStore.any(null, ns.rdf("type"), ns.bgo("Overview"));
+    fetchData(this);
+   },
+  methods: {
+    onPartitionChange(partitionId) {
+      this.$router.push({
+        name: "accounts-partition",
+        params: { partitionId }
+      });
+    }
+  }
+};
+
+function fetchData(app){
+ const overview = bgoStore.any(null, ns.rdf("type"), ns.bgo("Overview"));
     // Partition metadata
     // Push default partition with id 'overview'
-    this.partitions.push({
+    app.partitions.push({
       id: "overview",
       label: bgoStore.anyValue(overview, ns.bgo("label"))
     });
-    const partitions = bgoStore.any(overview, ns.bgo("hasPartitionList"))
-      .elements;
+    const partitions = bgoStore.any(overview, ns.bgo("hasPartitionList")).elements;
     for (const partition of partitions) {
+      //add other partitions
       const id = bgoStore.anyValue(partition, ns.bgo("partitionId"));
       const label = bgoStore.anyValue(partition, ns.bgo("label"));
       const subsets_uri = bgoStore.each(partition, ns.bgo("hasAccountSubSet"));
       const subsets = [];
       subsets_uri.forEach(subset => {
+        //for each partition add its subsets
         let title = bgoStore.anyValue(subset, ns.bgo("title"));
         let s_label = bgoStore.anyValue(subset, ns.bgo("label")) || "";
         let description =
@@ -89,31 +103,16 @@ export default {
         });
       });
 
-      this.partitions.push({
+      app.partitions.push({
         id,
         label,
         subsets
       });
-
-      // this.partitions[partition.value]={
-      //   id,
-      //   label,
-      //   subsets
-      // };
     }
     // Search metadata
     const searchPane = bgoStore.any(overview, ns.bgo("hasSearchPane"));
-    this.searchPaneLabel = bgoStore.anyValue(searchPane, ns.bgo("label"));
-  },
-  methods: {
-    onPartitionChange(partitionId) {
-      this.$router.push({
-        name: "accounts-partition",
-        params: { partitionId }
-      });
-    }
-  }
-};
+    app.searchPaneLabel = bgoStore.anyValue(searchPane, ns.bgo("label"));
+}
 </script>
 
 <style scoped>

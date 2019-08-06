@@ -23,6 +23,14 @@ function createNodes(store, ns, width, height) {
         rate = isFinite(rate) ? rate : 0;
 
         let bg = store.anyValue(account, ns.bgo('background'));
+        let partitions={};
+        let subSetUris=store.each(undefined,ns.bgo("hasAccount"),account);
+        subSetUris.forEach(subSetUri=>{
+            let partition=store.any(undefined,ns.bgo("hasAccountSubSet"),subSetUri);
+            let partitionId=store.anyValue(partition,ns.bgo("partitionId"))
+            partitions[partitionId]=subSetUri.value;   
+        });
+
         nodes.push({
             id,
             title,
@@ -30,8 +38,9 @@ function createNodes(store, ns, width, height) {
             amount,
             rate,
             bg,
+            partitions,
             x: Math.random() * width,
-            y: Math.random() * height
+            y: Math.random() * height,
         })
 
         nodes.sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));

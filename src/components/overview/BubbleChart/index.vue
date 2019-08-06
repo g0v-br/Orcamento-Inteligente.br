@@ -51,6 +51,15 @@ export default {
     window.removeEventListener("resize", debouncedUpdate);
   }
 };
+function createPartitioinStructure(store, ns){
+    /*
+    {
+        
+    }
+    
+    */ 
+
+}
 </script>
 
 

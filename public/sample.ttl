@@ -137,16 +137,14 @@ resource:p1_1 a bgo:AccountSet ;
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        resource:account_1 ,
-        resource:account_2
+        resource:account_1 
 .
 
 resource:p1_2 a bgo:AccountSet ;
     bgo:label "subset 2" ;
     bgo:title "Subset 2 title" ;
     bgo:hasAccount
-        resource:account_3 ,
-        resource:account_4
+        resource:account_2
 .
 
 
@@ -156,17 +154,28 @@ resource:p2 a bgo:Partition;
 	bgo:label "partition2" ;
 	bgo:title "P2 title" ;
     bgo:hasAccountSubSet
-	    [
-		    bgo:title "Title for p2_1" ;
-		    bgo:hasAccount
-		        resource:account_1 ,
-		        resource:account_4 ,
-		        resource:account_6 ,
-		        resource:account_8   # N: this not exists, so it will be ignored
-	    ]
+        resource:p2_1 ,
+        resource:p2_2
+    
     ;
 
+
     # Note no default partition is present : a default one should be create with title "Unassigned"
+.
+
+resource:p2_1 a bgo:AccountSet ;
+    bgo:title "Subset 1 title" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        resource:account_1 
+.
+
+resource:p2_2 a bgo:AccountSet ;
+    bgo:label "subset 2" ;
+    bgo:title "Subset 2 title" ;
+    bgo:hasAccount
+        resource:account_2
 .
 
 
@@ -265,28 +274,28 @@ resource:account_2 a bgo:Account ;
     bgo:background <http://bit.ly/2MxbJWQ>
 .
 
-resource:account_3 a bgo:Account ;
-	bgo:accountId "account_3" ;
-    bgo:amount 100.00 ;
-    bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_3" ;
-    bgo:background "#fcba03"  # as RGB solid color
-.
+# resource:account_3 a bgo:Account ;
+# 	bgo:accountId "account_3" ;
+#     bgo:amount 100.00 ;
+#     bgo:referenceAmount 95.00 ;
+#     bgo:title "titolo account_3" ;
+#     bgo:background "#fcba03"  # as RGB solid color
+# .
 
-resource:account_4 a bgo:Account ;
-	bgo:accountId "account_4" ;
-    bgo:amount 100.00 ;
-    bgo:referenceAmount 95.00
-.
+# resource:account_4 a bgo:Account ;
+# 	bgo:accountId "account_4" ;
+#     bgo:amount 100.00 ;
+#     bgo:referenceAmount 95.00
+# .
 
 
-resource:account_5 a bgo:Account ;
-	bgo:accountId "account_5" ;
-    bgo:amount 100.00
-.
+# resource:account_5 a bgo:Account ;
+# 	bgo:accountId "account_5" ;
+#     bgo:amount 100.00
+# .
 
-# no amounts default to amount=0
-resource:account_6 a bgo:Account ;
-	bgo:accountId "account_6"
-.
+# # no amounts default to amount=0
+# resource:account_6 a bgo:Account ;
+# 	bgo:accountId "account_6"
+# .
 

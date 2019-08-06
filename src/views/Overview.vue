@@ -72,10 +72,34 @@ export default {
     for (const partition of partitions) {
       const id = bgoStore.anyValue(partition, ns.bgo("partitionId"));
       const label = bgoStore.anyValue(partition, ns.bgo("label"));
+      const subsets_uri = bgoStore.each(partition, ns.bgo("hasAccountSubSet"));
+      const subsets = [];
+      subsets_uri.forEach(subset => {
+        let title = bgoStore.anyValue(subset, ns.bgo("title"));
+        let s_label = bgoStore.anyValue(subset, ns.bgo("label")) || "";
+        let description =
+          bgoStore.anyValue(subset, ns.bgo("description")) || "";
+        let abstract = bgoStore.anyValue(subset, ns.bgo("abstract")) || "";
+        subsets.push({
+          id:subset.value,
+          title,
+          description,
+          abstract,
+          label: s_label
+        });
+      });
+
       this.partitions.push({
         id,
-        label
+        label,
+        subsets
       });
+
+      // this.partitions[partition.value]={
+      //   id,
+      //   label,
+      //   subsets
+      // };
     }
     // Search metadata
     const searchPane = bgoStore.any(overview, ns.bgo("hasSearchPane"));
@@ -110,7 +134,6 @@ export default {
     "meta chart tools";
   grid-template-rows: auto 11fr;
   grid-template-columns: 1fr 2fr 1fr;
-
 }
 
 /* Extends chart column to fill the screen */
@@ -120,7 +143,6 @@ export default {
     "chart chart chart"
     "chart chart chart";
 }
-
 
 /* remove meta and tools columns when partioned */
 .content-grid.partitioned .tools,

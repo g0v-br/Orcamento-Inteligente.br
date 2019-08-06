@@ -1,0 +1,292 @@
+#
+# Copyright (c) 2019 LinkedData.Center.
+#
+# Please test before publishing with http://rdf-translator.appspot.com/
+#
+@prefix bgo: <http://linkeddata.center/lodmap-bgo/v1#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix resource: <http://example.com/resource/> .
+
+
+<> foaf:primaryTopic resource:domain .
+
+################################################
+# Menues and navigation data
+################################################
+resource:domain a bgo:Domain ;
+	# Here write some thing about your project (ie the data driven document domain metadata)
+	
+	bgo:title "Live test of LODMAP2D" ;
+    bgo:description "Here a short description of the data domain" ;
+    bgo:abstract "These are **demo data** without a real meaning."^^bgo:MDString ; 
+   
+    
+    # Just use the default navigation menu
+    
+    # Use the Option menu with two external links
+    bgo:hasOptionMenu [	
+    	bgo:withCustomMenuItems ( 
+    		[
+				bgo:icon "far fa-building" ;
+				bgo:title "About this app..." ;
+				bgo:link <http://bit.ly/lodmap2d_p>
+			]
+    		[
+				bgo:icon "fas fa-shield-alt" ;
+				bgo:title "About WebID-OIDC ..." ;
+				bgo:link <https://github.com/solid/webid-oidc-spec>
+			]
+		)
+    ] ;
+    
+    # Add just a couple of short cuts icons to footer
+    bgo:hasFooterMenu [
+    	bgo:withCustomMenuItems ( 
+    		[
+		    	bgo:icon "fas fa-table" ;
+				bgo:link "/table"  # this is internal link example
+			]
+    		[
+		    	bgo:icon "fab fa-github-square" ;
+				bgo:link <https://github.com/linkeddatacenter/LODMAP2D>
+			]
+		)
+    ] ;
+    
+    # This domain likes social
+    bgo:hasSocialSharing  true;
+    
+    # This should be used if copyright is not present, to hide use the empty string
+    bgo:hasCopyrigth "(c) [LinkedData.Center](http://linkeddata.center)"^^bgo:MDString ;
+.
+
+#######################################################
+# Views
+#######################################################
+resource:overview a bgo:Overview, bgo:DefaultAccountSet ;
+	bgo:label "stato" ;	
+	bgo:title "Overview" ;	
+    bgo:hasPartitionList (
+        resource:p1
+        resource:p2
+    ) ;
+	bgo:hasTrendColorScheme resource:trend_color_scheme ;
+    bgo:hasTotalizer resource:totalizer ;
+    bgo:hasTagCloud resource:tag_cloud ;
+    bgo:hasSearchPane resource:search_pane ;
+.
+
+### Credits page ##########
+resource:credits_page a bgo:CreditsView ;
+	bgo:title "Credits"@en ;
+	bgo:abstract 
+"""
+Grazie a
+--------
+ - x
+ - y 
+ - z
+"""^^bgo:MDString.
+
+
+### Term and conditions page ##########
+resource:terms_page a bgo:TermsView ;
+	bgo:title "Terms & conditions" ;
+	bgo:abstract 
+"""
+here palace your **Terms & conditions** about published service.
+"""^^bgo:MDString.
+
+#### Table ###################
+resource:table_view a bgo:TableView ;
+	bgo:title "Table view";
+    bgo:hasSearchPane resource:search_pane ;
+     
+    bgo:headerTitle "Title" ;
+    bgo:headerAmount "Amount" ;
+    bgo:headerTrend "Trend" ;
+    bgo:headerDescription "Description" ;
+.
+
+#######################################################
+# Partitions
+#######################################################
+
+##### P1
+resource:p1 a bgo:Partition ;
+	bgo:partitionId "p1" ; 
+	bgo:label "partition1" ; 
+	bgo:title "Partition 1 title" ;
+	bgo:sortOrder bgo:ascending_sort ; # or bgo:descending_sort (default)
+	bgo:sortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
+	bgo:groupFunction bgo:trend_average ; # or bgo:amounts_sum(default), bgo:accounts_count
+
+    bgo:hasAccountSubSet 
+        resource:p1_1 ,
+        resource:p1_2
+    ;
+    bgo:hasDefaultAccountSubSet [ a bgo:DefaultAccountSet  ;
+	    bgo:label "default" ;
+	    bgo:title "Default subset for p1" 
+    ]
+.
+
+
+resource:p1_1 a bgo:AccountSet ;
+    bgo:title "Subset 1 title" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        resource:account_1 ,
+        resource:account_2 
+.
+
+resource:p1_2 a bgo:AccountSet ;
+    bgo:label "subset 2" ;
+    bgo:title "Subset 2 title" ;
+    bgo:hasAccount
+        resource:account_3 ,
+        resource:account_4 
+.
+
+
+#### P2 ###########
+resource:p2 a bgo:Partition;
+	bgo:partitionId "2" ;
+	bgo:label "partition2" ;
+	bgo:title "P2 title" ;
+    bgo:hasAccountSubSet 
+	    [
+		    bgo:title "Title for p2_1" ;
+		    bgo:hasAccount
+		        resource:account_1 ,
+		        resource:account_4 , 
+		        resource:account_6 ,
+		        resource:account_8   # N: this not exists, so it will be ignored	          	    
+	    ]
+    ;
+    
+    # Note no default partition is present : a default one should be create with title "Unassigned"
+.
+
+
+#######################################################
+# Views options
+#######################################################
+
+###### Trend Color Scheme #######
+resource:trend_color_scheme a bgo:TrendColorScheme ;
+    bgo:title "Variazione rispetto alla precedente legge di bilancio" ;
+    bgo:noTrendColor "0xeeeeee" ;
+    bgo:maxTrendColor "green" ;
+    bgo:minTrendColor "red" ;
+.
+
+
+##### Totalizer #######
+resource:totalizer a bgo:Totalizer ;
+    bgo:totalPrintfTemplate "Totale: € %s" ;
+    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s%% del tot.)" 
+.
+
+
+### Search and tag clouds #######
+resource:search_pane a bgo:SearchWidget ;
+    bgo:label "Cerca" 
+.
+
+
+resource:tag_cloud a bgo:TagCloud ;
+	bgo:hasTag
+		[ bgo:label "Test1"; bgo:tagWeight 1.0 ] ,
+		[ bgo:label "Test2"; bgo:tagWeight 0.5 ] ,
+		[ bgo:label "Test3"; bgo:tagWeight 1.0 ] ,
+		[ bgo:label "Test4"; bgo:tagWeight 0.2 ] ,
+		[ bgo:label "Test5"; bgo:tagWeight 0.7 ] ,
+		[ bgo:label "Test6"; bgo:tagWeight 0.3 ] 
+.
+
+#############################################
+# Accounts perspectives
+############################################# 
+resource:metadata_perspective a bgo:MetadataPerspective ;
+   	bgo:notAvailableTrendAccountLabel "Non disponibile" 
+.
+
+resource:historical_perspective a bgo:HistoricalPerspective ;
+	bgo:title "Storico dell'azione"
+.
+
+resource:breakdown_perspective a bgo:BreakdownPerspective ;
+	bgo:title "Dettaglio capitoli di spesa" 
+.
+
+
+#############################################
+# Accounts
+############################################# 
+
+## Account 1 with all the details
+resource:account_1 a bgo:Account, bgo:ProfiledAccount ;	
+	bgo:accountId "account_1" ;
+    bgo:amount 1000.00 ;
+    bgo:referenceAmount 950.00 ;
+    bgo:title "titolo account_1" ;
+    bgo:description "descrizione account_1" ;
+    bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: \n- pagamento delle quote capitale sui titoli del debito statale\n- rimborso del capitale relativo a buoni postali fruttiferi\n- rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione\n- rimborso passività a carico dello Stato"^^bgo:MDString ;
+    bgo:background <http://bit.ly/2MxbJWQ> ;    
+    bgo:versionLabel "2019" ;
+    
+	bgo:hasHistoryRec
+		[ bgo:versionLabel "2018" ; bgo:amount 980.00 ],
+		[ bgo:versionLabel "2017" ; bgo:amount 1100.00 ]
+    ;
+    bgo:hasBreakdown
+    	[ bgo:title "account_1_part 1" ; bgo:amount 110.00 ] ,
+    	[ bgo:title "account_1_part 2" ; bgo:amount 120.00 ] ,
+    	[ bgo:title "account_1_part 3" ; bgo:amount 130.00 ] 
+    ;
+    
+    bgo:usesHistoricalPerspective resource:historical_perspective ;
+    bgo:usesBreakdownPerspective resource:breakdown_perspective ;
+    bgo:usesMetadataPerspective resource:metadata_perspective ;  
+.
+
+
+##################################################
+## Other accounts without detailef profile
+###################################################
+resource:account_2 a bgo:Account ;
+	bgo:accountId "account_2" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_2" ;
+    bgo:description "descrizione account_2" ;
+    bgo:background <http://bit.ly/2MxbJWQ>
+.
+
+resource:account_3 a bgo:Account ;
+	bgo:accountId "account_3" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_3" ;
+    bgo:background "#fcba03"  # as RGB solid color
+.
+
+resource:account_4 a bgo:Account ;
+	bgo:accountId "account_4" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 
+.
+
+
+resource:account_5 a bgo:Account ;
+	bgo:accountId "account_5" ;
+    bgo:amount 100.00  
+.
+
+# no amounts default to amount=0
+resource:account_6 a bgo:Account ;
+	bgo:accountId "account_6" 
+.
+

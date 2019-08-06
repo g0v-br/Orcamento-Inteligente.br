@@ -23,15 +23,16 @@ function createNodes(store, ns, width, height) {
         rate = isFinite(rate) ? rate : 0;
 
         let bg = store.anyValue(account, ns.bgo('background'));
-        let partitions={};
-        let subSetUris=store.each(undefined,ns.bgo("hasAccount"),account);
-        subSetUris.forEach(subSetUri=>{
-            let partition=store.any(undefined,ns.bgo("hasAccountSubSet"),subSetUri);
-            let partitionId=store.anyValue(partition,ns.bgo("partitionId"))
-            partitions[partitionId]=subSetUri.value;   
+        let partitions = {};
+        let subSetUris = store.each(undefined, ns.bgo("hasAccount"), account);
+        subSetUris.forEach(subSetUri => {
+            let partition = store.any(undefined, ns.bgo("hasAccountSubSet"), subSetUri);
+            let partitionId = store.anyValue(partition, ns.bgo("partitionId"))
+            partitions[partitionId] = subSetUri.value;
         });
 
         nodes.push({
+            active: true,
             id,
             title,
             description,
@@ -103,6 +104,9 @@ export default class BubbleChart {
             .attr("fill", function (d) {
                 return colorScale(d.rate);
             })
+            .attr("fill", function (d) {
+                return colorScale(d.rate);
+            })
             .attr("stroke", function (d) {
                 return d3.rgb(colorScale(d.rate)).darker();
             })
@@ -157,10 +161,14 @@ export default class BubbleChart {
         this.simulation.alpha(1).restart();
     }
 
-    update(width, height) {
-        this.simulation.force("x", d3.forceX().strength(this.forceStrength).x(width / 2));
-        this.simulation.force("y", d3.forceY().strength(this.forceStrength).y(height / 2));
-        this.simulation.alpha(1).restart();
+    update(width, height, gridBlocks, partitions, activePartitionId) {
+        if (activePartitionId == 'overview') {
+            this.simulation.force("x", d3.forceX().strength(this.forceStrength).x(width / 2));
+            this.simulation.force("y", d3.forceY().strength(this.forceStrength).y(height / 2));
+            this.simulation.alpha(1).restart();
+        }
+        // per ogni bolla partendo dagli idsubset e idpart ricavo la posizione nell'arrey
+        // partition.subset e uso i centri nella stesa pos
     }
 
 

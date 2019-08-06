@@ -1,13 +1,7 @@
 <template>
   <div ref="bound" class="bc-container">
-    <div v-if="activePartition != 'overview'" class="partitions-grid">
-      <div class="grid-block">ciao</div>
-      <div class="grid-block">ciao</div>
-      <div class="grid-block">ciao</div>
-      <div class="grid-block">ciao</div>
-      <div class="grid-block">ciao</div>
-      <div class="grid-block">ciao</div>
-      <div class="grid-block">ciao</div>
+    <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
+      <div v-for="subset in activePartitionSubSet" :key="subset.id" class="grid-block">{{subset.id}}</div>
     </div>
     <svg id="vis" />
   </div>
@@ -21,12 +15,25 @@ import _debounce from "lodash/debounce";
 let debouncedUpdate;
 export default {
   props: {
-    activePartition: {
+    activePartitionId: {
       type: String
+    },
+    partitions: {
+      type: Array
     }
   },
+
   data() {
     return {};
+  },
+
+  computed: {
+    activePartitionSubSet: function() {
+      return this.partitions.find(partition => {
+        console.log(partition);
+        return partition.id == this.activePartitionId;
+      }).subsets;
+    }
   },
 
   mounted() {
@@ -41,7 +48,13 @@ export default {
 
     debouncedUpdate = _debounce(() => {
       console.log("resize");
-      chart.update(this.$refs.bound.offsetWidth, this.$refs.bound.offsetHeight);
+      chart.update(
+        this.$refs.bound.offsetWidth,
+        this.$refs.bound.offsetHeight,
+        this.$refs.grid.childNodes,
+        this.partitions,
+        this.activePartitionId
+      );
     }, 200);
 
     window.addEventListener("resize", debouncedUpdate);
@@ -72,7 +85,7 @@ export default {
 }
 
 #vis {
-  background-color: aqua;
+  /* background-color: aqua; */
   height: 100%;
   width: 100%;
   position: absolute;

@@ -24,7 +24,7 @@
 
       <div class="meta">Metadata, sul cellulare solo il totale, per il resto c'è il popup</div>
 
-      <BubbleChart class="chart" :active-partition="activePartitionId"></BubbleChart>
+      <BubbleChart class="chart" :active-partition-id="activePartitionId" :partitions="partitions"></BubbleChart>
 
       <div class="tools">Tools, tag cloud e legenda</div>
     </div>
@@ -59,21 +59,8 @@ export default {
     this.activePartitionId = to.params.partitionId;
     next();
   },
-  mounted() {
-    fetchData(this);
-   },
-  methods: {
-    onPartitionChange(partitionId) {
-      this.$router.push({
-        name: "accounts-partition",
-        params: { partitionId }
-      });
-    }
-  }
-};
-
-function fetchData(app){
- const overview = bgoStore.any(null, ns.rdf("type"), ns.bgo("Overview"));
+  created() {
+    const overview = bgoStore.any(null, ns.rdf("type"), ns.bgo("Overview"));
     // Partition metadata
     // Push default partition with id 'overview'
     app.partitions.push({
@@ -95,7 +82,7 @@ function fetchData(app){
           bgoStore.anyValue(subset, ns.bgo("description")) || "";
         let abstract = bgoStore.anyValue(subset, ns.bgo("abstract")) || "";
         subsets.push({
-          id:subset.value,
+          id: subset.value,
           title,
           description,
           abstract,
@@ -109,6 +96,8 @@ function fetchData(app){
         subsets
       });
     }
+    // console.log(this.partitions);
+
     // Search metadata
     const searchPane = bgoStore.any(overview, ns.bgo("hasSearchPane"));
     app.searchPaneLabel = bgoStore.anyValue(searchPane, ns.bgo("label"));

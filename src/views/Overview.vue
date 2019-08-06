@@ -24,7 +24,7 @@
 
       <div class="meta">Metadata, sul cellulare solo il totale, per il resto c'è il popup</div>
 
-      <BubbleChart class="chart" :active-partition="activePartitionId"></BubbleChart>
+      <BubbleChart class="chart" :active-partition-id="activePartitionId" :partitions="partitions"></BubbleChart>
 
       <div class="tools">Tools, tag cloud e legenda</div>
     </div>
@@ -59,7 +59,7 @@ export default {
     this.activePartitionId = to.params.partitionId;
     next();
   },
-  mounted() {
+  created() {
     const overview = bgoStore.any(null, ns.rdf("type"), ns.bgo("Overview"));
     // Partition metadata
     // Push default partition with id 'overview'
@@ -81,7 +81,7 @@ export default {
           bgoStore.anyValue(subset, ns.bgo("description")) || "";
         let abstract = bgoStore.anyValue(subset, ns.bgo("abstract")) || "";
         subsets.push({
-          id:subset.value,
+          id: subset.value,
           title,
           description,
           abstract,
@@ -94,13 +94,9 @@ export default {
         label,
         subsets
       });
-
-      // this.partitions[partition.value]={
-      //   id,
-      //   label,
-      //   subsets
-      // };
     }
+    // console.log(this.partitions);
+
     // Search metadata
     const searchPane = bgoStore.any(overview, ns.bgo("hasSearchPane"));
     this.searchPaneLabel = bgoStore.anyValue(searchPane, ns.bgo("label"));

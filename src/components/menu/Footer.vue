@@ -10,7 +10,7 @@
         >
           <v-icon size="24px">{{ el.icon }}</v-icon>
         </v-btn>
-    <p class="copyright"><i>{{copyright}}</i></p>
+    <span class="copyright"><i>{{copyright}}</i></span>
     </v-footer>
 </template>
 <script>
@@ -24,7 +24,7 @@ export default {
   },
   mounted(){
       fetchData(this)
-  }   
+  }
 }
 function fetchData(app){
     let domain = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("Domain"));

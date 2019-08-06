@@ -40,6 +40,8 @@ function createNodes(store, ns, width, height) {
     return nodes;
 }
 
+
+
 export default class BubbleChart {
 
     constructor(el, bgolib, width, height) {
@@ -60,12 +62,27 @@ export default class BubbleChart {
         this.nodes = createNodes(this.store, this.ns, this.width, this.height);
         console.table(this.nodes);
         const maxAmount = this.nodes[0].amount;
-        // const minAmount = this.nodes[this.nodes.length - 1].amount;
-        let radiusScale = d3.scalePow().exponent(0.5)
-            .domain([0, maxAmount]).range([3, 100]);
+        const overview = this.store.any(null, this.ns.rdf('type'), this.ns.bgo('Overview'));
+        const colorScheme = this.store.any(overview, this.ns.bgo('hasTrendColorScheme'));
+        const noTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('noTrendColor'));
+        const maxTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('maxTrendColor'));
+        const minTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('minTrendColor'));
 
-        let colorScale = d3.scaleLinear()
-            .domain([-1, 1]).range(["red", "blue"])
+        const radiusScale = d3.scalePow().exponent(0.5)
+            .domain([0, maxAmount]).range([5, 100]);
+
+        const colorScale = (val) => {
+            let fill = d3.scaleLinear()
+                .domain([-1, 1])
+                .range([minTrendColor, maxTrendColor])
+                .clamp(true);
+
+            if (isFinite(val)) {
+                return fill(val);
+            }
+            return noTrendColor;
+        }
+
 
         let bubbles = d3.select("svg#vis")
             .selectAll("circle")
@@ -77,6 +94,20 @@ export default class BubbleChart {
             .attr("fill", function (d) {
                 return colorScale(d.rate);
             })
+            .attr("stroke", function (d) {
+                return d3.rgb(colorScale(d.rate)).darker();
+            })
+            .on("mouseover", function () {
+                this.style["stroke-width"] = 4;
+            })
+            .on("mouseout", function () {
+                this.style["stroke-width"] = 1;
+            });
+
+        // native tooltip
+        bubbles.append('title').text(function (d) {
+            return `${d.title}\n${d.rate * 100}%`;
+        })
 
         bubbles
             .transition()
@@ -86,7 +117,7 @@ export default class BubbleChart {
             });
 
 
-        function ticked() {
+        const ticked = () => {
             bubbles
                 .attr("cx", function (d) {
                     return d.x;
@@ -95,7 +126,7 @@ export default class BubbleChart {
                     return d.y;
                 });
         }
-        let charge = (d) => {
+        const charge = (d) => {
             return -Math.pow(radiusScale(d.amount), 2.0) * this.forceStrength;
         }
 
@@ -107,15 +138,21 @@ export default class BubbleChart {
             .on("tick", ticked)
             .stop()
 
-        this.simulation.force("x", d3.forceX().strength(this.forceStrength).x(this.width / 2)
-        );
-        this.simulation.force("y", d3.forceY().strength(this.forceStrength).y(this.height / 2)
-        );
-        this.simulation.alpha(1).restart();
+        this.groupBubble();
 
-        console.log('b', bubbles);
     }
 
+    groupBubble() {
+        this.simulation.force("x", d3.forceX().strength(this.forceStrength).x(this.width / 2));
+        this.simulation.force("y", d3.forceY().strength(this.forceStrength).y(this.height / 2));
+        this.simulation.alpha(1).restart();
+    }
+
+    update(width, height) {
+        this.simulation.force("x", d3.forceX().strength(this.forceStrength).x(width / 2));
+        this.simulation.force("y", d3.forceY().strength(this.forceStrength).y(height / 2));
+        this.simulation.alpha(1).restart();
+    }
 
 
 }

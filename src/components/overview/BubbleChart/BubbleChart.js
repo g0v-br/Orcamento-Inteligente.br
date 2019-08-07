@@ -1,7 +1,6 @@
 import * as d3 from 'd3';
 
 function updateTotals(node, partitions_table, total, ns) {
-    console.log("NEW NODE____________________________________________________")
     Object.keys(node.partitions).forEach((partition_id) => {
         let target_partition = partitions_table.find((partition) => {
             return partition_id == partition.id;
@@ -9,7 +8,6 @@ function updateTotals(node, partitions_table, total, ns) {
         let target_subset = target_partition.subsets.find((subset) => {
             return subset.id == node.partitions[partition_id];
         });
-        console.log(node)
         //groupFunction define the way to calculate totals
         switch (target_partition.groupFunction) {
             //total = (sum of nodes.ammount - sum of nodes.referenceAmount)/ sum of nodes.referenceAmount
@@ -49,21 +47,21 @@ function updateTotals(node, partitions_table, total, ns) {
                     target_subset.total_filtered += 1;
                 break;
         }
-        console.log(target_subset)
-        
+
     });
-    console.log("END NODE________________________________________________")
 
 
 }
 //reset filtered totals
-function resetTotal(partitions_table){
-    partitions_table.forEach((partition)=>{
-        partitions.subsets.forEach((subset)=>{
-            subset.total_filtered=0;
-            if(subset.totalSupport!=undefined)
-                subset.totalSupport=null;
-        })
+function resetTotal(partitions_table) {
+    partitions_table.forEach((partition) => {
+        if (partition.id != "overview") {
+            partition.subsets.forEach((subset) => {
+                subset.total_filtered = 0;
+                if (subset.totalSupport != undefined)
+                    subset.totalSupport = null;
+            })
+        }
     });
 
 }
@@ -102,7 +100,7 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
             title,
             description,
             amount,
-            referenceAmount:refAmount,
+            referenceAmount: refAmount,
             rate,
             bg,
             partitions,
@@ -110,17 +108,17 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
             y: Math.random() * height,
         };
         newNode["active"] = match(newNode, searchText);
-        updateTotals(newNode, partitions_table,null,ns);
+        updateTotals(newNode, partitions_table, null, ns);
         nodes.push(newNode);
     })
     nodes.sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
-    console.log(partitions_table);
     return nodes;
 }
 
 // if account contains text return true, false otherwise
 function match(account, text) {
- return account.title.includes(text)||account.description.includes(text);
+    console.log("match called text: ", text, " return", account.title.includes(text) || account.description.includes(text))
+    return account.title.includes(text) || account.description.includes(text);
 }
 
 function groupBubble(chart) {
@@ -235,8 +233,8 @@ export default class BubbleChart {
 
     // called when partition change, group or split bubbles
     update(width, height, gridBlocks, activePartitionId) {
-        this.width=width;
-        this.height=height;
+        this.width = width;
+        this.height = height;
         if (activePartitionId == 'overview') {
             groupBubble(this);
         }
@@ -249,12 +247,12 @@ export default class BubbleChart {
     //called when filter changhe filter bubble and compute new filtered totals
     filterBubbles(searchText) {
         resetTotal(this.partitions);
-        d3.select("#bubbles")
+        d3.select("svg#vis")
             .selectAll("circle")
             .classed("disabled", d => {
-                d.__data__.active = match(d, searchText);
-                updateTotals(d.__data__, this.partitions, "filtered",this.ns);
-                return !d.__data__.active // if is active disabled must be false
+                d.active = match(d, searchText);
+                updateTotals(d, this.partitions, "filtered", this.ns);
+                return !d.active // if is active disabled must be false
             });
 
     }

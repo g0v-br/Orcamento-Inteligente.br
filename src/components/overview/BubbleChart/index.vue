@@ -110,7 +110,6 @@ export default {
   opacity: 1;
   transition: opacity 0.5s;
 }
-
 #vis circle.disabled {
   pointer-events: none;
   opacity: 0.2;

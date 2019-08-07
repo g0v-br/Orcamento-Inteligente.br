@@ -19,6 +19,7 @@
           outlined
           v-model="search"
           :placeholder="searchPaneLabel"
+          @input="onSearchInput"
         ></v-text-field>
       </div>
 
@@ -67,12 +68,21 @@ export default {
   },
   created() {
     fetchData(this);
+    this.search = this.$route.query.s;
   },
   methods: {
     onPartitionChange(partitionId) {
       this.$router.push({
         name: "accounts-partition",
-        params: { partitionId }
+        params: { partitionId },
+        query: { s: this.search }
+      });
+    },
+    onSearchInput() {
+      this.$router.replace({
+        name: "accounts-partition",
+        params: { partitionId: this.activePartitionId },
+        query: { s: this.search }
       });
     }
   }

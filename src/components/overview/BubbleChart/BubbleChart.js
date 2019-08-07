@@ -1,10 +1,77 @@
 import * as d3 from 'd3';
 
+function updateTotals(node, partitions_table, total, ns) {
+    console.log("NEW NODE____________________________________________________")
+    Object.keys(node.partitions).forEach((partition_id) => {
+        let target_partition = partitions_table.find((partition) => {
+            return partition_id == partition.id;
+        });
+        let target_subset = target_partition.subsets.find((subset) => {
+            return subset.id == node.partitions[partition_id];
+        });
+        console.log(node)
+        //groupFunction define the way to calculate totals
+        switch (target_partition.groupFunction) {
+            //total = (sum of nodes.ammount - sum of nodes.referenceAmount)/ sum of nodes.referenceAmount
 
-function createNodes(store, ns, width, height) {
+            case ns.bgo("trend_average").value:
+                if (target_subset.totalSupport == undefined) {
+                    target_subset.totalSupport = {
+                        amount: 0,
+                        amountFiltered: 0,
+                        referenceAmount: 0,
+                        referenceAmountFiltered: 0
+                    };
+                }
+                if (total = "total" || total == undefined) {
+                    target_subset.totalSupport.amount += node.amount;
+                    target_subset.totalSupport.referenceAmount += node.referenceAmount;
+                    target_subset.total = (target_subset.totalSupport.amount - target_subset.totalSupport.referenceAmount) / target_subset.totalSupport.referenceAmount;
+                }
+                if ((total = "filtered" || total == undefined) && node.active) {
+                    target_subset.totalSupport.amountFiltered += node.amount;
+                    target_subset.totalSupport.referenceAmountFiltered += node.referenceAmount;
+                    target_subset.total_filtered = (target_subset.totalSupport.amountFiltered - target_subset.totalSupport.referenceAmountFiltered) / target_subset.totalSupport.referenceAmountFiltered;
+                }
+                break;
+            //total = sum of node.account (absolute o natural)
+            case ns.bgo("amounts_sum").value:
+                if (total = "total" || total == undefined)
+                    target_subset.total += target_partition.sortCriteria == ns.bgo("abs_sort") ? Math.abs(node.amount) : node.amount;
+                if ((total = "filtered" || total == undefined) && node.active)
+                    target_subset.total_filtered += target_partition.sortCriteria == ns.bgo("abs_sort") ? Math.abs(node.amount) : node.amount;
+                break;
+            //total = number of nodes in the subset
+            case ns.bgo("accounts_count").value:
+                if (total = "total" || total == undefined)
+                    target_subset.total += 1;
+                if ((total = "filtered" || total == undefined) && node.active)
+                    target_subset.total_filtered += 1;
+                break;
+        }
+        console.log(target_subset)
+        
+    });
+    console.log("END NODE________________________________________________")
+
+
+}
+//reset filtered totals
+function resetTotal(partitions_table){
+    partitions_table.forEach((partition)=>{
+        partitions.subsets.forEach((subset)=>{
+            subset.total_filtered=0;
+            if(subset.totalSupport!=undefined)
+                subset.totalSupport=null;
+        })
+    });
+
+}
+//called only the first time
+function createNodes(store, ns, width, height, searchText, partitions_table) {
     let nodes = [];
     store.each(null, ns.rdf('type'), ns.bgo('Account')).forEach(account => {
-
+        let newNode;
         let id = store.anyValue(account, ns.bgo('accountId'));
 
         let title = store.anyValue(account, ns.bgo('title'));
@@ -30,47 +97,57 @@ function createNodes(store, ns, width, height) {
             let partitionId = store.anyValue(partition, ns.bgo("partitionId"))
             partitions[partitionId] = subSetUri.value;
         });
-
-        nodes.push({
-            active: true,
+        newNode = {
             id,
             title,
             description,
             amount,
+            referenceAmount:refAmount,
             rate,
             bg,
             partitions,
             x: Math.random() * width,
             y: Math.random() * height,
-        })
-
-        nodes.sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
-
+        };
+        newNode["active"] = match(newNode, searchText);
+        updateTotals(newNode, partitions_table,null,ns);
+        nodes.push(newNode);
     })
+    nodes.sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
+    console.log(partitions_table);
     return nodes;
 }
+
+// if account contains text return true, false otherwise
+function match(account, text) {
+ return account.title.includes(text)||account.description.includes(text);
+}
+
+function groupBubble(chart) {
+    chart.simulation.force("x", d3.forceX().strength(chart.forceStrength).x(chart.width / 2));
+    chart.simulation.force("y", d3.forceY().strength(chart.forceStrength).y(chart.height / 2));
+    chart.simulation.alpha(1).restart();
+};
 
 
 
 export default class BubbleChart {
 
-    constructor(el, bgolib, width, height) {
+    constructor(el, bgolib, partitions, width, height) {
         this.el = el;
         this.height = height;
         this.width = width;
         this.store = bgolib.bgoStore;
         this.ns = bgolib.ns;
+        this.partitions = partitions
         this.velocityDecay = 0.2;
         this.forceStrength = 0.03;
         this.simulation;
         this.nodes = [];
     }
-
-
-
-    render() {
-        this.nodes = createNodes(this.store, this.ns, this.width, this.height);
-        console.table(this.nodes);
+    //called only the first time
+    render(searchText) {
+        this.nodes = createNodes(this.store, this.ns, this.width, this.height, searchText, this.partitions);
         const maxAmount = this.nodes[0].amount;
         const overview = this.store.any(null, this.ns.rdf('type'), this.ns.bgo('Overview'));
         const colorScheme = this.store.any(overview, this.ns.bgo('hasTrendColorScheme'));
@@ -100,6 +177,7 @@ export default class BubbleChart {
             .enter()
             .append("circle")
             .classed("bubble", true)
+            .classed("disabled", d => { return !d.active })
             .attr("r", 0)
             .attr("fill", function (d) {
                 return colorScale(d.rate);
@@ -129,7 +207,6 @@ export default class BubbleChart {
                 return radiusScale(d.amount);
             });
 
-
         const ticked = () => {
             bubbles
                 .attr("cx", function (d) {
@@ -151,25 +228,37 @@ export default class BubbleChart {
             .on("tick", ticked)
             .stop()
 
-        this.groupBubble();
+        groupBubble(this);
 
     }
 
-    groupBubble() {
-        this.simulation.force("x", d3.forceX().strength(this.forceStrength).x(this.width / 2));
-        this.simulation.force("y", d3.forceY().strength(this.forceStrength).y(this.height / 2));
-        this.simulation.alpha(1).restart();
-    }
 
-    update(width, height, gridBlocks, partitions, activePartitionId) {
+    // called when partition change, group or split bubbles
+    update(width, height, gridBlocks, activePartitionId) {
+        this.width=width;
+        this.height=height;
         if (activePartitionId == 'overview') {
-            this.simulation.force("x", d3.forceX().strength(this.forceStrength).x(width / 2));
-            this.simulation.force("y", d3.forceY().strength(this.forceStrength).y(height / 2));
-            this.simulation.alpha(1).restart();
+            groupBubble(this);
         }
         // per ogni bolla partendo dagli idsubset e idpart ricavo la posizione nell'arrey
         // partition.subset e uso i centri nella stesa pos
+        //per gestire la default partition potremmo creare una copia di nodes da cui rimuoviamo man mano tutti i nodi che hanno una partizione
+        //quelli rimasti calcoliamo il totale  che aggiungiamo al subset e infine facciamo la sort
     }
+
+    //called when filter changhe filter bubble and compute new filtered totals
+    filterBubbles(searchText) {
+        resetTotal(this.partitions);
+        d3.select("#bubbles")
+            .selectAll("circle")
+            .classed("disabled", d => {
+                d.__data__.active = match(d, searchText);
+                updateTotals(d.__data__, this.partitions, "filtered",this.ns);
+                return !d.__data__.active // if is active disabled must be false
+            });
+
+    }
+
 
 
 }

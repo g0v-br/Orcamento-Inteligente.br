@@ -123,8 +123,7 @@ resource:p1 a bgo:Partition ;
 
     bgo:hasAccountSubSet
         resource:p1_1 ,
-        resource:p1_2,
-        resource:p2_2
+        resource:p1_2
 
     ;
     bgo:hasDefaultAccountSubSet [ a bgo:DefaultAccountSet  ;

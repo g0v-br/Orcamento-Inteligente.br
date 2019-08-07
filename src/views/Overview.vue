@@ -24,7 +24,7 @@
 
       <div class="meta">Metadata, sul cellulare solo il totale, per il resto c'è il popup</div>
 
-      <BubbleChart class="chart" :active-partition-id="activePartitionId" :partitions="partitions"></BubbleChart>
+      <BubbleChart class="chart" :active-partition-id="activePartitionId" :partitions="partitions" :search="search"></BubbleChart>
 
       <div class="tools">Tools, tag cloud e legenda</div>
     </div>
@@ -34,6 +34,7 @@
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BubbleChart from "@/components/overview/BubbleChart";
+import { debounce } from "lodash";
 
 export default {
   name: "overview",
@@ -60,6 +61,11 @@ export default {
     next();
   },
   created() {
+    fetchData(this);
+  }
+  };
+
+  function fetchData(app){
     const overview = bgoStore.any(null, ns.rdf("type"), ns.bgo("Overview"));
     // Partition metadata
     // Push default partition with id 'overview'
@@ -70,34 +76,44 @@ export default {
     const partitions = bgoStore.any(overview, ns.bgo("hasPartitionList")).elements;
     for (const partition of partitions) {
       //add other partitions
-      const id = bgoStore.anyValue(partition, ns.bgo("partitionId"));
-      const label = bgoStore.anyValue(partition, ns.bgo("label"));
-      const subsets_uri = bgoStore.each(partition, ns.bgo("hasAccountSubSet"));
-      const subsets = [];
+      //fetch partitions data
+      let id = bgoStore.anyValue(partition, ns.bgo("partitionId"));
+      let label = bgoStore.anyValue(partition, ns.bgo("label"));
+      let title = bgoStore.anyValue(partition, ns.bgo("title"));
+      let sortOrder = bgoStore.anyValue(partition, ns.bgo("sortOrder"))||ns.bgo("descending_sort").value;
+      let sortCriteria = bgoStore.anyValue(partition, ns.bgo("sortCriteria"))||ns.bgo("abs_sort").value;
+      let groupFunction = bgoStore.anyValue(partition, ns.bgo("groupFunction"))||ns.bgo("amounts_sum").value;
+      //fetch subset data
+      let subsets_uri = bgoStore.each(partition, ns.bgo("hasAccountSubSet"));
+      let subsets = [];
       subsets_uri.forEach(subset => {
         //for each partition add its subsets
-        let title = bgoStore.anyValue(subset, ns.bgo("title"));
+        let s_title = bgoStore.anyValue(subset, ns.bgo("title"));
         let s_label = bgoStore.anyValue(subset, ns.bgo("label")) || "";
         let description =
           bgoStore.anyValue(subset, ns.bgo("description")) || "";
         let abstract = bgoStore.anyValue(subset, ns.bgo("abstract")) || "";
         subsets.push({
           id: subset.value,
-          title,
+          title:s_title,
           description,
           abstract,
-          label: s_label
+          label: s_label,
+          total:0,
+          total_filtered:0
         });
       });
 
       app.partitions.push({
         id,
         label,
+        title,
+        sortOrder,
+        sortCriteria,
+        groupFunction,
         subsets
       });
     }
-    // console.log(this.partitions);
-
     // Search metadata
     const searchPane = bgoStore.any(overview, ns.bgo("hasSearchPane"));
     app.searchPaneLabel = bgoStore.anyValue(searchPane, ns.bgo("label"));

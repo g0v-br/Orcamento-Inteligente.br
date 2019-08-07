@@ -13,6 +13,7 @@ import BubbleChart from "@/components/overview/BubbleChart/BubbleChart.js";
 import * as d3 from "d3";
 import _debounce from "lodash/debounce";
 let debouncedUpdate;
+let chart;
 export default {
   props: {
     activePartitionId: {
@@ -20,6 +21,9 @@ export default {
     },
     partitions: {
       type: Array
+    },
+    search: {
+      type: String
     }
   },
 
@@ -30,29 +34,27 @@ export default {
   computed: {
     activePartitionSubSet: function() {
       return this.partitions.find(partition => {
-        console.log(partition);
         return partition.id == this.activePartitionId;
       }).subsets;
     }
   },
 
   mounted() {
-    let chart = new BubbleChart(
+    chart = new BubbleChart(
       "#vis",
       { bgoStore, ns },
+      this.partitions,
       this.$refs.bound.offsetWidth,
       this.$refs.bound.offsetHeight
     );
 
-    chart.render();
+    chart.render(this.search);
 
     debouncedUpdate = _debounce(() => {
-      console.log("resize");
       chart.update(
         this.$refs.bound.offsetWidth,
         this.$refs.bound.offsetHeight,
         this.$refs.grid.childNodes,
-        this.partitions,
         this.activePartitionId
       );
     }, 200);
@@ -62,6 +64,14 @@ export default {
 
   beforeDestroy() {
     window.removeEventListener("resize", debouncedUpdate);
+  },
+  watch: {
+    search: {
+      handler: _debounce((newVal)=> {
+        chart.filterBubbles(newVal);
+      }, 1000),
+      deep: true
+    }
   }
 };
 
@@ -99,5 +109,10 @@ export default {
   stroke-width: 1px;
   opacity: 1;
   transition: opacity 0.5s;
+}
+
+#vis circle.disabled {
+  pointer-events: none;
+  opacity: 0.2;
 }
 </style>

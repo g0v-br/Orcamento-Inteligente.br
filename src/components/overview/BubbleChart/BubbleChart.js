@@ -121,11 +121,7 @@ function match(account, text) {
     return account.title.includes(text) || account.description.includes(text);
 }
 
-function groupBubble(chart) {
-    chart.simulation.force("x", d3.forceX().strength(chart.forceStrength).x(chart.width / 2));
-    chart.simulation.force("y", d3.forceY().strength(chart.forceStrength).y(chart.height / 2));
-    chart.simulation.alpha(1).restart();
-};
+
 
 function getCenters(gridBlocks) {
     // console.table(gridBlocks);
@@ -134,7 +130,8 @@ function getCenters(gridBlocks) {
         const x = block.offsetLeft + block.offsetWidth / 2;
         const y = block.offsetTop + block.offsetHeight / 2;
         centers.push({ x, y });
-    })
+    });
+    return centers;
 }
 
 export default class BubbleChart {
@@ -154,7 +151,7 @@ export default class BubbleChart {
     //called only the first time
     render(searchText) {
         this.nodes = createNodes(this.store, this.ns, this.width, this.height, searchText, this.partitions);
-        console.table(this.nodes);
+        // console.table(this.nodes);
         const maxAmount = this.nodes[0].amount;
         const overview = this.store.any(null, this.ns.rdf('type'), this.ns.bgo('Overview'));
         const colorScheme = this.store.any(overview, this.ns.bgo('hasTrendColorScheme'));
@@ -243,26 +240,60 @@ export default class BubbleChart {
     // called when partition change, group or split bubbles
     update(width, height, gridBlocks, activePartitionId) {
 
+        // update with new boundaries
+        this.height = height;
+        this.width = width;
+        // console.log('height', height);
+        // console.log('width', width);
         if (activePartitionId == 'overview') {
-            groupBubble(this);
+            this.groupBubble();
         } else {
-            console.log("partitions uodate", this.partitions);
+            // console.log("partitions uodate", this.partitions);
 
             const centers = getCenters(gridBlocks);
+            console.log('centers', centers);
+            let subsetToCenterMap = {};
+            // console.log('center', centers);
 
             let activeSubsets = this.partitions.find(partition => {
-                return partition.id = activePartitionId;
+                return partition.id == activePartitionId;
             }).subsets;
 
-            // let subsetToCenter = {};
+            activeSubsets.forEach((subset, i) => {
+                subsetToCenterMap[subset.id] = centers[i];
+            })
+            console.log('subsetToCenterMap', subsetToCenterMap);
 
-            // activeSubsets.forEach(subset => {
-            //     subsetToCenter[subset.id]
-            // })
+            this.simulation.force(
+                "x",
+                d3
+                    .forceX()
+                    .strength(this.forceStrength)
+                    .x(function (d) {
+                        return subsetToCenterMap[d.partitions[activePartitionId]].x;
+                    })
+            );
+            this.simulation.force(
+                "y",
+                d3
+                    .forceY()
+                    .strength(this.forceStrength)
+                    .y(function (d) {
+                        return subsetToCenterMap[d.partitions[activePartitionId]].y;
+                    })
+            );
+
+            this.simulation.alpha(1).restart();
 
         }
-        groupBubble(this);
+        // groupBubble(this);
 
+    }
+
+    groupBubble() {
+        this.simulation.force("x", d3.forceX().strength(this.forceStrength).x(this.width / 2));
+        this.simulation.force("y", d3.forceY().strength(this.forceStrength).y(this.height / 2));
+        this.simulation.alpha(1).restart();
     }
 
     //called when filter changhe filter bubble and compute new filtered totals

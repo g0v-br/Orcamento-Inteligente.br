@@ -1,7 +1,11 @@
 <template>
   <div ref="bound" class="bc-container">
     <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
-      <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">{{subset.id}}</div>
+      <div
+        v-for="subset in activePartitionSubSets"
+        :key="subset.id"
+        class="grid-block"
+      >{{subset.id}}</div>
     </div>
     <svg id="vis" />
   </div>
@@ -47,7 +51,7 @@ export default {
     chart = new BubbleChart(
       "#vis",
       { bgoStore, ns },
-      Object.create(this.partitions),
+      this.partitions,
       this.$refs.bound.offsetWidth,
       this.$refs.bound.offsetHeight
     );
@@ -62,6 +66,7 @@ export default {
     );
 
     debouncedUpdate = _debounce(() => {
+      const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
       chart.update(
         this.$refs.bound.offsetWidth,
         this.$refs.bound.offsetHeight,
@@ -79,6 +84,7 @@ export default {
 
   updated() {
     const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
+    console.log("gridblock", gridBloks);
     chart.update(
       this.$refs.bound.offsetWidth,
       this.$refs.bound.offsetHeight,

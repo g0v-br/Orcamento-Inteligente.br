@@ -53,7 +53,6 @@ export default {
     return {
       activePartitionId: this.partitionId,
       partitions: [],
-      overviewLabel:"",
       searchPaneLabel: "",
       search: ""
     };
@@ -83,7 +82,6 @@ function fetchData(app) {
   const overview = bgoStore.any(null, ns.rdf("type"), ns.bgo("Overview"));
   // Partition metadata
   // Push default partition with id 'overview'
-
   app.partitions.push({
     id: "overview",
     label: bgoStore.anyValue(overview, ns.bgo("label"))

@@ -1,7 +1,7 @@
 <template>
   <div ref="bound" class="bc-container">
     <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
-      <div v-for="subset in activePartitionSubSet" :key="subset.id" class="grid-block">{{subset.id}}</div>
+      <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">{{subset.id}}</div>
     </div>
     <svg id="vis" />
   </div>
@@ -27,15 +27,19 @@ export default {
     }
   },
 
-  data() {
-    return {};
-  },
-
   computed: {
-    activePartitionSubSet: function() {
+    activePartitionSubSets: function() {
       return this.partitions.find(partition => {
         return partition.id == this.activePartitionId;
       }).subsets;
+    }
+  },
+  watch: {
+    search: {
+      handler: _debounce(newVal => {
+        chart.filterBubbles(newVal);
+      }, 1000),
+      deep: true
     }
   },
 
@@ -43,18 +47,25 @@ export default {
     chart = new BubbleChart(
       "#vis",
       { bgoStore, ns },
-      this.partitions,
+      Object.create(this.partitions),
       this.$refs.bound.offsetWidth,
       this.$refs.bound.offsetHeight
     );
+    const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
 
     chart.render(this.search);
+    chart.update(
+      this.$refs.bound.offsetWidth,
+      this.$refs.bound.offsetHeight,
+      gridBloks,
+      this.activePartitionId
+    );
 
     debouncedUpdate = _debounce(() => {
       chart.update(
         this.$refs.bound.offsetWidth,
         this.$refs.bound.offsetHeight,
-        this.$refs.grid.childNodes,
+        gridBloks,
         this.activePartitionId
       );
     }, 200);
@@ -65,20 +76,21 @@ export default {
   beforeDestroy() {
     window.removeEventListener("resize", debouncedUpdate);
   },
-  watch: {
-    search: {
-      handler: _debounce((newVal)=> {
-        chart.filterBubbles(newVal);
-      }, 1000),
-      deep: true
-    }
+
+  updated() {
+    const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
+    chart.update(
+      this.$refs.bound.offsetWidth,
+      this.$refs.bound.offsetHeight,
+      gridBloks,
+      this.activePartitionId
+    );
   }
 };
-
 </script>
 
 
-<style scoped>
+<style>
 .bc-container {
   position: relative;
 }

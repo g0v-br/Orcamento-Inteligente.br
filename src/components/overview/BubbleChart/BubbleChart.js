@@ -117,7 +117,7 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
 
 // if account contains text return true, false otherwise
 function match(account, text) {
-    console.log("match called text: ", text, " return", account.title.includes(text) || account.description.includes(text))
+    // console.log("match called text: ", text, " return", account.title.includes(text) || account.description.includes(text))
     return account.title.includes(text) || account.description.includes(text);
 }
 
@@ -127,7 +127,15 @@ function groupBubble(chart) {
     chart.simulation.alpha(1).restart();
 };
 
-
+function getCenters(gridBlocks) {
+    // console.table(gridBlocks);
+    const centers = [];
+    gridBlocks.forEach(block => {
+        const x = block.offsetLeft + block.offsetWidth / 2;
+        const y = block.offsetTop + block.offsetHeight / 2;
+        centers.push({ x, y });
+    })
+}
 
 export default class BubbleChart {
 
@@ -146,6 +154,7 @@ export default class BubbleChart {
     //called only the first time
     render(searchText) {
         this.nodes = createNodes(this.store, this.ns, this.width, this.height, searchText, this.partitions);
+        console.table(this.nodes);
         const maxAmount = this.nodes[0].amount;
         const overview = this.store.any(null, this.ns.rdf('type'), this.ns.bgo('Overview'));
         const colorScheme = this.store.any(overview, this.ns.bgo('hasTrendColorScheme'));
@@ -226,22 +235,34 @@ export default class BubbleChart {
             .on("tick", ticked)
             .stop()
 
-        groupBubble(this);
+        // groupBubble(this);
 
     }
 
 
     // called when partition change, group or split bubbles
     update(width, height, gridBlocks, activePartitionId) {
-        this.width = width;
-        this.height = height;
+
         if (activePartitionId == 'overview') {
             groupBubble(this);
+        } else {
+            console.log("partitions uodate", this.partitions);
+
+            const centers = getCenters(gridBlocks);
+
+            let activeSubsets = this.partitions.find(partition => {
+                return partition.id = activePartitionId;
+            }).subsets;
+
+            // let subsetToCenter = {};
+
+            // activeSubsets.forEach(subset => {
+            //     subsetToCenter[subset.id]
+            // })
+
         }
-        // per ogni bolla partendo dagli idsubset e idpart ricavo la posizione nell'arrey
-        // partition.subset e uso i centri nella stesa pos
-        //per gestire la default partition potremmo creare una copia di nodes da cui rimuoviamo man mano tutti i nodi che hanno una partizione
-        //quelli rimasti calcoliamo il totale  che aggiungiamo al subset e infine facciamo la sort
+        groupBubble(this);
+
     }
 
     //called when filter changhe filter bubble and compute new filtered totals

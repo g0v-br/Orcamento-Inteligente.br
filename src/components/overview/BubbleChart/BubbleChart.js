@@ -117,14 +117,12 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
 
 // if account contains text return true, false otherwise
 function match(account, text) {
-    // console.log("match called text: ", text, " return", account.title.includes(text) || account.description.includes(text))
     return account.title.includes(text) || account.description.includes(text);
 }
 
 
 
 function getCenters(gridBlocks) {
-    // console.table(gridBlocks);
     const centers = [];
     gridBlocks.forEach(block => {
         const x = block.offsetLeft + block.offsetWidth / 2;
@@ -151,7 +149,6 @@ export default class BubbleChart {
     //called only the first time
     render(searchText) {
         this.nodes = createNodes(this.store, this.ns, this.width, this.height, searchText, this.partitions);
-        // console.table(this.nodes);
         const maxAmount = this.nodes[0].amount;
         const overview = this.store.any(null, this.ns.rdf('type'), this.ns.bgo('Overview'));
         const colorScheme = this.store.any(overview, this.ns.bgo('hasTrendColorScheme'));
@@ -239,21 +236,16 @@ export default class BubbleChart {
 
     // called when partition change, group or split bubbles
     update(width, height, gridBlocks, activePartitionId) {
-
+        
         // update with new boundaries
         this.height = height;
         this.width = width;
-        // console.log('height', height);
-        // console.log('width', width);
         if (activePartitionId == 'overview') {
             this.groupBubble();
         } else {
-            // console.log("partitions uodate", this.partitions);
 
             const centers = getCenters(gridBlocks);
-            console.log('centers', centers);
             let subsetToCenterMap = {};
-            // console.log('center', centers);
 
             let activeSubsets = this.partitions.find(partition => {
                 return partition.id == activePartitionId;
@@ -262,7 +254,6 @@ export default class BubbleChart {
             activeSubsets.forEach((subset, i) => {
                 subsetToCenterMap[subset.id] = centers[i];
             })
-            console.log('subsetToCenterMap', subsetToCenterMap);
 
             this.simulation.force(
                 "x",
@@ -286,7 +277,6 @@ export default class BubbleChart {
             this.simulation.alpha(1).restart();
 
         }
-        // groupBubble(this);
 
     }
 

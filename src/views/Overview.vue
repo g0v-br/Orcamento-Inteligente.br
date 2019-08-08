@@ -115,6 +115,7 @@ function fetchData(app) {
       ns.bgo("amounts_sum").value;
     //fetch subset data
     let subsets_uri = bgoStore.each(partition, ns.bgo("hasAccountSubSet"));
+    
     let subsets = [];
     subsets_uri.forEach(subset => {
       //for each partition add its subsets

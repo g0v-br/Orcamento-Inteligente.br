@@ -68,7 +68,7 @@ export default {
   },
   created() {
     fetchData(this);
-    this.search = this.$route.query.s;
+    this.search = this.$route.query.s||"";
   },
   methods: {
     onPartitionChange(partitionId) {

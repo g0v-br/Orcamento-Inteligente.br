@@ -3,7 +3,7 @@
     <!-- partitioned is used to remove the side content -->
     <div :class="{'content-grid':true, 'partitioned': activePartitionId != 'overview'}">
       <div class="partitions">
-        <v-btn-toggle v-model="activePartitionId" mandatory>
+        <v-btn-toggle v-model="activePartitionId" mandatory active-class="primary--text">
           <v-btn
             v-for="partition in partitions"
             :key="partition.id"
@@ -17,6 +17,7 @@
         <v-text-field
           append-icon="mdi-magnify"
           outlined
+          clearable
           v-model="search"
           :placeholder="searchPaneLabel"
           @input="onSearchInput"
@@ -32,7 +33,19 @@
         :search="search"
       ></BubbleChart>
 
-      <div class="tools">Tools, tag cloud e legenda</div>
+      <div class="tools">
+        <div class="tagcloud">
+          <router-link
+            v-for="tag in tags"
+            :key="tag.label"
+            :to="{ name: 'accounts-partition',
+             params: { partitionId: activePartitionId },
+             query: { s: tag.label }}"
+            :style="{fontSize: tag.weight *1.4 +0.5 +'em'}"
+            class="tag"
+          >{{tag.label}}</router-link>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -55,20 +68,22 @@ export default {
       activePartitionId: this.partitionId,
       partitions: [],
       searchPaneLabel: "",
-      search: ""
+      search: null,
+      tags: []
     };
   },
   components: {
     BubbleChart
   },
   beforeRouteUpdate(to, from, next) {
-    // Update activePartition when the view is reused with new id
+    // Update activePartition and search when the view is reused with new id
     this.activePartitionId = to.params.partitionId;
+    this.search = to.query.s || "";
     next();
   },
   created() {
     fetchData(this);
-    this.search = this.$route.query.s||"";
+    this.search = this.$route.query.s || "";
   },
   methods: {
     onPartitionChange(partitionId) {
@@ -79,6 +94,7 @@ export default {
       });
     },
     onSearchInput() {
+      this.selectedTag = null;
       this.$router.replace({
         name: "accounts-partition",
         params: { partitionId: this.activePartitionId },
@@ -115,7 +131,7 @@ function fetchData(app) {
       ns.bgo("amounts_sum").value;
     //fetch subset data
     let subsets_uri = bgoStore.each(partition, ns.bgo("hasAccountSubSet"));
-    
+
     let subsets = [];
     subsets_uri.forEach(subset => {
       //for each partition add its subsets
@@ -147,6 +163,15 @@ function fetchData(app) {
   // Search metadata
   const searchPane = bgoStore.any(overview, ns.bgo("hasSearchPane"));
   app.searchPaneLabel = bgoStore.anyValue(searchPane, ns.bgo("label"));
+
+  // TagCloud metadata
+  const tagCloud = bgoStore.any(overview, ns.bgo("hasTagCloud"));
+
+  bgoStore.each(tagCloud, ns.bgo("hasTag")).forEach(tag => {
+    const label = bgoStore.anyValue(tag, ns.bgo("label"));
+    const weight = bgoStore.anyValue(tag, ns.bgo("tagWeight"));
+    app.tags.push({ label, weight });
+  });
 }
 </script>
 
@@ -203,6 +228,24 @@ function fetchData(app) {
 .tools {
   grid-area: tools;
   /* background-color: coral; */
+}
+
+.tagcloud {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tagcloud .tag {
+  text-decoration: none;
+  color: #9e9e9e;
+  width: auto;
+  margin: 0 0.2em;
+  text-align: center;
+  vertical-align: middle;
+}
+.tagcloud .tag:hover {
+  color: #797979;
 }
 
 /* Landscape phones to portrait tablets and desktop */

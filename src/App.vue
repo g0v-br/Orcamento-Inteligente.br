@@ -57,7 +57,7 @@ function fetchData(app){
 
   let domain = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("Domain"));
   //if domain doesn't exist go to error page
-  if(!domain){ 
+  if(!domain){
     app.$router.push("error")
   }
   //if title doesn't exist use default

@@ -15,17 +15,17 @@
 ################################################
 resource:domain a bgo:Domain ;
 	# Here write some thing about your project (ie the data driven document domain metadata)
-	
+
 	bgo:title "Live test of LODMAP2D" ;
     bgo:description "Here a short description of the data domain" ;
-    bgo:abstract "These are **demo data** without a real meaning."^^bgo:MDString ; 
-   
-    
+    bgo:abstract "These are **demo data** without a real meaning."^^bgo:MDString ;
+
+
     # Just use the default navigation menu
-    
+
     # Use the Option menu with two external links
-    bgo:hasOptionMenu [	
-    	bgo:withCustomMenuItems ( 
+    bgo:hasOptionMenu [
+    	bgo:withCustomMenuItems (
     		[
 				bgo:icon "far fa-building" ;
 				bgo:title "About this app..." ;
@@ -38,10 +38,10 @@ resource:domain a bgo:Domain ;
 			]
 		)
     ] ;
-    
+
     # Add just a couple of short cuts icons to footer
     bgo:hasFooterMenu [
-    	bgo:withCustomMenuItems ( 
+    	bgo:withCustomMenuItems (
     		[
 		    	bgo:icon "fas fa-table" ;
 				bgo:link "/table"  # this is internal link example
@@ -52,10 +52,10 @@ resource:domain a bgo:Domain ;
 			]
 		)
     ] ;
-    
+
     # This domain likes social
     bgo:hasSocialSharing  true;
-    
+
     # This should be used if copyright is not present, to hide use the empty string
     bgo:hasCopyrigth "(c) [LinkedData.Center](http://linkeddata.center)"^^bgo:MDString ;
 .
@@ -64,8 +64,8 @@ resource:domain a bgo:Domain ;
 # Views
 #######################################################
 resource:overview a bgo:Overview, bgo:DefaultAccountSet ;
-	bgo:label "stato" ;	
-	bgo:title "Overview" ;	
+	bgo:label "stato" ;
+	bgo:title "Overview" ;
     bgo:hasPartitionList (
         resource:p1_ministero
         resource:p2_missione
@@ -79,12 +79,12 @@ resource:overview a bgo:Overview, bgo:DefaultAccountSet ;
 ### Credits page ##########
 resource:credits_page a bgo:CreditsView ;
 	bgo:title "Credits"@en ;
-	bgo:abstract 
+	bgo:abstract
 """
 Grazie a
 --------
  - x
- - y 
+ - y
  - z
 """^^bgo:MDString.
 
@@ -92,7 +92,7 @@ Grazie a
 ### Term and conditions page ##########
 resource:terms_page a bgo:TermsView ;
 	bgo:title "Terms & conditions" ;
-	bgo:abstract 
+	bgo:abstract
 """
 here palace your **Terms & conditions** about published service.
 """^^bgo:MDString.
@@ -101,7 +101,7 @@ here palace your **Terms & conditions** about published service.
 resource:table_view a bgo:TableView ;
 	bgo:title "Table view";
     bgo:hasSearchPane resource:search_pane ;
-     
+
     bgo:headerTitle "Title" ;
     bgo:headerAmount "Amount" ;
     bgo:headerTrend "Trend" ;
@@ -173,8 +173,8 @@ resource:p2_missione_33 ;
 resource:p1_ministero_0 a bgo:AccountSet ;
 bgo:title "Ambiente e Territorio" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_36 ,
 resource:account_44 ,
 resource:account_75 ,
@@ -216,8 +216,8 @@ resource:account_772 ;
 resource:p1_ministero_1 a bgo:AccountSet ;
 bgo:title "ministero delle politiche agricole alimentari, forestali e del turismo" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_13 ,
 resource:account_19 ,
 resource:account_67 ,
@@ -251,8 +251,8 @@ resource:account_785 ;
 resource:p1_ministero_2 a bgo:AccountSet ;
 bgo:title "Salute" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_15 ,
 resource:account_20 ,
 resource:account_87 ,
@@ -301,8 +301,8 @@ resource:account_776 ;
 resource:p1_ministero_3 a bgo:AccountSet ;
 bgo:title "Affari Esteri" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_1 ,
 resource:account_41 ,
 resource:account_43 ,
@@ -349,8 +349,8 @@ resource:account_791 ;
 resource:p1_ministero_4 a bgo:AccountSet ;
 bgo:title "ministero per i beni e le attivita' culturali" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_5 ,
 resource:account_7 ,
 resource:account_25 ,
@@ -415,8 +415,8 @@ resource:account_788 ;
 resource:p1_ministero_5 a bgo:AccountSet ;
 bgo:title "Sviluppo Economico" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_21 ,
 resource:account_39 ,
 resource:account_52 ,
@@ -470,8 +470,8 @@ resource:account_753 ;
 resource:p1_ministero_6 a bgo:AccountSet ;
 bgo:title "Giustizia" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_18 ,
 resource:account_35 ,
 resource:account_50 ,
@@ -513,8 +513,8 @@ resource:account_795 ;
 resource:p1_ministero_7 a bgo:AccountSet ;
 bgo:title "Infrastrutture e Trasporti" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_24 ,
 resource:account_28 ,
 resource:account_37 ,
@@ -578,8 +578,8 @@ resource:account_792 ;
 resource:p1_ministero_8 a bgo:AccountSet ;
 bgo:title "Difesa" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_8 ,
 resource:account_11 ,
 resource:account_27 ,
@@ -643,8 +643,8 @@ resource:account_745 ;
 resource:p1_ministero_9 a bgo:AccountSet ;
 bgo:title "Interno" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_3 ,
 resource:account_9 ,
 resource:account_12 ,
@@ -721,8 +721,8 @@ resource:account_771 ;
 resource:p1_ministero_10 a bgo:AccountSet ;
 bgo:title "Istruzione" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_0 ,
 resource:account_22 ,
 resource:account_26 ,
@@ -790,8 +790,8 @@ resource:account_793 ;
 resource:p1_ministero_11 a bgo:AccountSet ;
 bgo:title "Lavoro e Politiche Sociali" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_2 ,
 resource:account_29 ,
 resource:account_47 ,
@@ -842,8 +842,8 @@ resource:account_773 ;
 resource:p1_ministero_12 a bgo:AccountSet ;
 bgo:title "Economia e Finanze" ;
 bgo:description "An account SubSet" ;
-bgo:abstract "This use **markdown**"^^bgo:MDString ; 
-bgo:hasAccount 
+bgo:abstract "This use **markdown**"^^bgo:MDString ;
+bgo:hasAccount
 resource:account_4 ,
 resource:account_6 ,
 resource:account_10 ,
@@ -7493,40 +7493,38 @@ bgo:description "amministrazione penitenziaria";
 ###### Trend Color Scheme #######
 resource:trend_color_scheme a bgo:TrendColorScheme ;
     bgo:title "Variazione rispetto alla precedente legge di bilancio" ;
-    bgo:noTrendColor "0xeeeeee" ;
-    bgo:maxTrendColor "green" ;
-    bgo:minTrendColor "red" ;
+    bgo:noTrendColor "#cdcdcd" ;
+    bgo:maxTrendColor "#008837" ;
+    bgo:minTrendColor "#ca0020" ;
 .
 
 
 ##### Totalizer #######
 resource:totalizer a bgo:Totalizer ;
     bgo:totalPrintfTemplate "Totale: € %s" ;
-    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s%% del tot.)" 
+    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s%% del tot.)"
 .
 
 
 ### Search and tag clouds #######
 resource:search_pane a bgo:SearchWidget ;
-    bgo:label "Cerca" 
+    bgo:label "Cerca"
 .
+
 
 
 resource:tag_cloud a bgo:TagCloud ;
 	bgo:hasTag
-		[ bgo:label "Test1"; bgo:tagWeight 1.0 ] ,
-		[ bgo:label "Test2"; bgo:tagWeight 0.5 ] ,
-		[ bgo:label "Test3"; bgo:tagWeight 1.0 ] ,
-		[ bgo:label "Test4"; bgo:tagWeight 0.2 ] ,
-		[ bgo:label "Test5"; bgo:tagWeight 0.7 ] ,
-		[ bgo:label "Test6"; bgo:tagWeight 0.3 ] 
+		[ bgo:label "woo"; bgo:tagWeight 1.0 ] ,
+		[ bgo:label "debito"; bgo:tagWeight 0.5 ] ,
+		[ bgo:label "spese"; bgo:tagWeight 1.0 ] ,
+		[ bgo:label "ricerca"; bgo:tagWeight 0.2 ]
 .
-
 #############################################
 # Accounts perspectives
-############################################# 
+#############################################
 resource:metadata_perspective a bgo:MetadataPerspective ;
-   	bgo:notAvailableTrendAccountLabel "Non disponibile" 
+   	bgo:notAvailableTrendAccountLabel "Non disponibile"
 .
 
 resource:historical_perspective a bgo:HistoricalPerspective ;
@@ -7534,7 +7532,7 @@ resource:historical_perspective a bgo:HistoricalPerspective ;
 .
 
 resource:breakdown_perspective a bgo:BreakdownPerspective ;
-	bgo:title "Dettaglio capitoli di spesa" 
+	bgo:title "Dettaglio capitoli di spesa"
 .
 
 

@@ -84,7 +84,6 @@ export default {
 
   updated() {
     const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
-    console.log("gridblock", gridBloks);
     chart.update(
       this.$refs.bound.offsetWidth,
       this.$refs.bound.offsetHeight,
@@ -104,13 +103,13 @@ export default {
   height: 100%;
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(384px, 1fr));
   grid-auto-rows: 30em;
 }
-
+/*
 .grid-block:nth-child(odd) {
   background-color: salmon;
-}
+} */
 
 #vis {
   /* background-color: aqua; */
@@ -130,6 +129,6 @@ export default {
 }
 #vis circle.disabled {
   pointer-events: none;
-  opacity: 0.2;
+  opacity: 0.1;
 }
 </style>

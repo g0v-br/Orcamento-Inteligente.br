@@ -85,7 +85,7 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
         refAmount = refAmount ? parseFloat(refAmount) : 0;
 
         let rate = (amount - refAmount) / refAmount;
-        rate = isFinite(rate) ? rate : 0;
+        rate = isFinite(rate) ? rate : NaN;
 
         let bg = store.anyValue(account, ns.bgo('background'));
         let partitions = {};
@@ -145,24 +145,24 @@ export default class BubbleChart {
         this.forceStrength = 0.03;
         this.simulation;
         this.nodes = [];
+        this.totalDefaultArea = 0;
     }
     //called only the first time
     render(searchText) {
         this.nodes = createNodes(this.store, this.ns, this.width, this.height, searchText, this.partitions);
-        const maxAmount = this.nodes[0].amount;
+        // console.table(this.nodes)
         const overview = this.store.any(null, this.ns.rdf('type'), this.ns.bgo('Overview'));
         const colorScheme = this.store.any(overview, this.ns.bgo('hasTrendColorScheme'));
         const noTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('noTrendColor'));
         const maxTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('maxTrendColor'));
         const minTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('minTrendColor'));
 
-        const radiusScale = d3.scalePow().exponent(0.5)
-            .domain([0, maxAmount]).range([5, 100]);
+
 
         const colorScale = (val) => {
             let fill = d3.scaleLinear()
-                .domain([-1, 1])
-                .range([minTrendColor, maxTrendColor])
+                .domain([-1, 0, 1])
+                .range([minTrendColor, '#fefefe', maxTrendColor])
                 .clamp(true);
 
             if (isFinite(val)) {
@@ -170,6 +170,16 @@ export default class BubbleChart {
             }
             return noTrendColor;
         }
+
+        // Calc total default area
+        // for (const n of this.nodes) {
+        //     this.totalDefaultArea += 3.14 * (radiusScale(n.amount) ** 2);
+        // }
+        // const maxRadius = (this.width > this.height) ? this.height : this.width;
+        // const maxArea = (3.14 * (((maxRadius / 2) - (maxRadius / 10)) ** 2));
+        // // Radius multiplier
+        // const radiusChangeRate = maxArea / this.totalDefaultArea;
+
 
 
         let bubbles = d3.select("svg#vis")
@@ -201,12 +211,6 @@ export default class BubbleChart {
             return `${d.title}\n${d.rate * 100}%`;
         })
 
-        bubbles
-            .transition()
-            .duration(2000)
-            .attr("r", function (d) {
-                return radiusScale(d.amount);
-            });
 
         const ticked = () => {
             bubbles
@@ -217,30 +221,62 @@ export default class BubbleChart {
                     return d.y;
                 });
         }
-        const charge = (d) => {
-            return -Math.pow(radiusScale(d.amount), 2.0) * this.forceStrength;
-        }
 
         this.simulation = d3
             .forceSimulation()
             .velocityDecay(this.velocityDecay)
             .nodes(this.nodes)
-            .force("charge", d3.forceManyBody().strength(charge))
             .on("tick", ticked)
             .stop()
 
+        // this.updateSimulation();
         // groupBubble(this);
 
     }
 
+    // Update bubbles radius and update the simulation obj with the new charge force according to the new radius
+    updateSimulation(radiusUpdate = true) {
+        const maxAmount = this.nodes[0].amount;
+        const radiusScale = d3.scalePow().exponent(0.5)
+            .domain([0, maxAmount]).range([2, 100]);
+
+        if (this.totalDefaultArea == 0) {
+            for (const n of this.nodes) {
+                this.totalDefaultArea += 3.14 * (radiusScale(n.amount) ** 2);
+            }
+        }
+
+        const maxRadius = (this.width > this.height) ? this.height : this.width;
+        const maxArea = (3.14 * (((maxRadius / 2) - (maxRadius / 10)) ** 2));
+        // Radius multiplier
+        const radiusChangeRate = radiusUpdate ? maxArea / this.totalDefaultArea : 1;
+
+        let bubbles = d3.select("svg#vis")
+            .selectAll("circle");
+
+        bubbles
+            .transition()
+            .duration(2000)
+            .attr("r", function (d) {
+                return radiusScale(d.amount) * Math.sqrt(radiusChangeRate);
+            });
+
+        const charge = (d) => {
+            return -Math.pow(radiusScale(d.amount) * Math.sqrt(radiusChangeRate), 2.0) * this.forceStrength;
+        }
+
+        this.simulation.force("charge", d3.forceManyBody().strength(charge)).stop()
+    }
 
     // called when partition change, group or split bubbles
     update(width, height, gridBlocks, activePartitionId) {
-        
+
         // update with new boundaries
         this.height = height;
         this.width = width;
+
         if (activePartitionId == 'overview') {
+            this.updateSimulation()
             this.groupBubble();
         } else {
 
@@ -255,13 +291,20 @@ export default class BubbleChart {
                 subsetToCenterMap[subset.id] = centers[i];
             })
 
+
+            // TODO aggiungere ai gridblock un blocco per i default, i nodi senza partizioni sono a posto
             this.simulation.force(
                 "x",
                 d3
                     .forceX()
                     .strength(this.forceStrength)
                     .x(function (d) {
-                        return subsetToCenterMap[d.partitions[activePartitionId]].x;
+                        let nodePartition = d.partitions[activePartitionId];
+                        if (nodePartition) {
+                            return subsetToCenterMap[nodePartition].x;
+                        } else {
+                            return centers[centers.length - 1].x;
+                        }
                     })
             );
             this.simulation.force(
@@ -270,10 +313,15 @@ export default class BubbleChart {
                     .forceY()
                     .strength(this.forceStrength)
                     .y(function (d) {
-                        return subsetToCenterMap[d.partitions[activePartitionId]].y;
+                        let nodePartition = d.partitions[activePartitionId];
+                        if (nodePartition) {
+                            return subsetToCenterMap[nodePartition].y;
+                        } else {
+                            return centers[centers.length - 1].y;
+                        }
                     })
             );
-
+            this.updateSimulation(false)
             this.simulation.alpha(1).restart();
 
         }

@@ -24,13 +24,17 @@
         ></v-text-field>
       </div>
 
-      <div class="meta">Metadata, sul cellulare solo il totale, per il resto c'è il popup</div>
+      <div class="meta">Metadata, sul cellulare solo il totale, per il resto c'è il popup
+        <Totalizer :total="total" :newData="newData"/>
+      </div>
+
 
       <BubbleChart
         class="chart"
         :active-partition-id="activePartitionId"
         :partitions="partitions"
         :search="search"
+        @total_changed="onTotalChanged"
       ></BubbleChart>
 
       <div class="tools">
@@ -53,6 +57,7 @@
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BubbleChart from "@/components/overview/BubbleChart";
+import Totalizer from "@/components/Totalizer";
 import { debounce } from "lodash";
 
 export default {
@@ -73,7 +78,8 @@ export default {
     };
   },
   components: {
-    BubbleChart
+    BubbleChart,
+    Totalizer
   },
   beforeRouteUpdate(to, from, next) {
     // Update activePartition and search when the view is reused with new id
@@ -100,6 +106,11 @@ export default {
         params: { partitionId: this.activePartitionId },
         query: { s: this.search }
       });
+    },
+    onTotalChanged(data){
+      this.total["total"]=data.total;
+      this.total["total_filtered"]=data.total_filtered;
+      this.newData=true;
     }
   }
 };
@@ -110,7 +121,9 @@ function fetchData(app) {
   // Push default partition with id 'overview'
   app.partitions.push({
     id: "overview",
-    label: bgoStore.anyValue(overview, ns.bgo("label"))
+    label: bgoStore.anyValue(overview, ns.bgo("label")),
+    total: 0,
+    total_filtered: 0
   });
   const partitions = bgoStore.any(overview, ns.bgo("hasPartitionList"))
     .elements;

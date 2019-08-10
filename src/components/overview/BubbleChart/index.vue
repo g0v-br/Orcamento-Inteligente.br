@@ -42,6 +42,11 @@ export default {
     search: {
       handler: _debounce(newVal => {
         chart.filterBubbles(newVal);
+        if (this.activePartitionId == "overview") {
+          let overviewPartition=this.partitions.find(p=>{return p.id=="overview" });
+          emitTotalEvent(this,overviewPartition.total, 
+            overviewPartition.total_filtered);
+        }
       }, 1000),
       deep: true
     }
@@ -74,7 +79,11 @@ export default {
         this.activePartitionId
       );
     }, 200);
-
+    if (this.activePartitionId == "overview") {
+       let overviewPartition=this.partitions.find(p=>{return p.id=="overview" });
+      emitTotalEvent(this,overviewPartition.total, 
+            overviewPartition.total_filtered);
+    }
     window.addEventListener("resize", debouncedUpdate);
   },
 
@@ -92,6 +101,13 @@ export default {
     );
   }
 };
+function emitTotalEvent(app,total, total_filtered){
+  let data={
+    total,
+    total_filtered
+  }
+  app.$emit('total_changed',data);
+}
 </script>
 
 

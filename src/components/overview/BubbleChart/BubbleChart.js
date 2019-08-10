@@ -1,6 +1,16 @@
 import * as d3 from 'd3';
 
 function updateTotals(node, partitions_table, total, ns) {
+    //update overview total
+    let overviewPartition=partitions_table.find(p=>{
+        return p.id=="overview"
+    });
+    if (total = "total" || total == undefined) {
+        overviewPartition.total+=node.amount;
+    }
+    if ((total = "filtered" || total == undefined) && node.active) {
+        overviewPartition.total_filtered+=node.amount;
+    }   
     Object.keys(node.partitions).forEach((partition_id) => {
         let target_partition = partitions_table.find((partition) => {
             return partition_id == partition.id;
@@ -11,7 +21,6 @@ function updateTotals(node, partitions_table, total, ns) {
         //groupFunction define the way to calculate totals
         switch (target_partition.groupFunction) {
             //total = (sum of nodes.ammount - sum of nodes.referenceAmount)/ sum of nodes.referenceAmount
-
             case ns.bgo("trend_average").value:
                 if (target_subset.totalSupport == undefined) {
                     target_subset.totalSupport = {
@@ -49,8 +58,6 @@ function updateTotals(node, partitions_table, total, ns) {
         }
 
     });
-
-
 }
 //reset filtered totals
 function resetTotal(partitions_table) {
@@ -61,7 +68,10 @@ function resetTotal(partitions_table) {
                 if (subset.totalSupport != undefined)
                     subset.totalSupport = null;
             })
+        }else{
+            partition.total_filtered=0;
         }
+        
     });
 
 }
@@ -119,8 +129,6 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
 function match(account, text) {
     return account.title.includes(text) || account.description.includes(text);
 }
-
-
 
 function getCenters(gridBlocks) {
     const centers = [];

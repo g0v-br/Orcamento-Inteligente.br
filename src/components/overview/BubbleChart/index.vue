@@ -17,6 +17,7 @@ import BubbleChart from "@/components/overview/BubbleChart/BubbleChart.js";
 import * as d3 from "d3";
 import _debounce from "lodash/debounce";
 let debouncedUpdate;
+let debouncedSearch;
 let chart;
 export default {
   props: {
@@ -40,14 +41,10 @@ export default {
   },
   watch: {
     search: {
-      handler: _debounce(newVal => {
-        chart.filterBubbles(newVal);
-        if (this.activePartitionId == "overview") {
-          let overviewPartition=this.partitions.find(p=>{return p.id=="overview" });
-          emitTotalEvent(this,overviewPartition.total, 
-            overviewPartition.total_filtered);
-        }
-      }, 1000),
+      handler: function(newVal){
+        let app=this;
+        debouncedSearch(newVal,app);
+      },
       deep: true
     }
   },
@@ -61,7 +58,6 @@ export default {
       this.$refs.bound.offsetHeight
     );
     const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
-
     chart.render(this.search);
     chart.update(
       this.$refs.bound.offsetWidth,
@@ -69,7 +65,7 @@ export default {
       gridBloks,
       this.activePartitionId
     );
-
+    //new update can't be called twice in 200ms
     debouncedUpdate = _debounce(() => {
       const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
       chart.update(
@@ -79,6 +75,13 @@ export default {
         this.activePartitionId
       );
     }, 200);
+    //wait that user finisc to write search string
+    debouncedSearch = _debounce((newVal,app)=>{
+      chart.filterBubbles(newVal);
+          let overviewPartition=app.partitions.find(p=>{return p.id=="overview" });
+          emitTotalEvent(app, overviewPartition.total, overviewPartition.total_filtered);
+    },1000);
+
     if (this.activePartitionId == "overview") {
        let overviewPartition=this.partitions.find(p=>{return p.id=="overview" });
       emitTotalEvent(this,overviewPartition.total, 

@@ -113,6 +113,7 @@ resource:table_view a bgo:TableView ;
 #######################################################
 resource:p1_ministero a bgo:Partition ;
 bgo:partitionId "p1_ministero" ;
+bgo:sortOrder bgo:ascending_sort ;
 bgo:title "Partizione 1 per ministero" ;
 bgo:label "ministero" ;
 bgo:hasAccountSubSet
@@ -7502,7 +7503,7 @@ resource:trend_color_scheme a bgo:TrendColorScheme ;
 ##### Totalizer #######
 resource:totalizer a bgo:Totalizer ;
     bgo:totalPrintfTemplate "Totale: € %s" ;
-    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s%% del tot.)"
+    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s% del tot.)"
 .
 
 

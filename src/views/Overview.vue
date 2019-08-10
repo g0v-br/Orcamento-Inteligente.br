@@ -25,7 +25,7 @@
       </div>
 
       <div class="meta">Metadata, sul cellulare solo il totale, per il resto c'è il popup
-        <Totalizer :total="total" :newData="newData"/>
+        <Totalizer :total="total"/>
       </div>
 
 
@@ -74,7 +74,8 @@ export default {
       partitions: [],
       searchPaneLabel: "",
       search: null,
-      tags: []
+      tags: [],
+      total:"",
     };
   },
   components: {
@@ -108,9 +109,7 @@ export default {
       });
     },
     onTotalChanged(data){
-      this.total["total"]=data.total;
-      this.total["total_filtered"]=data.total_filtered;
-      this.newData=true;
+      this.total=""+data.total+";"+data.total_filtered;
     }
   }
 };

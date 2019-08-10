@@ -5,10 +5,10 @@ function updateTotals(node, partitions_table, total, ns) {
     let overviewPartition=partitions_table.find(p=>{
         return p.id=="overview"
     });
-    if (total = "total" || total == undefined) {
+    if (total == "total" || total == undefined) {
         overviewPartition.total+=node.amount;
     }
-    if ((total = "filtered" || total == undefined) && node.active) {
+    if ((total == "filtered" || total == undefined) && node.active) {
         overviewPartition.total_filtered+=node.amount;
     }   
     Object.keys(node.partitions).forEach((partition_id) => {
@@ -30,12 +30,12 @@ function updateTotals(node, partitions_table, total, ns) {
                         referenceAmountFiltered: 0
                     };
                 }
-                if (total = "total" || total == undefined) {
+                if (total == "total" || total == undefined) {
                     target_subset.totalSupport.amount += node.amount;
                     target_subset.totalSupport.referenceAmount += node.referenceAmount;
                     target_subset.total = (target_subset.totalSupport.amount - target_subset.totalSupport.referenceAmount) / target_subset.totalSupport.referenceAmount;
                 }
-                if ((total = "filtered" || total == undefined) && node.active) {
+                if ((total == "filtered" || total == undefined) && node.active) {
                     target_subset.totalSupport.amountFiltered += node.amount;
                     target_subset.totalSupport.referenceAmountFiltered += node.referenceAmount;
                     target_subset.total_filtered = (target_subset.totalSupport.amountFiltered - target_subset.totalSupport.referenceAmountFiltered) / target_subset.totalSupport.referenceAmountFiltered;
@@ -43,16 +43,16 @@ function updateTotals(node, partitions_table, total, ns) {
                 break;
             //total = sum of node.account (absolute o natural)
             case ns.bgo("amounts_sum").value:
-                if (total = "total" || total == undefined)
+                if (total == "total" || total == undefined)
                     target_subset.total += target_partition.sortCriteria == ns.bgo("abs_sort") ? Math.abs(node.amount) : node.amount;
-                if ((total = "filtered" || total == undefined) && node.active)
+                if ((total == "filtered" || total == undefined) && node.active)
                     target_subset.total_filtered += target_partition.sortCriteria == ns.bgo("abs_sort") ? Math.abs(node.amount) : node.amount;
                 break;
             //total = number of nodes in the subset
             case ns.bgo("accounts_count").value:
-                if (total = "total" || total == undefined)
+                if (total == "total" || total == undefined)
                     target_subset.total += 1;
-                if ((total = "filtered" || total == undefined) && node.active)
+                if ((total == "filtered" || total == undefined) && node.active)
                     target_subset.total_filtered += 1;
                 break;
         }
@@ -65,10 +65,12 @@ function resetTotal(partitions_table) {
         if (partition.id != "overview") {
             partition.subsets.forEach((subset) => {
                 subset.total_filtered = 0;
+                
                 if (subset.totalSupport != undefined)
                     subset.totalSupport = null;
             })
         }else{
+            console.log("HO AZZERATO PARTITION")
             partition.total_filtered=0;
         }
         
@@ -291,13 +293,21 @@ export default class BubbleChart {
             const centers = getCenters(gridBlocks);
             let subsetToCenterMap = {};
 
-            let activeSubsets = this.partitions.find(partition => {
+            let active_partition = this.partitions.find(partition => {
                 return partition.id == activePartitionId;
-            }).subsets;
-
-            activeSubsets.forEach((subset, i) => {
+            });
+            // sort array asc or desc
+            let subsets_clone=active_partition.subsets.slice(0);
+            subsets_clone.sort((a,b)=>{
+                return a.total_filtered-b.total_filtered;
+            });
+            if(active_partition.sortOrder==this.ns.bgo("descending_sort").value){
+                subsets_clone=subsets_clone.reverse();
+            }
+            subsets_clone.forEach((subset, i) => {
                 subsetToCenterMap[subset.id] = centers[i];
             })
+            
 
 
             // TODO aggiungere ai gridblock un blocco per i default, i nodi senza partizioni sono a posto

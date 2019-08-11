@@ -34,16 +34,18 @@ export default {
 
   computed: {
     activePartitionSubSets: function() {
-      return this.partitions.find(partition => {
+      let partition_active = this.partitions.find(partition => {
         return partition.id == this.activePartitionId;
-      }).subsets;
+      });
+      sortSubset(partition_active,ns);
+      return partition_active.subsets
     }
   },
   watch: {
     search: {
-      handler: function(newVal){
-        let app=this;
-        debouncedSearch(newVal,app);
+      handler: function(newVal) {
+        let app = this;
+        debouncedSearch(newVal, app);
       },
       deep: true
     }
@@ -76,16 +78,27 @@ export default {
       );
     }, 200);
     //wait that user finisc to write search string
-    debouncedSearch = _debounce((newVal,app)=>{
+    debouncedSearch = _debounce((newVal, app) => {
       chart.filterBubbles(newVal);
-          let overviewPartition=app.partitions.find(p=>{return p.id=="overview" });
-          emitTotalEvent(app, overviewPartition.total, overviewPartition.total_filtered);
-    },1000);
+      let overviewPartition = app.partitions.find(p => {
+        return p.id == "overview";
+      });
+      emitTotalEvent(
+        app,
+        overviewPartition.total,
+        overviewPartition.total_filtered
+      );
+    }, 1000);
 
     if (this.activePartitionId == "overview") {
-       let overviewPartition=this.partitions.find(p=>{return p.id=="overview" });
-      emitTotalEvent(this,overviewPartition.total, 
-            overviewPartition.total_filtered);
+      let overviewPartition = this.partitions.find(p => {
+        return p.id == "overview";
+      });
+      emitTotalEvent(
+        this,
+        overviewPartition.total,
+        overviewPartition.total_filtered
+      );
     }
     window.addEventListener("resize", debouncedUpdate);
   },
@@ -104,12 +117,22 @@ export default {
     );
   }
 };
-function emitTotalEvent(app,total, total_filtered){
-  let data={
+function emitTotalEvent(app, total, total_filtered) {
+  let data = {
     total,
     total_filtered
-  }
-  app.$emit('total_changed',data);
+  };
+  app.$emit("total_changed", data);
+}
+function sortSubset(partition_active,ns){
+   // sort array asc or desc
+      partition_active.subsets.sort((a, b) => {
+        return a.total_filtered - b.total_filtered;
+      });
+      if (partition_active.sortOrder == ns.bgo("descending_sort").value) {
+        partition_active.subsets.reverse();
+      }
+     
 }
 </script>
 

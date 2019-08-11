@@ -70,7 +70,6 @@ function resetTotal(partitions_table) {
                     subset.totalSupport = null;
             })
         }else{
-            console.log("HO AZZERATO PARTITION")
             partition.total_filtered=0;
         }
         
@@ -164,15 +163,19 @@ export default class BubbleChart {
         const overview = this.store.any(null, this.ns.rdf('type'), this.ns.bgo('Overview'));
         const colorScheme = this.store.any(overview, this.ns.bgo('hasTrendColorScheme'));
         const noTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('noTrendColor'));
-        const maxTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('maxTrendColor'));
-        const minTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('minTrendColor'));
-
-
+        const domainColor=[];
+        const rangeColor=[];
+        this.store.any(colorScheme,this.ns.bgo("rateTresholds")).elements.forEach((c)=>{
+            domainColor.push(parseFloat( c.value));
+        });
+        this.store.any(colorScheme,this.ns.bgo("colorTresholds")).elements.forEach((c)=>{
+            rangeColor.push(c.value);
+        });   
 
         const colorScale = (val) => {
             let fill = d3.scaleLinear()
-                .domain([-1, 0, 1])
-                .range([minTrendColor, '#fefefe', maxTrendColor])
+                .domain(domainColor)
+                .range(rangeColor)
                 .clamp(true);
 
             if (isFinite(val)) {
@@ -180,17 +183,6 @@ export default class BubbleChart {
             }
             return noTrendColor;
         }
-
-        // Calc total default area
-        // for (const n of this.nodes) {
-        //     this.totalDefaultArea += 3.14 * (radiusScale(n.amount) ** 2);
-        // }
-        // const maxRadius = (this.width > this.height) ? this.height : this.width;
-        // const maxArea = (3.14 * (((maxRadius / 2) - (maxRadius / 10)) ** 2));
-        // // Radius multiplier
-        // const radiusChangeRate = maxArea / this.totalDefaultArea;
-
-
 
         let bubbles = d3.select("svg#vis")
             .selectAll("circle")
@@ -293,20 +285,12 @@ export default class BubbleChart {
             const centers = getCenters(gridBlocks);
             let subsetToCenterMap = {};
 
-            let active_partition = this.partitions.find(partition => {
+            let active_subsets = this.partitions.find(partition => {
                 return partition.id == activePartitionId;
-            });
-            // sort array asc or desc
-            let subsets_clone=active_partition.subsets.slice(0);
-            subsets_clone.sort((a,b)=>{
-                return a.total_filtered-b.total_filtered;
-            });
-            if(active_partition.sortOrder==this.ns.bgo("descending_sort").value){
-                subsets_clone=subsets_clone.reverse();
-            }
-            subsets_clone.forEach((subset, i) => {
+            }).subsets;
+            active_subsets.forEach((subset, i) => {
                 subsetToCenterMap[subset.id] = centers[i];
-            })
+              });
             
 
 

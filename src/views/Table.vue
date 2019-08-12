@@ -69,11 +69,26 @@
         
         let accounts = bgoStore.each(undefined, ns.rdf('type'), ns.bgo('Account'));
         accounts.forEach(account => {
+            let title = bgoStore.anyValue(account, ns.bgo('title'));
+            let amount = bgoStore.anyValue(account, ns.bgo('amount'));
+            let rate = bgoStore.anyValue(account, ns.bgo('referenceAmount'))*100/amount;
+            
+            //Get the partitions using the hasAccount attribute
+            let partitionLabel, partitionLabels =[];
+            let partitions = bgoStore.each(undefined, ns.bgo('hasAccount'), account);
+            partitions.forEach((partition) => {
+                partitionLabels.push(bgoStore.anyValue(partition, ns.bgo('title')));
+            });
+
+
+            //Format partition labels
+            partitionLabel = partitionLabels.join(', ');
+            
             app.accounts.push({
-                title: bgoStore.anyValue(account, ns.bgo('title')),
-                amount: bgoStore.anyValue(account, ns.bgo('amount')),
-                rate: bgoStore.anyValue(account, ns.bgo('referenceAmount')),
-                partitionLabel: "TODO",
+                title,
+                amount,
+                rate,
+                partitionLabel,
             });
         })
 

@@ -1,62 +1,34 @@
 <template>
     <div class="container">
         <div class="g0v-table-container">
-            <VCard>
-                <VcardTitle>
-                    <h2 class="title">
-                        Totale visualizzato: {{totals}}
-                    </h2>
-                    <VSpacer />
-                    <VSpacer />
-                    <VTextField
-                    v-model="search" append-icon="search"
-                    :label="Cerca" single-line
-                    hide-details
-                    />
-                </VcardTitle>
-                <VDataTable
-                :headers="headers"
-                :items="filteredAccounts"
+            <v-card>
+              <v-card-title>
+                {{title}} : {{totals}}
+                <v-spacer></v-spacer>
+                <v-text-field
+                v-model="search"
+                append-icon="search"
+                label="Search"
+                single-line
+                hide-details
+                ></v-text-field>
+            </v-card-title>
+            <v-data-table
+            :headers="headers"
+            :items="accounts"
+            :search="search"
+            :pagination.sync="pagination"
+            :footer-props.items-per-page-text=25
+            :footer-props.items-per-page-options="[25,50,100,{text:'Tutti',value:-1}]"
+            class="elevation-1"
 
-                :pagination.sync="pagination"
-                :rows-per-page-text=25
-                :rows-per-page-items="[25,50,100,{text:'Tutti',value:-1}]"
-                class="elevation-1"
-                >
-                <template slot="headers" slot-scope="props">
-                    <tr>
-                        <th
-                        style="text-align: left;"
-                        v-for="header in props.headers"
-                        :key="header.text"
-                        :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
-                        @click="changeSort(header.value)">
-                        {{ header.text }}
-                        <VIcon small> arrow_upward</VIcon>
-                        </th>
-                    </tr>
-
-                </template>
-
-                <template slot="items" slot-scope="props">
-                <td class="account-name" width="35%" style="font-weight: 500;">
-                  {{ props.item.title }} 
-                </td>
-                <td class="account-amount" width="10%">
-                  {{props.item.amount}}
-                </td>
-                <td class="account-amount" width="10%">
-                  {{props.item.rate}}
-                </td>
-                <td class="account-top" width="15%">
-                  {{ props.item.partitionLabel}}
-                </td>
-          </template>
-        </VDataTable>
-    </VCard>
+            ></v-data-table>
+        </v-card>
+    </div>
 </div>
-</div>
+
 </template>
+
 
 <script>
     import { bgoStore, fetcher, ns } from "@/models/bgo.js";
@@ -64,7 +36,8 @@
         name: "Table",
         data() {
             return {
-                qualcosa: "ekkle",
+                title: "ekko",
+                accounts: [],
                 pagination: {
                     sortBy: "amount",
                     descending: true
@@ -72,25 +45,13 @@
                 search: ""
             };
         },
+        created() {
+            fetchData(this);
+            //this.search = this.$route.query.s || "";
+        },
         computed : {
             totals(){
                 return 1000000;
-            },
-            filteredAccounts(){
-                return [ 
-                { title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"},
-                { title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"},
-                { title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"},
-                { title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"},
-                { title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"},
-                { title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"},
-                { title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"},
-                { title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"},
-                { title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"},
-                { title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"},
-                { title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"},
-                { title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"},
-                ];
             },
             headers() {
                 return [
@@ -103,11 +64,27 @@
         }
     }
 
+    function fetchData(app) {
+        app.title = "totale visualizzato";
+        
+        let accounts = bgoStore.each(undefined, ns.rdf('type'), ns.bgo('Account'));
+        accounts.forEach(account => {
+            app.accounts.push({
+                title: bgoStore.anyValue(account, ns.bgo('title')),
+                amount: bgoStore.anyValue(account, ns.bgo('amount')),
+                rate: bgoStore.anyValue(account, ns.bgo('referenceAmount')),
+                partitionLabel: "TODO",
+            });
+        })
+
+        //app.accounts.push({ title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"});
+    }
+
 </script>
 
 
 
-//CSS
+<!-- CSS -->
 <style scoped>
 .g0v-table-container {
   background-color: #aaaaaa;
@@ -126,3 +103,73 @@ td::first-letter {
   width: auto;
   } */
 </style>
+
+
+
+
+
+
+
+<!-- 
+
+
+<template>
+    <div class="container">
+        <div class="g0v-table-container">
+            <VCard>
+                <VCardTitle>
+                    <h2 class="title">
+                        {{title}}: {{totals}}
+                    </h2>
+                    <v-spacer></v-spacer>
+                    <v-text-field
+                    v-model="search"
+                    append-icon="search"
+                    label="Search"
+                    single-line
+                    hide-details
+                    ></v-text-field>
+                </VCardTitle>
+                <VDataTable
+                :headers="headers"
+                :items="Accounts"
+
+                :pagination.sync="pagination"
+                :footer-props.items-per-page-text=25
+                :footer-props.items-per-page-options="[25,50,100,{text:'Tutti',value:-1}]"
+                class="elevation-1"
+                >
+                <template slot="headers" slot-scope="props">
+                    <tr>
+                        <th
+                        style="text-align: left;"
+                        v-for="header in props.headers"
+                        :key="header.text"
+                        :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                        @click="changeSort(header.value)">
+                        {{ header.text }}
+                        <VIcon small> arrow_upward</VIcon>
+                    </th>
+                </tr>
+
+            </template>
+
+            <template slot="items" slot-scope="props">
+                <td class="account-name" width="35%" style="font-weight: 500;">
+                  {{ props.item.title }} 
+              </td>
+              <td class="account-amount" width="10%">
+                  {{props.item.amount}}
+              </td>
+              <td class="account-amount" width="10%">
+                  {{props.item.rate}}
+              </td>
+              <td class="account-top" width="15%">
+                  {{ props.item.partitionLabel}}
+              </td>
+          </template>
+      </VDataTable>
+  </VCard>
+</div>
+</div>
+</template> -->

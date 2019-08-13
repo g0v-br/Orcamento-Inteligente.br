@@ -2,15 +2,15 @@ import * as d3 from 'd3';
 
 function updateTotals(node, partitions_table, total, ns) {
     //update overview total
-    let overviewPartition=partitions_table.find(p=>{
-        return p.id=="overview"
+    let overviewPartition = partitions_table.find(p => {
+        return p.id == "overview"
     });
     if (total == "total" || total == undefined) {
-        overviewPartition.total+=node.amount;
+        overviewPartition.total += node.amount;
     }
     if ((total == "filtered" || total == undefined) && node.active) {
-        overviewPartition.total_filtered+=node.amount;
-    }   
+        overviewPartition.total_filtered += node.amount;
+    }
     Object.keys(node.partitions).forEach((partition_id) => {
         let target_partition = partitions_table.find((partition) => {
             return partition_id == partition.id;
@@ -65,14 +65,14 @@ function resetTotal(partitions_table) {
         if (partition.id != "overview") {
             partition.subsets.forEach((subset) => {
                 subset.total_filtered = 0;
-                
+
                 if (subset.totalSupport != undefined)
                     subset.totalSupport = null;
             })
-        }else{
-            partition.total_filtered=0;
+        } else {
+            partition.total_filtered = 0;
         }
-        
+
     });
 
 }
@@ -83,11 +83,10 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
         let newNode;
         let id = store.anyValue(account, ns.bgo('accountId'));
 
-        let title = store.anyValue(account, ns.bgo('title'));
-        title = title ? title : "";
+        let title = store.anyValue(account, ns.bgo('title')) || "";
 
-        let description = store.anyValue(account, ns.bgo('description'));
-        description = description ? description : "";
+        let description = store.anyValue(account, ns.bgo('description')) || "";
+        // description = description ? description : "";
 
         let amount = store.anyValue(account, ns.bgo('amount'));
         amount = amount ? parseFloat(amount) : 0;
@@ -143,8 +142,9 @@ function getCenters(gridBlocks) {
 
 export default class BubbleChart {
 
-    constructor(el, bgolib, partitions, width, height) {
+    constructor(el, app, bgolib, partitions, width, height) {
         this.el = el;
+        this.app = app;
         this.height = height;
         this.width = width;
         this.store = bgolib.bgoStore;
@@ -163,14 +163,14 @@ export default class BubbleChart {
         const overview = this.store.any(null, this.ns.rdf('type'), this.ns.bgo('Overview'));
         const colorScheme = this.store.any(overview, this.ns.bgo('hasTrendColorScheme'));
         const noTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('noTrendColor'));
-        const domainColor=[];
-        const rangeColor=[];
-        this.store.any(colorScheme,this.ns.bgo("rateTresholds")).elements.forEach((c)=>{
-            domainColor.push(parseFloat( c.value));
+        const domainColor = [];
+        const rangeColor = [];
+        this.store.any(colorScheme, this.ns.bgo("rateTresholds")).elements.forEach((c) => {
+            domainColor.push(parseFloat(c.value));
         });
-        this.store.any(colorScheme,this.ns.bgo("colorTresholds")).elements.forEach((c)=>{
+        this.store.any(colorScheme, this.ns.bgo("colorTresholds")).elements.forEach((c) => {
             rangeColor.push(c.value);
-        });   
+        });
 
         const colorScale = (val) => {
             let fill = d3.scaleLinear()
@@ -184,6 +184,7 @@ export default class BubbleChart {
             return noTrendColor;
         }
 
+        const self = this;
         let bubbles = d3.select("svg#vis")
             .selectAll("circle")
             .data(this.nodes)
@@ -201,17 +202,20 @@ export default class BubbleChart {
             .attr("stroke", function (d) {
                 return d3.rgb(colorScale(d.rate)).darker();
             })
-            .on("mouseover", function () {
+            .on("mouseover", function (d) {
                 this.style["stroke-width"] = 4;
+                self.app.$emit("nodeover", Object.assign({}, d, { r: this.r.animVal.value }));
+                // console.table(d);
             })
-            .on("mouseout", function () {
+            .on("mouseout", function (d) {
                 this.style["stroke-width"] = 1;
+                self.app.$emit('nodeout');
             });
 
         // native tooltip
-        bubbles.append('title').text(function (d) {
-            return `${d.title}\n${d.rate * 100}%`;
-        })
+        // bubbles.append('title').text(function (d) {
+        //     return `${d.title}\n${d.rate * 100}%`;
+        // })
 
 
         const ticked = () => {
@@ -290,8 +294,8 @@ export default class BubbleChart {
             }).subsets;
             active_subsets.forEach((subset, i) => {
                 subsetToCenterMap[subset.id] = centers[i];
-              });
-            
+            });
+
 
 
             // TODO aggiungere ai gridblock un blocco per i default, i nodi senza partizioni sono a posto

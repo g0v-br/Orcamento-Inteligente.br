@@ -7,7 +7,7 @@
         class="grid-block"
       >{{subset.id}}</div>
     </div>
-    <svg id="vis" />
+    <svg ref="vis" id="vis" />
   </div>
 </template>
 
@@ -37,8 +37,8 @@ export default {
       let partition_active = this.partitions.find(partition => {
         return partition.id == this.activePartitionId;
       });
-      sortSubset(partition_active,ns);
-      return partition_active.subsets
+      sortSubset(partition_active, ns);
+      return partition_active.subsets;
     }
   },
   watch: {
@@ -54,6 +54,7 @@ export default {
   mounted() {
     chart = new BubbleChart(
       "#vis",
+      this,
       { bgoStore, ns },
       this.partitions,
       this.$refs.bound.offsetWidth,
@@ -124,15 +125,14 @@ function emitTotalEvent(app, total, total_filtered) {
   };
   app.$emit("total_changed", data);
 }
-function sortSubset(partition_active,ns){
-   // sort array asc or desc
-      partition_active.subsets.sort((a, b) => {
-        return a.total_filtered - b.total_filtered;
-      });
-      if (partition_active.sortOrder == ns.bgo("descending_sort").value) {
-        partition_active.subsets.reverse();
-      }
-     
+function sortSubset(partition_active, ns) {
+  // sort array asc or desc
+  partition_active.subsets.sort((a, b) => {
+    return a.total_filtered - b.total_filtered;
+  });
+  if (partition_active.sortOrder == ns.bgo("descending_sort").value) {
+    partition_active.subsets.reverse();
+  }
 }
 </script>
 
@@ -140,6 +140,8 @@ function sortSubset(partition_active,ns){
 <style>
 .bc-container {
   position: relative;
+  height: 100%;
+  width: 100%;
 }
 .partitions-grid {
   height: 100%;

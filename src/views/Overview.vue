@@ -24,18 +24,27 @@
         ></v-text-field>
       </div>
 
-      <div class="meta">Metadata, sul cellulare solo il totale, per il resto c'è il popup
-        <Totalizer :total="total"/>
+      <div class="meta">
+        Metadata, sul cellulare solo il totale, per il resto c'è il popup
+        <Totalizer :total="total" />
       </div>
 
-
-      <BubbleChart
-        class="chart"
-        :active-partition-id="activePartitionId"
-        :partitions="partitions"
-        :search="search"
-        @total_changed="onTotalChanged"
-      ></BubbleChart>
+      <div ref="chart" class="chart">
+        <BubbleChart
+          :active-partition-id="activePartitionId"
+          :partitions="partitions"
+          :search="search"
+          @total_changed="onTotalChanged"
+          @nodeover="onNodeOver"
+          @nodeout="isNodeHovered = false"
+        ></BubbleChart>
+        <Tooltip
+          v-if="isNodeHovered"
+          :node="hoveredNode"
+          :style="{top: hoveredNode.top+'px', left:hoveredNode.left+'px'}"
+          class="tooltip"
+        />
+      </div>
 
       <div class="tools">
         <div class="tagcloud">
@@ -58,10 +67,16 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BubbleChart from "@/components/overview/BubbleChart";
 import Totalizer from "@/components/Totalizer";
+import Tooltip from "@/components/overview/Tooltip";
 import { debounce } from "lodash";
 
 export default {
   name: "overview",
+  components: {
+    BubbleChart,
+    Totalizer,
+    Tooltip
+  },
   props: {
     partitionId: {
       type: String,
@@ -75,13 +90,12 @@ export default {
       searchPaneLabel: "",
       search: null,
       tags: [],
-      total:"",
+      total: "",
+      isNodeHovered: false,
+      hoveredNode: {}
     };
   },
-  components: {
-    BubbleChart,
-    Totalizer
-  },
+
   beforeRouteUpdate(to, from, next) {
     // Update activePartition and search when the view is reused with new id
     this.activePartitionId = to.params.partitionId;
@@ -108,8 +122,30 @@ export default {
         query: { s: this.search }
       });
     },
-    onTotalChanged(data){
-      this.total=""+data.total+";"+data.total_filtered;
+    onTotalChanged(data) {
+      this.total = "" + data.total + ";" + data.total_filtered;
+    },
+    onNodeOver(node) {
+      const tooltipHeight = 100;
+      const tooltipWidth = 350;
+      const boundHeight = this.$refs.chart.offsetHeight;
+      const boundWidth = this.$refs.chart.offsetWidth;
+      // let top = node.y + node.r / 1.4142;
+      let top = node.y - node.r - tooltipHeight - 12;
+      // let left = node.x + node.r / 1.4142;
+      let left = node.x - tooltipWidth / 2;
+      left = left < 0 ? 0 : left;
+      // if (top + tooltipHeight > boundHeight) {
+      //   top = boundHeight - tooltipHeight;
+      // }
+      if (left + tooltipWidth > boundWidth) {
+        left = boundWidth - tooltipWidth;
+      }
+      this.hoveredNode = Object.assign({}, this.hoveredNode, node, {
+        top,
+        left
+      });
+      this.isNodeHovered = true;
     }
   }
 };
@@ -223,23 +259,24 @@ function fetchData(app) {
 
 .partitions {
   grid-area: part;
-  /* background-color: aquamarine; */
 }
 .search {
   grid-area: search;
-  /* background-color: blueviolet; */
 }
 .meta {
   grid-area: meta;
-  /* background-color: cadetblue; */
 }
 .chart {
+  position: relative;
   grid-area: chart;
-  /* background-color: chartreuse; */
+}
+.chart .tooltip {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 .tools {
   grid-area: tools;
-  /* background-color: coral; */
 }
 
 .tagcloud {
@@ -250,14 +287,14 @@ function fetchData(app) {
 
 .tagcloud .tag {
   text-decoration: none;
-  color: #9e9e9e;
+  color: #919191;
   width: auto;
   margin: 0 0.2em;
   text-align: center;
   vertical-align: middle;
 }
 .tagcloud .tag:hover {
-  color: #797979;
+  color: #6b6b6b;
 }
 
 /* Landscape phones to portrait tablets and desktop */

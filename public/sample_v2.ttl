@@ -101,7 +101,6 @@ here palace your **Terms & conditions** about published service.
 resource:table_view a bgo:TableView ;
 	bgo:title "Table view";
     bgo:hasSearchPane resource:search_pane ;
-
     bgo:headerTitle "Title" ;
     bgo:headerAmount "Amount" ;
     bgo:headerTrend "Trend" ;

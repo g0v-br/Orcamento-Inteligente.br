@@ -8,7 +8,7 @@
                 <v-text-field
                 v-model="search"
                 append-icon="fa-search"
-                label="Search"
+                label="search"
                 single-line
                 hide-details
                 ></v-text-field>
@@ -22,7 +22,7 @@
               prevIcon: 'mdi-arrow-left',
               nextIcon: 'mdi-arrow-right'
             }"
-            class="elevation-1"
+            class="elevation-1 fixed"
 
           ></v-data-table>
       </v-card>
@@ -39,6 +39,7 @@
         data() {
             return {
                 title: "ekko",
+                headers: [],
                 accounts: [],
                 pagination: {
                     sortBy: "amount",
@@ -54,44 +55,62 @@
         computed : {
             totals(){
                 return 1000000;
-            },
-            headers() {
-                return [
-                { text: "title", value: "title" },
-                { text: "amount", value: "amount" },
-                { text: "rate", value: "rate" },
-                { text: "partitionLabel", value: "partitionLabel" }
-                ];
             }
+            // headers() {
+            //     return [
+            //     { text: "title", value: "title" },
+            //     { text: "amount", value: "amount" },
+            //     { text: "rate", value: "rate" },
+            //     { text: "partitionLabel", value: "partitionLabel" }
+            //     ];
+            // }
         }
     }
 
     function fetchData(app) {
-        app.title = "totale visualizzato";
+        //Fetch TableView
+        let tableView = bgoStore.any(undefined, ns.rdf('type'), ns.bgo('TableView')); 
         
+        //fetch Title
+        app.title = bgoStore.anyValue(tableView, ns.bgo('title'));
+        
+
+        //Fetch Headers
+        app.headers.push({text: bgoStore.anyValue(tableView, ns.bgo('headerTitle')), value: 'title'});
+        app.headers.push({text: bgoStore.anyValue(tableView, ns.bgo('headerAmount')), value: 'amount'});
+        app.headers.push({text: bgoStore.anyValue(tableView, ns.bgo('headerTrend')), value: 'trend'});
+        app.headers.push({text: bgoStore.anyValue(tableView, ns.bgo('headerDescription')), value: 'description'});
+
+        //Set the search
+        let searchPane = bgoStore.any(tableView, ns.bgo('hasSearchPane'));
+        app.search = bgoStore.anyValue(searchPane, ns.bgo('label'));
+
+
+        //Fetch Accounts
         let accounts = bgoStore.each(undefined, ns.rdf('type'), ns.bgo('Account'));
         accounts.forEach(account => {
             let title = bgoStore.anyValue(account, ns.bgo('title'));
             let amount = bgoStore.anyValue(account, ns.bgo('amount'));
+            let description = bgoStore.anyValue(account, ns.bgo('description'));
             let previousValue = bgoStore.anyValue(account, ns.bgo('referenceAmount'));
-            let rate = (amount - previousValue) / previousValue;
+            let trend = (amount - previousValue) / previousValue;
             
-            //Get the partitions using the hasAccount attribute
-            let partitionLabel, partitionLabels =[];
-            let partitions = bgoStore.each(undefined, ns.bgo('hasAccount'), account);
-            partitions.forEach((partition) => {
-                partitionLabels.push(bgoStore.anyValue(partition, ns.bgo('title')));
-            });
+            // Get the partitions using the hasAccount attribute
+            // let partitionLabel, partitionLabels =[];
+            // let partitions = bgoStore.each(undefined, ns.bgo('hasAccount'), account);
+            // partitions.forEach((partition) => {
+            //     partitionLabels.push(bgoStore.anyValue(partition, ns.bgo('title')));
+            // });
 
 
             //Format partition labels
-            partitionLabel = partitionLabels.join(', ');
+            //description = partitionLabels.join(', ');
             
             app.accounts.push({
                 title,
                 amount,
-                rate,
-                partitionLabel,
+                trend,
+                description,
             });
         })
 

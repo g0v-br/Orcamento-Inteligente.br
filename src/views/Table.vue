@@ -7,7 +7,7 @@
                 <v-spacer></v-spacer>
                 <v-text-field
                 v-model="search"
-                append-icon="search"
+                append-icon="fa-search"
                 label="Search"
                 single-line
                 hide-details
@@ -17,14 +17,16 @@
             :headers="headers"
             :items="accounts"
             :search="search"
-            :pagination.sync="pagination"
-            :footer-props.items-per-page-text=25
-            :footer-props.items-per-page-options="[25,50,100,{text:'Tutti',value:-1}]"
+            :items-per-page = 25
+            :footer-props="{
+              prevIcon: 'mdi-arrow-left',
+              nextIcon: 'mdi-arrow-right'
+            }"
             class="elevation-1"
 
-            ></v-data-table>
-        </v-card>
-    </div>
+          ></v-data-table>
+      </v-card>
+  </div>
 </div>
 
 </template>
@@ -71,7 +73,8 @@
         accounts.forEach(account => {
             let title = bgoStore.anyValue(account, ns.bgo('title'));
             let amount = bgoStore.anyValue(account, ns.bgo('amount'));
-            let rate = bgoStore.anyValue(account, ns.bgo('referenceAmount'))*100/amount;
+            let previousValue = bgoStore.anyValue(account, ns.bgo('referenceAmount'));
+            let rate = (amount - previousValue) / previousValue;
             
             //Get the partitions using the hasAccount attribute
             let partitionLabel, partitionLabels =[];

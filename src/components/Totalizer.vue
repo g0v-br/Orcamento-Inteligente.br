@@ -16,7 +16,7 @@ export default {
             if(totals[0]==totals[1]){
                 return text.replace("%s",totals[0]);
             }else{
-                //replace works only with the first occourrence of %2
+                //replace works only with the first occourrence of %s
                 return text.replace("%s",totals[1]).replace("%s",totals[1]*100/totals[0]);
             }
         }

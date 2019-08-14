@@ -1,11 +1,10 @@
 <template>
   <div ref="bound" class="bc-container">
     <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
-      <div
-        v-for="subset in activePartitionSubSets"
-        :key="subset.id"
-        class="grid-block"
-      >{{subset.id}}</div>
+      <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">
+        <h3 class="subheading">{{ subset.title }}</h3>
+        <Totalizer :total="total_subset(subset)" />
+      </div>
     </div>
     <svg ref="vis" id="vis" />
   </div>
@@ -16,10 +15,14 @@ import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BubbleChart from "@/components/overview/BubbleChart/BubbleChart.js";
 import * as d3 from "d3";
 import _debounce from "lodash/debounce";
+import Totalizer from "@/components/Totalizer.vue"
 let debouncedUpdate;
 let debouncedSearch;
 let chart;
 export default {
+  components:{
+    Totalizer
+  },
   props: {
     activePartitionId: {
       type: String
@@ -31,7 +34,6 @@ export default {
       type: String
     }
   },
-
   computed: {
     activePartitionSubSets: function() {
       let partition_active = this.partitions.find(partition => {
@@ -39,6 +41,11 @@ export default {
       });
       sortSubset(partition_active, ns);
       return partition_active.subsets;
+    }
+  },
+  methods: {
+    total_subset(subset) {
+      return "" + subset.total + ";" + subset.total_filtered;
     }
   },
   watch: {
@@ -50,7 +57,6 @@ export default {
       deep: true
     }
   },
-
   mounted() {
     chart = new BubbleChart(
       "#vis",
@@ -103,11 +109,9 @@ export default {
     }
     window.addEventListener("resize", debouncedUpdate);
   },
-
   beforeDestroy() {
     window.removeEventListener("resize", debouncedUpdate);
   },
-
   updated() {
     const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
     chart.update(

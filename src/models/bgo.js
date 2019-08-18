@@ -47,9 +47,9 @@ Si presume che la variabile $dereferencingRules contenga qualcosa tipo:
 		{ "regexp":".*" , "targets": [ "http://example.com/app.ttl"] } ,
 		{ "regexp":"/account/(.+)" , "targets": [ "http://example.com/account/$1.ttl" ] , "isLast": true } ,
 		{ "regexp":"/partition/(.+)" , "targets": [ "http://example.com/accounts.ttl", "http://example.com/partition/$1.ttl" ] , "isLast": true } ,
-		{ "regexp":"/$" , "targets": [ "http://example.com/accounts.ttl","http://example.com/overview.ttl"] , "isLast": true } 
 	]
 }
+
 
 la chiamata di dref( "http:/qualsiasicosa/partition/pippo") deve ritornare:
 	[
@@ -59,21 +59,29 @@ la chiamata di dref( "http:/qualsiasicosa/partition/pippo") deve ritornare:
 	]
 
 
-la chiamata di dref( "/") deve ritornare:
+la chiamata di dref( "/partition/overview") deve ritornare:
 	[
 		"http://example.com/app.ttl",
 		"http://example.com/accounts.ttl",
-		"http://example.com/overview.ttl"
+		"http://example.com/partition/overview.ttl"
 	]
 
 
 la chiamata di dref( "/nonesiste") deve ritornare:
-	"/nonesiste"
+	[
+		"/nonesiste"
+		"http://example.com/app.ttl"
+	]
 
-function dref( String $uri): array | String
+function dref( String $uri): array 
 {
 	$results = [];
 	$config = include "/config.js";
+	
+	//aggiungo l'ultima regola standard che matcha sempre
+	$dereferencingRules = $config->dereferencingRules + { "regexp": $uri , "targets": [ $uri ] } ;
+	
+	
 	foreach( $config->dereferencingRules a $rule ) {
 		$pattern = '%'.$rule->regexp.'%';
 		if( preg_matches ($pattern, $uri, $matches ) {
@@ -94,9 +102,7 @@ function dref( String $uri): array | String
 			if ($rule->isLast) break; // exit foreach loop, ignora le regole successive
 		}
 	}
-	
-	
-	// se result è vuoto ritornare l'uri
-	return empty($results)?$uri:$results
+
+	return $results
 }
 */

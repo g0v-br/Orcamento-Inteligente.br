@@ -33,9 +33,8 @@ export function getDefaultMenuItems(parent) {
 	}
 }
 
-//TO DO
-export function dref(uri) {
 
+export function dref(uri) {
 	const results = [];
 	const rules = config.dereferencingRules;
 

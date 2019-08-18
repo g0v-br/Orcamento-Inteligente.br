@@ -11,13 +11,25 @@
 //	]
 //}
 //else
+//
 
+let config = {
+	"dereferencingRules": [
+		{ "regexp": ".*", "targets": ["http://example.com/app.ttl"] },
+		{ "regexp": ".*/account/(.+)", "targets": ["http://example.com/account/$1.ttl"], "isLast": true },
+		{ "regexp": ".*/partition/(.+)", "targets": ["http://example.com/accounts.ttl", "http://example.com/partition/$1.ttl"], "isLast": true },
+	]
+}
 
-export default
-	{
+if (process.env.VUE_APP_DOMAIN) {
+	const domain = process.env.VUE_APP_DOMAIN;
+	config = {
 		"dereferencingRules": [
-			{ "regexp": ".*", "targets": ["http://example.com/app.ttl"] },
-			{ "regexp": ".*/account/(.+)", "targets": ["http://example.com/account/$1.ttl"], "isLast": true },
-			{ "regexp": ".*/partition/(.+)", "targets": ["http://example.com/accounts.ttl", "http://example.com/partition/$1.ttl"], "isLast": true },
+			{ "regexp": ".*", "targets": [`${domain}/app.ttl`] },
+			{ "regexp": ".*/account/(.+)", "targets": [`${domain}/account/$1.ttl`], "isLast": true },
+			{ "regexp": ".*/partition/(.+)", "targets": [`${domain}/accounts.ttl`, `${domain}/partition/$1.ttl`], "isLast": true },
 		]
 	}
+}
+
+export default config;

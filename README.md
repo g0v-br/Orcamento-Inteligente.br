@@ -48,7 +48,7 @@ Le funzioni di LODMAP2D sono richiamabili da un browser di nuova generazione ric
 
 | url template | azione |
 |------------- |------- |
-| /{?s} | renderizza un soggetto di tipo bgo:Overview  |
+| /partition/overview{?s} | renderizza un soggetto di tipo bgo:Overview  |
 | /table{?s} | renderizza un soggetto di tipo bgo:TableView  |
 | /credits | renderizza un soggetto di tipo bgo:CreditsView |
 | /terms | renderizza un soggetto di tipo bgo:TermsView |

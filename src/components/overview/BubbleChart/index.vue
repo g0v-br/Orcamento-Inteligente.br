@@ -89,7 +89,7 @@ export default {
         overviewPartition.total,
         overviewPartition.total_filtered
       );
-    }, 1000);
+    }, 200);
 
     if (this.activePartitionId == "overview") {
       let overviewPartition = this.partitions.find(p => {

@@ -41,7 +41,7 @@ docker rm -f lodmap2d
 
 ## Usare LODMAP2D
 
-LODMAP2D può essere pensato come un browser semantico in grado di riconoscerealcuni concetti descritti
+LODMAP2D è un browser semantico in grado di riconoscere i concetti descritti
 nella [Bubble Graph Ontology(BGO)](http://linkeddata.center/lodmap-bgo/v1)
 
 Le funzioni di LODMAP2D sono richiamabili da un browser di nuova generazione richiamando un URL seguito da alcune rotte gestite direttamente dalla applicazione (i.e. senza accedere alla rete), ed in particolare:
@@ -63,8 +63,8 @@ Il parametro opzionale  *s* permette di filtrare nella visualizzazione gli ogget
 
 Dal punto di vista tecnico, LODMAP2D è una single page application sviluppata nel framework [Vue](https://vuejs.org/) in accordo alle specifiche [SOLID](https://github.com/solid/solid-spec) basata sulla la libreria [Data Driven Document (d3)](https://d3js.org/)
 
-Il modello dei dati adotta il [Resource Description Framework (RDF)](https://www.w3.org/RDF/) e gli standard del [Semanitic Web](https://www.w3.org/standards/semanticweb/data). 
-In particolare LODMAP2D in grado di riconoscere dati espressi con la [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
+Il modello dei dati adotta il [Resource Description Framework (RDF)](https://www.w3.org/RDF/) e gli standards del [Semanitic Web](https://www.w3.org/standards/semanticweb/data). 
+In particolare LODMAP2D è in grado di riconoscere dati espressi con la [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
 
 I dati sono ottenuti attraverso una dereferenziazione delle rotte gestite internamente dalla applicazione attraverso la libreria bgolib, che estende la libreria [rdflib](https://github.com/linkeddata/rdflib.js/)
 
@@ -73,7 +73,7 @@ Nella configurazione di default i dati di esempio sono contenuti nel file
 
 ## Security
 
-LODMAP2D è molto rispettosa della privacy degli utenti, non utilizza nessun codice di tracciamento e non usa alcun cookie.
+LODMAP2D è molto rispettosa della privacy degli utenti, non utilizza codici di tracciamento e non usa alcun cookie.
 
 Se le risorse dereferenziate lo richiedono, LODMAP2D si autentica utizzando il [WebID](https://www.w3.org/wiki/WebID) che l'utente specifica in fase di login. La login è necessaria solo
 per accedere a dati riservati e per funzioni future, non è necessaria per accedere a dati pubblici.
@@ -100,14 +100,14 @@ LODMAP2D è predisposto per dereferenziare le rotte (ovvero caricare i dati nece
 
 risorsa | contenuto ritornato
 ------- | -------------------
-*LODMAP2D_DATA*/app.ttl | contiene dati relativi ai menu utilizzati da tutte le rotte.
+*LODMAP2D_DATA*/app | contiene dati utilizzati da tutte le rotte.
 *LODMAP2D_DATA*/account/*account_id*  | contiene i dati relativi all'account *account_id*
 *LODMAP2D_DATA*/partition/*partition_id*  | contiene i dati specifici relativi alla partizione *partition_id*
-*LODMAP2D_DATA*/credits.ttl | contiene i dati specifici alla rotta /credits
-*LODMAP2D_DATA*/terms.ttl | contiene i dati  specifici alla rotta /terms 
-*LODMAP2D_DATA*/accounts.ttl | contiene un indice di tutte gli account, includendo solo
+*LODMAP2D_DATA*/credits | contiene i dati specifici alla rotta /credits
+*LODMAP2D_DATA*/terms | contiene i dati  specifici alla rotta /terms 
+*LODMAP2D_DATA*/accounts | contiene un indice di tutte gli account, includendo solo
 le un subset delle informazioni presenti in dettaglio anche nei file della directory account 
-*LODMAP2D_DATA*/overview.ttl | contiene  dati  specifici alla rotta principale (/)
+*LODMAP2D_DATA*/overview | contiene  dati  specifici alla rotta principale (/)
 
 Ricompilando l'applicazione, è possibile utilizzare altre configurazioni (usando risorse RestFUL, LDP, SPARQL endpoints, etc., etc.) ottenibili modificando il file [config.js](config.js)
 
@@ -117,7 +117,8 @@ e sono inspirate al [Apache mod_rewrite](https://httpd.apache.org/docs/current/r
 
 Una regola di riscrittura è composta da tre attributi:
 
-- una espressione regolare (*regexp*) che viene applicata all'uri, in caso di match la regla viene valutata.
+- una espressione regolare (*regexp*) che viene applicata all'uri, in caso di match la regola viene valutata,
+altrimenti viene ignorata
 - un array di stringhe (*targets*) in cui ciascun elemento può contenere riferimenti (con "$1", "$2".."$n") a eventuali gruppi presenti nella regexp. 
 - un valore booleano (*isLast*) che dice se 'elaborazione delle regole deve considerarsi conclusa.
 
@@ -128,9 +129,9 @@ Nella directory *doc/config* è possibile trovare alcuni esempi di di configuraz
 
 # Thanks
 
-- [Enrico Fagnoni](https://github.com/ecow),[Miah Mohd Ehtesham](https://github.com/miahmohd), [Leonardo Longhi](https://github.com/LeonardoLonghi) and [Yassine Ouahidi](https://github.com/YassineOuahidi) the webapp code design.
+- [Enrico Fagnoni](https://github.com/ecow),[Miah Mohd Ehtesham](https://github.com/miahmohd), [Leonardo Longhi](https://github.com/LeonardoLonghi) and [Yassine Ouahidi](https://github.com/YassineOuahidi) for the webapp code design.
 - The [D3.js library](https://d3js.org/)
-- [Evan You](http://evanyou.me/) and the [Vue community](https://vuejs.org) for the great framework
+- [Evan You](http://evanyou.me/) and the [Vue community](https://vuejs.org) for the great javascript framework
 - TimBL & LinkedData team for SOLID and [rdflib project](https://github.com/linkeddata/rdflib.js)
 
 ## License

@@ -20,9 +20,15 @@ The application will be ready on port 8080
  
 ## Build and run with docker
 
-The platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized development environment up and running. 
-If you do not already have Docker on your computer, 
+The platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized  environment up and running. If you do not already have Docker on your computer, 
 [it's the right time to install it](https://docs.docker.com/install/).
+
+To run LODMAP2D container directly from dockerhub:
+
+```bash
+docker run -d --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
+```
+
 
 To build and run LODMAP2D container:
 
@@ -30,6 +36,7 @@ To build and run LODMAP2D container:
 docker build -t lodmap2d -f docker/Dockerfile .
 docker run -d --name lodmap2d -p 8080:80 lodmap2d
 ```
+
 
 Try it pointing your browser to http://localhost
 

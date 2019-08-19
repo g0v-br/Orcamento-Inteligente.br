@@ -8,7 +8,7 @@ LODMAP2D uses the SOLID specifications and the Semantic Web standards to ensure 
 
 ## Build and run with node
 
-Be sure to have [node](https://nodejs.org) installed, open a console and type:
+Be sure to have [node](https://nodejs.org) v 12.8+ installed, open a console and type:
 
 ```bash
 npm install
@@ -27,11 +27,11 @@ If you do not already have Docker on your computer,
 To build and run LODMAP2D container:
 
 ```bash
-docker build -t lodmap2d .
-docker run -d --name lodmap2d -p 8080:8080 lodmap2d
+docker build -t lodmap2d  .
+docker run -d --name lodmap2d -p 80:80 lodmap2d
 ```
 
-Try it pointing your browser to http://localhost:8080
+Try it pointing your browser to http://localhost
 
 Free docker resources with:
 
@@ -56,15 +56,15 @@ Le funzioni di LODMAP2D sono richiamabili da un browser di nuova generazione ric
 | /partition/{partition_id}{?s} | renderizza un soggetto di tipo bgo:Partition |
 
 
-Il parametro opzionale  *s* permette di filtrare nella visualizzazione gli oggetti il cui titolo, la cui descrizione o la cui id contiene, anche parzialmente, la stringa passata come valore al parametro.
+Il parametro opzionale  *s* permette di filtrare nella visualizzazione gli oggetti il cui titolo, la cui descrizione o il cui id contiene, anche parzialmente, la stringa passata come valore al parametro.
 
 
 ## Development
 
-Dal punto di vista tecnico, LODMAP2D è una single page application sviluppata nel framework [Vue](https://vuejs.org/) in accordo alle specifiche [SOLID](https://github.com/solid/solid-spec) basata sulla la libreria [Data Driven Document (d3)](https://d3js.org/)
+Dal punto di vista tecnico, LODMAP2D è una single page application sviluppata nel framework [Vue](https://vuejs.org/) in accordo alle specifiche [SOLID](https://github.com/solid/solid-spec) e basata sulla la libreria [Data Driven Document (d3)](https://d3js.org/)
 
-Il modello dei dati adotta il [Resource Description Framework (RDF)](https://www.w3.org/RDF/) e gli standards del [Semanitic Web](https://www.w3.org/standards/semanticweb/data). 
-In particolare LODMAP2D è in grado di riconoscere dati espressi con la [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
+Il modello dei dati adotta il [Resource Description Framework (RDF)](https://www.w3.org/RDF/) e gli standards del [Semantic Web](https://www.w3.org/standards/semanticweb/data). 
+In particolare LODMAP2D visualizza dati espressi con la [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
 
 I dati sono ottenuti attraverso una dereferenziazione delle rotte gestite internamente dalla applicazione attraverso la libreria bgolib, che estende la libreria [rdflib](https://github.com/linkeddata/rdflib.js/)
 
@@ -96,20 +96,19 @@ L'utilizzo di docker semplifica enormemente le attività di personalizzazione. V
 
 ### Personalizzazione dei dati
 
-LODMAP2D è predisposto per dereferenziare le rotte (ovvero caricare i dati necessari a visualizzare una rotta) in due modalità differenti, pilotabile dalla variabile di ambiente LODMAP2D_DATA: se la variabile non esiste o è vuota, sono caricati dei dati di test, altrimenti si assume che la variabile LODMAP2D_DATA contenga un endpoint che fornisca le seguenti risorse serializzato in RDF turtle:
+LODMAP2D è predisposto per dereferenziare le rotte (ovvero caricare i dati necessari a visualizzare una rotta) in due modalità differenti, pilotabile dalla variabile di ambiente VUE_APP_VUE_APP_LODMAP2D_DATA: se la variabile non esiste o è vuota, sono caricati dei dati contenuti nel file data.ttl nella directory principale di distribuzione, altrimenti si assume che la variabile VUE_APP_VUE_APP_LODMAP2D_DATA contenga un endpoint che fornisca le seguenti risorse serializzate in RDF turtle:
 
 risorsa | contenuto ritornato
 ------- | -------------------
-*LODMAP2D_DATA*/app | contiene dati utilizzati da tutte le rotte.
-*LODMAP2D_DATA*/account/*account_id*  | contiene i dati relativi all'account *account_id*
-*LODMAP2D_DATA*/partition/*partition_id*  | contiene i dati specifici relativi alla partizione *partition_id*
-*LODMAP2D_DATA*/credits | contiene i dati specifici alla rotta /credits
-*LODMAP2D_DATA*/terms | contiene i dati  specifici alla rotta /terms 
-*LODMAP2D_DATA*/accounts | contiene un indice di tutte gli account, includendo solo
+*VUE_APP_LODMAP2D_DATA*/app | contiene dati utilizzati da tutte le rotte.
+*VUE_APP_LODMAP2D_DATA*/account/*account_id*  | contiene i dati relativi all'account *account_id*
+*VUE_APP_LODMAP2D_DATA*/partition/*partition_id*  | contiene i dati specifici relativi alla partizione *partition_id*. è obbligatoria la presenza della "overview" 
+*VUE_APP_LODMAP2D_DATA*/credits | contiene i dati specifici alla rotta /credits
+*VUE_APP_LODMAP2D_DATA*/terms | contiene i dati  specifici alla rotta /terms 
+*VUE_APP_LODMAP2D_DATA*/accounts | contiene un indice di tutte gli account, includendo solo
 le un subset delle informazioni presenti in dettaglio anche nei file della directory account 
-*LODMAP2D_DATA*/overview | contiene  dati  specifici alla rotta principale (/)
 
-Ricompilando l'applicazione, è possibile utilizzare altre configurazioni (usando risorse RestFUL, LDP, SPARQL endpoints, etc., etc.) ottenibili modificando il file [config.js](config.js)
+Ricompilando l'applicazione, è possibile utilizzare anche altre configurazioni (usando risorse RestFUL, LDP, SPARQL endpoints, etc., etc.) ottenibili modificando il file [config.js](config.js)
 
 Il file [config.js](config.js) contiene le regole che sovraintendono alla dereferenziazione delle rotte
 e sono inspirate al [Apache mod_rewrite](https://httpd.apache.org/docs/current/rewrite/); in particolare l'array *dereferencingRules* permette di map routes onto a set of web resources in any way you like.

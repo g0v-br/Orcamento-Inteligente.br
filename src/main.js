@@ -10,7 +10,7 @@ console.table(dref("/partition/overview"));
 
 try {
 
-  fetcher.load("http://localhost:8080/sample_v2.ttl").then(
+  fetcher.load("http://localhost:8080/data.ttl").then(
 
     response => {
       new Vue({

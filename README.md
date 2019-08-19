@@ -38,7 +38,7 @@ docker run -d --name lodmap2d -p 8080:80 lodmap2d
 ```
 
 
-Try it pointing your browser to http://localhost
+Try it pointing your browser to http://localhost:8080
 
 Free docker resources with:
 
@@ -104,7 +104,7 @@ L'utilizzo di docker semplifica enormemente le attività di personalizzazione. V
 
 ### Personalizzazione dei dati
 
-LODMAP2D è predisposto per dereferenziare le rotte (ovvero caricare i dati necessari a visualizzare una rotta) in due modalità differenti, pilotabile dalla variabile di ambiente VUE_APP_VUE_APP_LODMAP2D_DATA: se la variabile non esiste o è vuota, sono caricati dei dati contenuti nel file data.ttl nella directory principale di distribuzione, altrimenti si assume che la variabile VUE_APP_VUE_APP_LODMAP2D_DATA contenga un endpoint che fornisca le seguenti risorse serializzate in RDF turtle:
+LODMAP2D è predisposto per dereferenziare le rotte (ovvero caricare i dati necessari a visualizzare una rotta) in due modalità differenti, pilotabile dalla variabile di ambiente VUE_APP_LODMAP2D_DATA: se la variabile non esiste o è vuota, sono caricati dei dati contenuti nel file data.ttl nella directory principale di distribuzione, altrimenti si assume che la variabile VUE_APP_LODMAP2D_DATA contenga un endpoint che fornisca le seguenti risorse serializzate in RDF turtle:
 
 risorsa | contenuto ritornato
 ------- | -------------------
@@ -113,8 +113,7 @@ risorsa | contenuto ritornato
 *VUE_APP_LODMAP2D_DATA*/partition/*partition_id*  | contiene i dati specifici relativi alla partizione *partition_id*. è obbligatoria la presenza della "overview" 
 *VUE_APP_LODMAP2D_DATA*/credits | contiene i dati specifici alla rotta /credits
 *VUE_APP_LODMAP2D_DATA*/terms | contiene i dati  specifici alla rotta /terms 
-*VUE_APP_LODMAP2D_DATA*/accounts | contiene un indice di tutte gli account, includendo solo
-le un subset delle informazioni presenti in dettaglio anche nei file della directory account 
+*VUE_APP_LODMAP2D_DATA*/accounts | contiene un indice di tutte gli account, includendo solo un subset delle informazioni presenti in dettaglio anche nei file della directory account 
 
 Se la variabile *VUE_APP_LODMAP2D_DATA* non è definita, è possibile utilizzare anche altre configurazioni (usando risorse RestFUL, LDP, SPARQL endpoints, etc., etc.) ottenibili modificando il file [config.js](config.js)
 
@@ -123,7 +122,7 @@ e sono inspirate al [Apache mod_rewrite](https://httpd.apache.org/docs/current/r
 
 Una regola di riscrittura è composta da tre attributi:
 
-- una espressione regolare (*regexp*) che viene applicata all'uri, in caso di match la regola viene valutata,
+- una espressione regolare (*regexp*) che viene applicata alla rotta, in caso di match la regola viene valutata,
 altrimenti viene ignorata
 - un array di stringhe (*targets*) in cui ciascun elemento può contenere riferimenti (con "$1", "$2".."$n") a eventuali gruppi presenti nella regexp. 
 - un valore booleano (*isLast*) che dice se 'elaborazione delle regole deve considerarsi conclusa.
@@ -133,7 +132,7 @@ Quando una regola è applicabile i valori di eventuali gruppi sono espansi nei t
 
 Nella directory *doc/config* è possibile trovare alcuni esempi di di configurazione più articolati che consentono all'applicazione di usare dati da sorgenti esterni all'applicazione.
 
-# Thanks
+## Thanks
 
 - [Enrico Fagnoni](https://github.com/ecow),[Miah Mohd Ehtesham](https://github.com/miahmohd), [Leonardo Longhi](https://github.com/LeonardoLonghi) and [Yassine Ouahidi](https://github.com/YassineOuahidi) for the webapp code design.
 - The [D3.js library](https://d3js.org/)

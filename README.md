@@ -28,7 +28,7 @@ To build and run LODMAP2D container:
 
 ```bash
 docker build -t lodmap2d  .
-docker run -d --name lodmap2d -p 80:80 lodmap2d
+docker run -d --name lodmap2d -p 8080:80 lodmap2d
 ```
 
 Try it pointing your browser to http://localhost

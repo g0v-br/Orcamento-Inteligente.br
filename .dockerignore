@@ -1,8 +1,3 @@
-*
-!src
-!public
-!vue.config.js
-!config.js
-!package*.json
-!babel.config.js
-!LICENSE
+node_modules
+.git
+.gitignore

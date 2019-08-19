@@ -27,7 +27,7 @@ If you do not already have Docker on your computer,
 To build and run LODMAP2D container:
 
 ```bash
-docker build -t lodmap2d  .
+docker build -t lodmap2d -f docker/Dockerfile .
 docker run -d --name lodmap2d -p 8080:80 lodmap2d
 ```
 

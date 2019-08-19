@@ -48,6 +48,7 @@ Le funzioni di LODMAP2D sono richiamabili da un browser di nuova generazione ric
 
 | url template | azione |
 |------------- |------- |
+| /            | ridirige su /partition/overview |
 | /partition/overview{?s} | renderizza un soggetto di tipo bgo:Overview  |
 | /table{?s} | renderizza un soggetto di tipo bgo:TableView  |
 | /credits | renderizza un soggetto di tipo bgo:CreditsView |
@@ -108,11 +109,10 @@ risorsa | contenuto ritornato
 *VUE_APP_LODMAP2D_DATA*/accounts | contiene un indice di tutte gli account, includendo solo
 le un subset delle informazioni presenti in dettaglio anche nei file della directory account 
 
-Ricompilando l'applicazione, è possibile utilizzare anche altre configurazioni (usando risorse RestFUL, LDP, SPARQL endpoints, etc., etc.) ottenibili modificando il file [config.js](config.js)
+Se la variabile *VUE_APP_LODMAP2D_DATA* non è definita, è possibile utilizzare anche altre configurazioni (usando risorse RestFUL, LDP, SPARQL endpoints, etc., etc.) ottenibili modificando il file [config.js](config.js)
 
 Il file [config.js](config.js) contiene le regole che sovraintendono alla dereferenziazione delle rotte
 e sono inspirate al [Apache mod_rewrite](https://httpd.apache.org/docs/current/rewrite/); in particolare l'array *dereferencingRules* permette di map routes onto a set of web resources in any way you like.
-
 
 Una regola di riscrittura è composta da tre attributi:
 

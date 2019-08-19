@@ -1,10 +1,13 @@
 ### build stage ###
 FROM node:12-alpine as build-stage
+
 WORKDIR /app
-COPY . .
+
+COPY package*.json ./
 RUN npm install
 
-ENV PATH ./node_modules/@vue/cli-service/bin:$PATH
+COPY . .
+ENV PATH /app/node_modules/.bin:$PATH
 RUN npm run build
 
 ### production stage ###

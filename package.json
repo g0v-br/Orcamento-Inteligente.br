@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service.js  serve",
-    "build": "vue-cli-service.js  build",
-    "test:e2e": "vue-cli-service.js  test:e2e",
-    "test:unit": "vue-cli-service.js  test:unit"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:e2e": "vue-cli-service test:e2e",
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "core-js": "^2.6.5",

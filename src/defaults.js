@@ -6,11 +6,12 @@ import config from "./../config.js"
 
 //Here some facilities to override defaults with  alternative configuration using environment variables
 if (process.env.VUE_APP_LODMAP2D_DATA) {
-	const domain = process.env.VUE_APP_LODMAP2D_DATA;
+	const namespace = process.env.VUE_APP_LODMAP2D_DATA;
 	config.dereferencingRules = [
-		{ "regexp": ".*", "targets": [`${domain}/app.ttl`] },
-		{ "regexp": ".*/account/(.+)", "targets": [`${domain}/account/$1.ttl`], "isLast": true },
-		{ "regexp": ".*/partition/(.+)", "targets": [`${domain}/accounts.ttl`, `${domain}/partition/$1.ttl`], "isLast": true },
+		{ "regexp": ".*/", "targets": [`${namespace}app.ttl`] },
+		{ "regexp": ".*/account/(.+)", "targets": [`${namespace}account/$1.ttl`], "isLast": true },
+		{ "regexp": ".*/partition/(.+)", "targets": [`${namespace}accounts.ttl`, `${namespace}partition/$1.ttl`], "isLast": true },
+		{ "regexp": ".*/(credits|terms)$", "targets": [`${namespace}$1.ttl`], "isLast": true },
 	]
 }
 

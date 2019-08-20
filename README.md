@@ -53,7 +53,7 @@ LODMAP2D is a semantic web browser able to recognize the concepts described in t
 
 LODMAP2D functions are available from any recent browser by some routes managed directly by the application (i.e. without accessing the network), and in particular:
 
-| url template                  | expected behavior                     |
+| route template                 | expected behavior                     |
 |------------------------------ |-------------------------------------- |
 | /                             | redirects to /partition/overview		|
 | /partition/overview{?s}       | renders a bgo:Overview subject		|
@@ -98,7 +98,6 @@ You can override all files in the *public* directory :
 - the *favicon* and *logos* files can be customized as needed. The preview.png file is used as preview image in social network posts
 - IE_alert manages incompatible old browsers.
    
-Using docker greatly simplify customization activities.
 
 
 ### Data customization
@@ -110,13 +109,12 @@ LODMAP2D is designed to dereference routes (i.e. the process of loading the data
 
 resource | payload
 ------- | -------------------
-*VUE_APP_LODMAP2D_DATA*/app.ttl | common layout data.
+*VUE_APP_LODMAP2D_DATA*/app.ttl | common application layout data.
 *VUE_APP_LODMAP2D_DATA*/account/*account_id*.ttl  | data for *account_id* account
-*VUE_APP_LODMAP2D_DATA*/partition/*partition_id*.ttl  | data for *partition_id* partition. Nothe that "overview" partition is mandatory
+*VUE_APP_LODMAP2D_DATA*/partition/*partition_id*.ttl  | data for *partition_id* partition
 *VUE_APP_LODMAP2D_DATA*/credits.ttl | contains credits data 
 *VUE_APP_LODMAP2D_DATA*/terms.ttl | contains terms & conditions data 
-*VUE_APP_LODMAP2D_DATA*/accounts.ttl | contains an index of all accounts, including just information used to render
-tooltips
+*VUE_APP_LODMAP2D_DATA*/accounts.ttl | contains an index of all accounts, including just information used to render account tooltips
 
 When the variable *VUE_APP_LODMAP2D_DATA* is undefined, it is also  possible to write custom configurations, for istance to sues as data provider RESTful APIs, LDP, SPARQL endpoints, etc., etc.
 To customize data dereferencing, modify the [config.js](config.js) file.
@@ -127,15 +125,31 @@ inspired by  [Apache mod_rewrite](https://httpd.apache.org/docs/current/rewrite/
 
 A rewrite rule is composed of three attributes:
 
-- una espressione regolare (*regexp*) che viene applicata alla rotta, in caso di match la regola viene valutata,
-altrimenti viene ignorata
+- a regular expression (* regexp *) that is applied to the LODMAP2D route, in case of match the rule is evaluated,
+otherwise it is ignored
 - an array of strings (* targets *) where each element can contain references (with "$ 1", "$ 2" .. "$ n") to any groups present in the regexp.
 - an optional boolean value (*isLast*, default=false) that says if the elaboration of the rules must be considered concluded.
 
-The rules are evaluated in sequence. If no rule is applicable, the standard method of dereferencing uri is used as implemented by rdflib.
-When a rule is applicable the values ​​of any groups are expanded in the targets and the resulting values ​​are added to an array of resources that will be loaded by the network.
+The dref function in bgolib accepts a LODMAP2D route and evaluates the rewriting rules in sequence creating anarray of resource to be retrived by the rdflib fetcher object.
 
 In the * doc / config * directory you can find some possible config.js examples .
+
+### Using docker to customize LOADMAP2D
+
+Using docker greatly simplify customization activities:
+
+- create an empty directory and copy in it the LOADMAP2D public dir
+- apply required modification to fany file
+- create a file named Dockerfile like in [this example](https://gist.github.com/ecow/4a5a22c2ed6b3987043931c3b8355fed):
+
+<script src="https://gist.github.com/ecow/4a5a22c2ed6b3987043931c3b8355fed.js"></script>
+
+Than build and run your customized docker image:
+
+```bash
+docker build -t mylodmap2d .
+docker run -d -p 8080:80 mylodmap2d
+```
 
 ## Thanks
 

@@ -8,9 +8,10 @@ COPY package*.json ./
 RUN npm install
 
 # build the distribution
-COPY src ./src
 COPY public ./public
-COPY config.js cypress.json babel.config.js vue.config.js ./
+COPY config.js ./
+COPY src ./src
+COPY cypress.json babel.config.js vue.config.js ./
 RUN PATH=/app/node_modules/.bin:$PATH npm run build
 
 ### production stage ###

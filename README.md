@@ -139,12 +139,9 @@ In the * doc / config * directory you can find some possible config.js examples 
 Using docker greatly simplify customization activities:
 
 - create an empty directory and copy in it the LOADMAP2D public dir
-- apply required modification to fany file
-- create a file named Dockerfile like in [this example](https://gist.github.com/ecow/4a5a22c2ed6b3987043931c3b8355fed):
-
-<script src="https://gist.github.com/ecow/4a5a22c2ed6b3987043931c3b8355fed.js"></script>
-
-Than build and run your customized docker image:
+- apply required modification to the files in your public directory
+- create a file named Dockerfile like in [this example](https://gist.github.com/ecow/4a5a22c2ed6b3987043931c3b8355fed)
+- build and run your customized docker image:
 
 ```bash
 docker build -t mylodmap2d .

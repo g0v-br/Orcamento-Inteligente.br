@@ -3,14 +3,19 @@ FROM node:12-alpine as build-stage
 
 WORKDIR /app
 
+# expand dependencies
 COPY package*.json ./
 RUN npm install
 
-COPY . .
-ENV PATH /app/node_modules/.bin:$PATH
-RUN npm run build
+# build the distribution
+COPY src ./src
+COPY public ./public
+COPY config.js cypress.json babel.config.js vue.config.js ./
+RUN PATH=/app/node_modules/.bin:$PATH npm run build
 
 ### production stage ###
 FROM nginx:1.16-alpine as production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+# loads nginx optimized config
 COPY docker/nginx.conf /etc/nginx/nginx.conf

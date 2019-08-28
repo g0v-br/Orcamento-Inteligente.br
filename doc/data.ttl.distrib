@@ -184,9 +184,9 @@ resource:p2_2 a bgo:AccountSet ;
 
 ###### Trend Color Scheme #######
 resource:trend_color_scheme a bgo:TrendColorScheme ;
-    bgo:title "Variazione rispetto alla precedente legge di bilancio" ;
+    bgo:title "Variazione rispetto al valore di acquisto" ;
     bgo:noTrendColor "#cdcdcd" ;
-    bgo:rateTresholds [
+    bgo:rateTreshold 
 		( -1	"#a50026" ) ,
 		( -0.5	"#d73027" ) ,
 		( -0.25	"#f46d43" ) ,
@@ -197,9 +197,9 @@ resource:trend_color_scheme a bgo:TrendColorScheme ;
 		( 0.10	"#a6d96a" ) ,
 		( 0.25	"#66bd63" ) ,
 		( 0.5	"#1a9850" ) ,
-		( 10  	"#006837"
-    ] 
+		( 10  	"#006837" )
 .
+
 
 
 ##### Totalizer #######

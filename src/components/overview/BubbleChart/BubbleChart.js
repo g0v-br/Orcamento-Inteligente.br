@@ -210,6 +210,12 @@ export default class BubbleChart {
             .on("mouseout", function (d) {
                 this.style["stroke-width"] = 1;
                 self.app.$emit('nodeout');
+            })
+            .on("click", d => {
+                self.app.$router.push({
+                    name: "account",
+                    params: { accountId: d.id }
+                });
             });
 
         // native tooltip

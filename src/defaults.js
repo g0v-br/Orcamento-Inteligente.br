@@ -1,10 +1,23 @@
-import config from "/../config.js"
+// Please do not change this options
+// override them in /config.js instead
+//
+import config from "./../config.js"
+
+
+//Here some facilities to override defaults with  alternative configuration using environment variables
+if (process.env.VUE_APP_LODMAP2D_DATA) {
+	const namespace = process.env.VUE_APP_LODMAP2D_DATA;
+	config.dereferencingRules = [
+		{ "regexp": ".*/", "targets": [`${namespace}app.ttl`] },
+		{ "regexp": ".*/account/(.+)", "targets": [`${namespace}account/$1.ttl`], "isLast": true },
+		{ "regexp": ".*/partition/(.+)", "targets": [`${namespace}accounts.ttl`, `${namespace}partition/$1.ttl`], "isLast": true },
+		{ "regexp": ".*/(credits|terms)$", "targets": [`${namespace}$1.ttl`], "isLast": true },
+	]
+}
+
+
 export default
 {
-	"minBorder": 3, // in pixel
-	"minRadius": 2, //in pixel
-	"velocityDecady": 0.2,
-	"forceStrength": 0.03 ,
-	"dereferencingRules": [{ "regexp":".*" , "tagets": [ "/sample.ttl"] }],
-	//...config
+	"dereferencingRules": [{ "regexp":".*" , "targets": [ "/data.ttl"], "isLast": true }],
+	...config
 }

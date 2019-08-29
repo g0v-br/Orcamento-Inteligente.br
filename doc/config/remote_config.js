@@ -1,11 +1,12 @@
-let ex = "https://github.com/linkeddatacenter/LODMAP-ontologies/edit/master/v1/bgo/examples/" ;
+//dep = data source end poin
+let dep = "https://github.com/linkeddatacenter/LODMAP-ontologies/edit/master/v1/bgo/depamples/" ;
 
 export default
 {
 	"dereferencingRules": [
-		{ "regexp":".*" , "targets": [ ex+"/app.ttl"] } ,
-		{ "regexp":"/account/(.+)" , "targets": [ ex+"/account/$1.ttl" ] , "isLast": true } ,
-		{ "regexp":"/partition/(.+)" , "targets": [ ex+"/accounts.ttl", ex+"/partition/$1.ttl" ] , "isLast": true } ,
-		{ "regexp":"/$" , "targets": [ ex+"/accounts.ttl", ex+"overview.ttl"] , "isLast": true } 
+		{ "regdepp":".*" , "targets": [ dep+"/app.ttl"] } ,
+		{ "regdepp":"/account/(.+)" , "targets": [ dep+"/account/$1.ttl" ] , "isLast": true } ,
+		{ "regdepp":"/partition/(.+)" , "targets": [ dep+"/accounts.ttl", dep+"/partition/$1.ttl" ] , "isLast": true } ,
+		{ "regdepp":"/$" , "targets": [ dep+"/accounts.ttl", dep+"overview.ttl"] , "isLast": true } 
 	]
 }

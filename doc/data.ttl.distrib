@@ -184,46 +184,22 @@ resource:p2_2 a bgo:AccountSet ;
 
 ###### Trend Color Scheme #######
 resource:trend_color_scheme a bgo:TrendColorScheme ;
-    bgo:title "Variazione rispetto alla precedente legge di bilancio" ;
+    bgo:title "Variazione rispetto al valore di acquisto" ;
     bgo:noTrendColor "#cdcdcd" ;
-
-
-    # sarebbe meglio qualcosa tipo:
-    # bgo:rateTresholds [
-	#	( -0.5 "#d73027" )
-	#	( -1 "#a50026" )
-	#	..
-    #] ;
-    #Gestendo il sort delle threshold a applic azione
-
-
-	bgo:rateTresholds(
-		-1
-		-0.5
-		-0.25
-		-0.10
-		-0.05
-		0
-		0.05
-		0.10
-		0.25
-		0.5
-		10
-    ) ;
-	bgo:colorTresholds(
-		"#a50026"
-		"#d73027"
-		"#f46d43"
-		"#fdae61"
-		"#fee08b"
-		"#ffffbf"
-		"#d9ef8b"
-		"#a6d96a"
-		"#66bd63"
-		"#1a9850"
-		"#006837"
-	);
+    bgo:rateTreshold 
+		( -1	"#a50026" ) ,
+		( -0.5	"#d73027" ) ,
+		( -0.25	"#f46d43" ) ,
+		( -0.10	"#fdae61" ) ,
+		( -0.05	"#fee08b" ) ,
+		( 0		"#ffffbf" ) ,
+		( 0.05	"#d9ef8b" ) ,
+		( 0.10	"#a6d96a" ) ,
+		( 0.25	"#66bd63" ) ,
+		( 0.5	"#1a9850" ) ,
+		( 10  	"#006837" )
 .
+
 
 
 ##### Totalizer #######
@@ -247,10 +223,10 @@ resource:tag_cloud a bgo:TagCloud ;
 		[ bgo:label "Tedgst4"; bgo:tagWeight 0.2 ] ,
 		[ bgo:label "Tefgst5"; bgo:tagWeight 0.7 ] ,
 		[ bgo:label "Teefst6"; bgo:tagWeight 0.3 ],
-        	[ bgo:label "Testsdf4"; bgo:tagWeight 0.2 ] ,
+        [ bgo:label "Testsdf4"; bgo:tagWeight 0.2 ] ,
 		[ bgo:label "Tegsgsbst5"; bgo:tagWeight 0.7 ] ,
 		[ bgo:label "Testeag6"; bgo:tagWeight 0.3 ],
-        	[ bgo:label "Tesbgbt4"; bgo:tagWeight 0.2 ] ,
+        [ bgo:label "Tesbgbt4"; bgo:tagWeight 0.2 ] ,
 		[ bgo:label "Twrfegest5"; bgo:tagWeight 0.7 ] ,
 		[ bgo:label "Tesqr3hyt6"; bgo:tagWeight 0.3 ]
 .
@@ -283,14 +259,12 @@ resource:account_1 a bgo:Account, bgo:ProfiledAccount ;
     bgo:title "titolo account_1" ;
     bgo:description "descrizione account_1" ;
     bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: \n- pagamento delle quote capitale sui titoli del debito statale\n- rimborso del capitale relativo a buoni postali fruttiferi\n- rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione\n- rimborso passività a carico dello Stato"^^bgo:MDString ;
-    bgo:background <http://bit.ly/2MxbJWQ> ;
+    bgo:depiction <http://bit.ly/2MxbJWQ> ;
     bgo:versionLabel "2019" ;
 
 	bgo:hasHistoryRec
 		[ bgo:versionLabel "2018" ; bgo:amount 980.00 ],
-		[ bgo:versionLabel "2017" ; bgo:amount 1500.00 ],
-		[ bgo:versionLabel "2017" ; bgo:amount 2000.00 ],
-		[ bgo:versionLabel "2017" ; bgo:amount 200.00 ]
+		[ bgo:versionLabel "2017" ; bgo:amount 1100.00 ]
     ;
     bgo:hasBreakdown
     	[ bgo:title "account_1_part 1" ; bgo:amount 110.00 ] ,
@@ -305,7 +279,7 @@ resource:account_1 a bgo:Account, bgo:ProfiledAccount ;
 
 
 ##################################################
-## Other accounts without detailef profile
+## Other accounts without detailed profile
 ###################################################
 resource:account_2 a bgo:Account ;
 	bgo:accountId "account_2" ;
@@ -313,30 +287,31 @@ resource:account_2 a bgo:Account ;
     bgo:referenceAmount 95.00 ;
     bgo:title "titolo account_2" ;
     bgo:description "descrizione account_2" ;
-    bgo:background <http://bit.ly/2MxbJWQ>
+    bgo:depiction <http://bit.ly/2MxbJWQ>
 .
 
-# resource:account_3 a bgo:Account ;
-# 	bgo:accountId "account_3" ;
-#     bgo:amount 100.00 ;
-#     bgo:referenceAmount 95.00 ;
-#     bgo:title "titolo account_3" ;
-#     bgo:background "#fcba03"  # as RGB solid color
-# .
+resource:account_3 a bgo:Account ;
+	bgo:accountId "account_3" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_3" ;
+    bgo:depiction "#fcba03"  # as RGB solid color
+.
 
-# resource:account_4 a bgo:Account ;
-# 	bgo:accountId "account_4" ;
-#     bgo:amount 100.00 ;
-#     bgo:referenceAmount 95.00
-# .
+resource:account_4 a bgo:Account ;
+ 	bgo:accountId "account_4" ;
+     bgo:amount 100.00 ;
+     bgo:referenceAmount 95.00
+.
 
 
-# resource:account_5 a bgo:Account ;
-# 	bgo:accountId "account_5" ;
-#     bgo:amount 100.00
-# .
+resource:account_5 a bgo:Account ;
+ 	bgo:accountId "account_5" ;
+    bgo:amount 100.00
+.
 
-# # no amounts default to amount=0
-# resource:account_6 a bgo:Account ;
-# 	bgo:accountId "account_6"
-# .
+# no amounts default to amount=0
+resource:account_6 a bgo:Account ;
+	bgo:accountId "account_6"
+.
+

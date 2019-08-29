@@ -7494,6 +7494,17 @@ bgo:description "amministrazione penitenziaria";
 resource:trend_color_scheme a bgo:TrendColorScheme ;
     bgo:title "Variazione rispetto alla precedente legge di bilancio" ;
     bgo:noTrendColor "#cdcdcd" ;
+
+
+    # sarebbe meglio qualcosa tipo:
+    # bgo:rateTresholds [
+	#	( -0.5 "#d73027" )
+	#	( -1 "#a50026" )
+	#	..
+    #] ;
+    #Gestendo il sort delle threshold a applic azione
+
+
 	bgo:rateTresholds(
 		-1
 		-0.5
@@ -7506,7 +7517,6 @@ resource:trend_color_scheme a bgo:TrendColorScheme ;
 		0.25
 		0.5
 		10
-        
     ) ;
 	bgo:colorTresholds(
 		"#a50026"
@@ -7527,7 +7537,7 @@ resource:trend_color_scheme a bgo:TrendColorScheme ;
 ##### Totalizer #######
 resource:totalizer a bgo:Totalizer ;
     bgo:totalPrintfTemplate "Totale: € %s" ;
-    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s% del tot.)"
+    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s del tot.)"
 .
 
 

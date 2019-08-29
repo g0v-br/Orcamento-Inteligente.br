@@ -1,122 +1,151 @@
 <template>
-    <div class="container">
-        <div class="g0v-table-container">
-            <v-card>
-              <v-card-title>
-                {{title}} : {{totals}}
-                <v-spacer></v-spacer>
-                <v-text-field
-                v-model="search"
-                append-icon="fa-search"
-                label="search"
-                single-line
-                hide-details
-                ></v-text-field>
-            </v-card-title>
-            <v-data-table
-            :headers="headers"
-            :items="accounts"
-            :search="search"
-            :items-per-page = 25
-            :footer-props="{
+  <div class="container">
+    <div class="g0v-table-container">
+      <v-card>
+        <v-card-title>
+          <Totalizer :total="total +';'+total" />
+          <!-- {{title}} : {{total}} -->
+          <v-spacer></v-spacer>
+
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            :placeholder="label"
+            single-line
+            hide-details
+            @input="onSearchInput"
+          ></v-text-field>
+        </v-card-title>
+        <v-data-table
+          :headers="headers"
+          :items="accounts"
+          :search="search"
+          :items-per-page="25"
+          :footer-props="{
               prevIcon: 'mdi-arrow-left',
               nextIcon: 'mdi-arrow-right'
-            }"
-            class="elevation-1 fixed"
-
-          ></v-data-table>
+          }"
+          class="elevation-1 fixed"
+        ></v-data-table>
       </v-card>
+    </div>
   </div>
-</div>
-
 </template>
 
 
 <script>
-    import { bgoStore, fetcher, ns } from "@/models/bgo.js";
-    export default {
-        name: "Table",
-        data() {
-            return {
-                title: "ekko",
-                headers: [],
-                accounts: [],
-                pagination: {
-                    sortBy: "amount",
-                    descending: true
-                },
-                search: ""
-            };
-        },
-        created() {
-            fetchData(this);
-            //this.search = this.$route.query.s || "";
-        },
-        computed : {
-            totals(){
-                return 1000000;
-            }
-            // headers() {
-            //     return [
-            //     { text: "title", value: "title" },
-            //     { text: "amount", value: "amount" },
-            //     { text: "rate", value: "rate" },
-            //     { text: "partitionLabel", value: "partitionLabel" }
-            //     ];
-            // }
-        }
+import { bgoStore, fetcher, ns } from "@/models/bgo.js";
+import Totalizer from "@/components/Totalizer";
+export default {
+  name: "Table",
+  components: {
+    Totalizer
+  },
+  data() {
+    return {
+      title: "",
+      headers: [],
+      accounts: [],
+      search: "",
+      label: ""
+    };
+  },
+  created() {
+    fetchData(this);
+    this.search = this.$route.query.s || "";
+  },
+  computed: {
+    total() {
+      return this.filteredAccounts.reduce((sum, node) => {
+        return sum + parseInt(node.amount);
+      }, 0);
+    },
+    filteredAccounts() {
+      return this.accounts.filter(node => {
+        let search = this.search.toLowerCase(),
+          title = node.title.toLowerCase().includes(search),
+          description = node.description.toLowerCase().includes(search);
+
+        return title || description;
+      });
     }
-
-    function fetchData(app) {
-        //Fetch TableView
-        let tableView = bgoStore.any(undefined, ns.rdf('type'), ns.bgo('TableView')); 
-        
-        //fetch Title
-        app.title = bgoStore.anyValue(tableView, ns.bgo('title'));
-        
-
-        //Fetch Headers
-        app.headers.push({text: bgoStore.anyValue(tableView, ns.bgo('headerTitle')), value: 'title'});
-        app.headers.push({text: bgoStore.anyValue(tableView, ns.bgo('headerAmount')), value: 'amount'});
-        app.headers.push({text: bgoStore.anyValue(tableView, ns.bgo('headerTrend')), value: 'trend'});
-        app.headers.push({text: bgoStore.anyValue(tableView, ns.bgo('headerDescription')), value: 'description'});
-
-        //Set the search
-        let searchPane = bgoStore.any(tableView, ns.bgo('hasSearchPane'));
-        app.search = bgoStore.anyValue(searchPane, ns.bgo('label'));
-
-
-        //Fetch Accounts
-        let accounts = bgoStore.each(undefined, ns.rdf('type'), ns.bgo('Account'));
-        accounts.forEach(account => {
-            let title = bgoStore.anyValue(account, ns.bgo('title'));
-            let amount = bgoStore.anyValue(account, ns.bgo('amount'));
-            let description = bgoStore.anyValue(account, ns.bgo('description'));
-            let previousValue = bgoStore.anyValue(account, ns.bgo('referenceAmount'));
-            let trend = (amount - previousValue) / previousValue;
-            
-            // Get the partitions using the hasAccount attribute
-            // let partitionLabel, partitionLabels =[];
-            // let partitions = bgoStore.each(undefined, ns.bgo('hasAccount'), account);
-            // partitions.forEach((partition) => {
-            //     partitionLabels.push(bgoStore.anyValue(partition, ns.bgo('title')));
-            // });
-
-
-            //Format partition labels
-            //description = partitionLabels.join(', ');
-            
-            app.accounts.push({
-                title,
-                amount,
-                trend,
-                description,
-            });
-        })
-
-        //app.accounts.push({ title: "title", amount: "title", rate:27 ,partitionLabel: "Ekkleee"});
+  },
+  methods: {
+    onSearchInput() {
+      this.$router.replace({
+        name: "table",
+        query: { s: this.search }
+      });
     }
+  }
+};
 
+function fetchData(app) {
+  //Fetch tableView and searchPane
+  let tableView = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("TableView")),
+    searchPane = bgoStore.any(tableView, ns.bgo("hasSearchPane"));
+
+  //fetch Title
+  app.title = bgoStore.anyValue(tableView, ns.bgo("title"));
+
+  //Fetch Headers
+  //TODO decide where to get the width values
+  app.headers.push({
+    text: bgoStore.anyValue(tableView, ns.bgo("headerTitle")),
+    value: "title",
+    width: "45%"
+  });
+  app.headers.push({
+    text: bgoStore.anyValue(tableView, ns.bgo("headerAmount")),
+    value: "amount",
+    width: "15%",
+    filter: () => true
+  }); //unserachable
+  app.headers.push({
+    text: bgoStore.anyValue(tableView, ns.bgo("headerTrend")),
+    value: "trend",
+    width: "15%",
+    filter: () => true
+  }); //unsearchable
+  app.headers.push({
+    text: bgoStore.anyValue(tableView, ns.bgo("headerDescription")),
+    value: "description",
+    width: "25%"
+  });
+
+  //Set the search
+  app.label = bgoStore.anyValue(searchPane, ns.bgo("label"));
+
+  //Fetch Accounts
+  let accounts = bgoStore.each(undefined, ns.rdf("type"), ns.bgo("Account"));
+  accounts.forEach(account => {
+    let title = bgoStore.anyValue(account, ns.bgo("title")),
+      amount = bgoStore.anyValue(account, ns.bgo("amount")),
+      description = bgoStore.anyValue(account, ns.bgo("description")),
+      previousValue = bgoStore.anyValue(account, ns.bgo("referenceAmount")),
+      trend = (amount - previousValue) / previousValue;
+
+    app.accounts.push({
+      title,
+      amount,
+      trend,
+      description
+    });
+
+    //i'm already here so i can just calculate the total
+    //app.total += parseInt(amount);
+
+    // Get the partitions using the hasAccount attribute
+    // let partitionLabel, partitionLabels =[];
+    // let partitions = bgoStore.each(undefined, ns.bgo('hasAccount'), account);
+    // partitions.forEach((partition) => {
+    //     partitionLabels.push(bgoStore.anyValue(partition, ns.bgo('title')));
+    // });
+
+    //Format partition labels
+    //description = partitionLabels.join(', ');
+  });
+}
 </script>
 
 
@@ -140,73 +169,3 @@ td::first-letter {
   width: auto;
   } */
 </style>
-
-
-
-
-
-
-
-<!-- 
-
-
-<template>
-    <div class="container">
-        <div class="g0v-table-container">
-            <VCard>
-                <VCardTitle>
-                    <h2 class="title">
-                        {{title}}: {{totals}}
-                    </h2>
-                    <v-spacer></v-spacer>
-                    <v-text-field
-                    v-model="search"
-                    append-icon="search"
-                    label="Search"
-                    single-line
-                    hide-details
-                    ></v-text-field>
-                </VCardTitle>
-                <VDataTable
-                :headers="headers"
-                :items="Accounts"
-
-                :pagination.sync="pagination"
-                :footer-props.items-per-page-text=25
-                :footer-props.items-per-page-options="[25,50,100,{text:'Tutti',value:-1}]"
-                class="elevation-1"
-                >
-                <template slot="headers" slot-scope="props">
-                    <tr>
-                        <th
-                        style="text-align: left;"
-                        v-for="header in props.headers"
-                        :key="header.text"
-                        :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
-                        @click="changeSort(header.value)">
-                        {{ header.text }}
-                        <VIcon small> arrow_upward</VIcon>
-                    </th>
-                </tr>
-
-            </template>
-
-            <template slot="items" slot-scope="props">
-                <td class="account-name" width="35%" style="font-weight: 500;">
-                  {{ props.item.title }} 
-              </td>
-              <td class="account-amount" width="10%">
-                  {{props.item.amount}}
-              </td>
-              <td class="account-amount" width="10%">
-                  {{props.item.rate}}
-              </td>
-              <td class="account-top" width="15%">
-                  {{ props.item.partitionLabel}}
-              </td>
-          </template>
-      </VDataTable>
-  </VCard>
-</div>
-</div>
-</template> -->

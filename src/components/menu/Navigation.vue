@@ -5,7 +5,7 @@
     </template>
     <v-list>
       <!--overview-->
-      <v-list-item v-on:click="menuShow=false" :to="overview.path">
+      <v-list-item v-on:click="menuShow=false" :to="overview.path + '?s='+($route.query.s||'')">
         <v-list-item-icon>
           <v-icon v-text="overview.icon"></v-icon>
         </v-list-item-icon>
@@ -24,7 +24,7 @@
           v-for="el in partition.partitionList"
           :key="el.title"
           v-on:click="menuShow=false"
-          :to="el.path"
+          :to="el.path + '?s='+($route.query.s||'')"
         >
           <v-list-item-content>
             <v-list-item-title v-text="el.title"></v-list-item-title>
@@ -36,7 +36,7 @@
         v-for="el in otherNavigationItem"
         :key="el.title"
         v-on:click="menuShow=false"
-        :to="el.path"
+        :to="el.path + '?s='+($route.query.s||'')"
       >
         <v-list-item-icon>
           <v-icon v-text="el.icon"></v-icon>
@@ -75,18 +75,18 @@ function fetchData(app) {
   app.overview.icon = "fas fa-atom";
   app.overview.path = "/";
   //partitions
-  let partitionList=bgoStore.any(overview, ns.bgo("hasPartitionList"));
+  let partitionList = bgoStore.any(overview, ns.bgo("hasPartitionList"));
   app.partition.title = "Partitions";
   app.partition.partitionList = [];
-  if(partitionList && partitionList.elements.length!=0){
+  if (partitionList && partitionList.elements.length != 0) {
     partitionList.elements.forEach(el => {
-    app.partition.partitionList.push({
-      title: bgoStore.any(el, ns.bgo("label")).value,
-      path: "/partition/" + bgoStore.any(el, ns.bgo("partitionId")).value
+      app.partition.partitionList.push({
+        title: bgoStore.any(el, ns.bgo("label")).value,
+        path: "/partition/" + bgoStore.any(el, ns.bgo("partitionId")).value
+      });
     });
-  });
-  }else{
-      app.partition=undefined;
+  } else {
+    app.partition = undefined;
   }
   //otherlinks
   if (tabview) {

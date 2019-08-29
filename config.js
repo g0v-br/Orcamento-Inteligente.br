@@ -1,6 +1,10 @@
-export default
-{
-	"dereferencingRules": [
-		{ "regexp":".*" , "tagets": [ "/sample.ttl"] , "isLast": true }
-	]
+//
+// Here are some default values for config:
+//
+
+let config = {
+	"dereferencingRules": [{ "regexp": ".*", "targets": ["/data.ttl"], "isLast": true }]
 }
+
+
+export default config;

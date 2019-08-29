@@ -259,7 +259,7 @@ resource:account_1 a bgo:Account, bgo:ProfiledAccount ;
     bgo:title "titolo account_1" ;
     bgo:description "descrizione account_1" ;
     bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: \n- pagamento delle quote capitale sui titoli del debito statale\n- rimborso del capitale relativo a buoni postali fruttiferi\n- rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione\n- rimborso passività a carico dello Stato"^^bgo:MDString ;
-    bgo:background <http://bit.ly/2MxbJWQ> ;
+    bgo:depiction <http://bit.ly/2MxbJWQ> ;
     bgo:versionLabel "2019" ;
 
 	bgo:hasHistoryRec

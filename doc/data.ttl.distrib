@@ -223,10 +223,10 @@ resource:tag_cloud a bgo:TagCloud ;
 		[ bgo:label "Tedgst4"; bgo:tagWeight 0.2 ] ,
 		[ bgo:label "Tefgst5"; bgo:tagWeight 0.7 ] ,
 		[ bgo:label "Teefst6"; bgo:tagWeight 0.3 ],
-        	[ bgo:label "Testsdf4"; bgo:tagWeight 0.2 ] ,
+        [ bgo:label "Testsdf4"; bgo:tagWeight 0.2 ] ,
 		[ bgo:label "Tegsgsbst5"; bgo:tagWeight 0.7 ] ,
 		[ bgo:label "Testeag6"; bgo:tagWeight 0.3 ],
-        	[ bgo:label "Tesbgbt4"; bgo:tagWeight 0.2 ] ,
+        [ bgo:label "Tesbgbt4"; bgo:tagWeight 0.2 ] ,
 		[ bgo:label "Twrfegest5"; bgo:tagWeight 0.7 ] ,
 		[ bgo:label "Tesqr3hyt6"; bgo:tagWeight 0.3 ]
 .
@@ -287,7 +287,7 @@ resource:account_2 a bgo:Account ;
     bgo:referenceAmount 95.00 ;
     bgo:title "titolo account_2" ;
     bgo:description "descrizione account_2" ;
-    bgo:background <http://bit.ly/2MxbJWQ>
+    bgo:depiction <http://bit.ly/2MxbJWQ>
 .
 
 resource:account_3 a bgo:Account ;
@@ -295,7 +295,7 @@ resource:account_3 a bgo:Account ;
     bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
     bgo:title "titolo account_3" ;
-    bgo:background "#fcba03"  # as RGB solid color
+    bgo:depiction "#fcba03"  # as RGB solid color
 .
 
 resource:account_4 a bgo:Account ;

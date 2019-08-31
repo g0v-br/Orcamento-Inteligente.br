@@ -4,7 +4,9 @@
     <div class="bar">
       <BarChart :historic-rec="historicRec.records" :title="historicRec.title"></BarChart>
     </div>
-    <div class="pie"></div>
+    <div class="pie">
+      <PieChart :breakdown="breakDown.records" :title="breakDown.title"></PieChart>
+    </div>
   </div>
 </template>
 
@@ -31,7 +33,11 @@ export default {
         title: "",
         records: []
       },
-      breakDown: []
+      breakDown: {
+        title: "",
+        records: [],
+        total: 0
+      }
     };
   },
   created() {
@@ -51,7 +57,8 @@ let fetchData = app => {
     app.tags.push({ label, weight });
   });
    */
-
+  
+  //Bar chart data
   let historical_perspective = bgoStore.any(
     account,
     ns.bgo("usesHistoricalPerspective")
@@ -59,7 +66,6 @@ let fetchData = app => {
 
   app.historicRec.title =
     bgoStore.anyValue(historical_perspective, ns.bgo("title")) || "";
-  console.log("title", app.historicRec.title);
 
   bgoStore.each(account, ns.bgo("hasHistoryRec")).forEach(rec => {
     const version = bgoStore.anyValue(rec, ns.bgo("versionLabel"));
@@ -70,12 +76,23 @@ let fetchData = app => {
   app.historicRec.records.sort((a, b) => {
     return a.x.localeCompare(b.x);
   });
-
+   //pie chart data
+  let breakdown_perspective = bgoStore.any(
+    account,
+    ns.bgo("usesBreakdownPerspective")
+  );
+  //pie chart title
+  app.breakDown.title = bgoStore.anyValue(breakdown_perspective, ns.bgo("title")) || "";
+  //total amount
+  app.breakDown.total = bgoStore.anyValue(account, ns.bgo('amount'));
+  //breakdown set
   bgoStore.each(account, ns.bgo("hasBreakdown")).forEach(br => {
     const title = bgoStore.anyValue(br, ns.bgo("title"));
     const amount = bgoStore.anyValue(br, ns.bgo("amount"));
-    app.breakDown.push({ title, amount });
+    app.breakDown.records.push({ title, amount });
   });
+
+ 
 };
 </script>
 
@@ -94,7 +111,7 @@ let fetchData = app => {
 .bar {
 }
 .pie {
-  background-color: palevioletred;
+ 
 }
 
 @media (max-width: 768px) {

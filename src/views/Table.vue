@@ -36,10 +36,12 @@
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import Totalizer from "@/components/Totalizer";
+import StringFormatter from "@/components/StringFormatter.vue";
 export default {
   name: "Table",
   components: {
-    Totalizer
+    Totalizer,
+    StringFormatter
   },
   data() {
     return {
@@ -87,6 +89,7 @@ function fetchData(app) {
 
   //fetch Title
   app.title = bgoStore.anyValue(tableView, ns.bgo("title"));
+
 
   //Fetch Headers
   //TODO decide where to get the width values

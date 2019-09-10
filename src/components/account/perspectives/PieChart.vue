@@ -8,7 +8,15 @@
 import Chart from "chart.js";
 import * as d3 from "d3";
 let cdsSpeed = 4000;
+let activeElement = 0;
 let intervalID;
+function highlightElement(chart,index){
+      chart.data.datasets[0]._meta[1].data.forEach(el=>{
+        chart.updateHoverStyle([el],null,index==el._index);
+      });
+      // render so we can see it
+      chart.render();
+}
 
 export default {
   props: {
@@ -26,28 +34,31 @@ export default {
   },
   mounted() {
     let ctx = this.$refs.canvas.getContext("2d");
-    let color = d3.scaleOrdinal(d3.schemeCategory10);
+    let getColor = d3.scaleOrdinal(d3.schemeCategory10);
     let labels = [];
     let datasets = [
       {
         data: [],
         backgroundColor: [],
+        hoverBackgroundColor:[],
         borderWidth: 1,
-        hoverBorderWidth: 5,
-        
-      }];
-    let breakdown_set=[];
+        hoverBorderWidth: 5
+      }
+    ];
+    let breakdown_set = [];
     this.breakdown.forEach(el => {
       labels.push(el.title);
       datasets[0].data.push(el.amount);
-      datasets[0].backgroundColor.push(color(el.title));
+      let bg=d3.color(getColor(el.title));
+      datasets[0].backgroundColor.push(bg.formatRgb());
+      bg.opacity=0.5;
+      datasets[0].hoverBackgroundColor.push(bg.formatRgb());
       breakdown_set.push({
-        title:el.title,
-        amount:el.amount,
-        percentage: el.amount*100/this.total
+        title: el.title,
+        amount: el.amount,
+        percentage: (el.amount * 100) / this.total
       });
     });
-
     let breakdownChart = new Chart(ctx, {
       type: "pie",
       data: {
@@ -70,11 +81,10 @@ export default {
         }
       }
     });
-
+    highlightElement(breakdownChart, activeElement);
     intervalID = window.setInterval(() => {
-      console.log(breakdownChart.active)
-      let el=breakdownChart.inactive.pop()
-      breakdownChart.active=[el]
+      activeElement=(1+activeElement)%this.breakdown.length
+      highlightElement(breakdownChart, activeElement);
     }, cdsSpeed);
   },
   beforeDestroy() {

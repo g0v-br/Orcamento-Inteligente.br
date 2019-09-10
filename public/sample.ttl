@@ -229,7 +229,7 @@ resource:trend_color_scheme a bgo:TrendColorScheme ;
 ##### Totalizer #######
 resource:totalizer a bgo:Totalizer ;
     bgo:totalPrintfTemplate "Totale: € %s" ;
-    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s%% del tot.)"
+    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s del tot.)"
 .
 
 
@@ -295,7 +295,7 @@ resource:account_1 a bgo:Account, bgo:ProfiledAccount ;
     bgo:hasBreakdown
     	[ bgo:title "account_1_part 1" ; bgo:amount 110.00 ] ,
     	[ bgo:title "account_1_part 2" ; bgo:amount 120.00 ] ,
-    	[ bgo:title "account_1_part 3" ; bgo:amount 130.00 ]
+    	[ bgo:title "account_1_part 3" ; bgo:amount 130.00 ] 
     ;
 
     bgo:usesHistoricalPerspective resource:historical_perspective ;

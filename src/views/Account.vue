@@ -5,7 +5,7 @@
       <BarChart :historic-rec="historicRec.records" :title="historicRec.title"></BarChart>
     </div>
     <div class="pie">
-      <PieChart :breakdown="breakDown.records" :title="breakDown.title"></PieChart>
+      <PieChart :breakdown="breakDown.records" :title="breakDown.title" :total="breakDown.total"></PieChart>
     </div>
   </div>
 </template>
@@ -84,7 +84,7 @@ let fetchData = app => {
   //pie chart title
   app.breakDown.title = bgoStore.anyValue(breakdown_perspective, ns.bgo("title")) || "";
   //total amount
-  app.breakDown.total = bgoStore.anyValue(account, ns.bgo('amount'));
+  app.breakDown.total = parseFloat(bgoStore.anyValue(account, ns.bgo('amount')));
   //breakdown set
   bgoStore.each(account, ns.bgo("hasBreakdown")).forEach(br => {
     const title = bgoStore.anyValue(br, ns.bgo("title"));

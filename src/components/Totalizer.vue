@@ -30,6 +30,9 @@ export default {
           style: "percent",
           maximumFractionDigits: 2
         }).format(rate);
+        
+        if(parseFloat(rate)<0.01)
+          return text.replace("%s", total1).replace("%s", "Meno dello 0,01% ");
         //replace works only with the first occourrence of %2
         return text.replace("%s", total1).replace("%s", rate);
       }

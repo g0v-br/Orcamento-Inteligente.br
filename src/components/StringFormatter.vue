@@ -16,13 +16,18 @@
       let md = new Markdown();
       
       let display;
-      if (ns.bgo("MDString").value == this.string.datatype.value){
-        display = md.renderInline(this.string.value);
-      } else {
-        display = this.string.value; 
+
+      switch(this.string.datatype.value) {
+        case ns.bgo("MDString").value:
+          display = md.render(this.string.value);
+          break;
+        default:
+          display = this.string.value;
+          break;
       }
 
       divDisplay.innerHTML = display;
+
     }
   };
 

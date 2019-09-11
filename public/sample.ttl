@@ -229,7 +229,9 @@ resource:trend_color_scheme a bgo:TrendColorScheme ;
 ##### Totalizer #######
 resource:totalizer a bgo:Totalizer ;
     bgo:totalPrintfTemplate "Totale: € %s" ;
-    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s del tot.)"
+    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s del tot.)" ;
+    bgo:treshold 0.01 ;
+    bgo:tresholdPrintTemplate "Meno del 0,01%" ;
 .
 
 

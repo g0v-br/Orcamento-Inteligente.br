@@ -11,6 +11,7 @@
 <script>
 import * as d3 from "d3";
 import Totalizer from "@/components/Totalizer";
+import _debounce from "lodash/debounce";
 //---------------------------------------------------------
 //BUILDER
 let cdsSpeed = 4000;
@@ -21,6 +22,7 @@ let height;
 let outerRadius; 
 let innerRadius;
 let slices;
+let debouncedUpdate;
 let updateDetail = function(context, overed_index) {
   for (let index = 0; index < slices.length; index++) {
     slices[index].classList.remove("selected");
@@ -43,6 +45,43 @@ const computeBoundaries = function() {
   innerRadius = outerRadius - 70;
   height = 2 * outerRadius;
 };
+const drowPieChart =function(context){
+    let chart_obj = pieChart()
+      .outerRadius(outerRadius)
+      .innerRadius(innerRadius);
+    let svg = d3
+      .select(".js-chart")
+      .attr("width", width)
+      .attr("height", height);
+    let domPieChart = svg
+      .append("g")
+      .attr("class", "pie-chart")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+      .call(chart_obj.data(context.breakdown));
+    domPieChart.call(chart_obj.data(context.breakdown));
+    //UPDATE CDS DETAIL
+    slices = d3.selectAll(".slice")._groups[0];
+    d3.selectAll(".slice")
+      .on("mouseenter", (actual, i) => {
+        window.clearInterval(intervalID);
+        updateDetail(context, i);
+      })
+      .on("mouseleave", () => {
+        intervalID = window.setInterval(() => {
+          updateDetail(context, -1);
+        }, cdsSpeed);
+      });
+}
+const centerPieChart = function(){
+  let chart = d3
+      .select("g")
+  let svg = d3
+      .select(".js-chart")
+      .attr("width", width)
+      .attr("height", height);
+
+  chart.attr("transform","translate(" + (width / 2) +"," + (height / 2) +")");
+}
 function pieChart(options) {
   var animationDuration = 750,
     color = d3.scaleOrdinal(d3.schemeCategory10),
@@ -103,6 +142,7 @@ function pieChart(options) {
   };
   return pieChart;
 }
+
 //---------------------------------------------------------
 export default {
   props: { 
@@ -130,37 +170,20 @@ export default {
 
   mounted() {
     computeBoundaries();
-    let chart_obj = pieChart()
-      .outerRadius(outerRadius)
-      .innerRadius(innerRadius);
-    let svg = d3
-      .select(".js-chart")
-      .attr("width", width)
-      .attr("height", height);
-    let domPieChart = svg
-      .append("g")
-      .attr("class", "pie-chart")
-      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-      .call(chart_obj.data(this.breakdown));
-    domPieChart.call(chart_obj.data(this.breakdown));
-    //UPDATE CDS DETAIL
-    slices = d3.selectAll(".slice")._groups[0];
-    d3.selectAll(".slice")
-      .on("mouseenter", (actual, i) => {
-        window.clearInterval(intervalID);
-        updateDetail(this, i);
-      })
-      .on("mouseleave", () => {
-        intervalID = window.setInterval(() => {
-          updateDetail(this, -1);
-        }, cdsSpeed);
-      });
+    drowPieChart(this);
     updateDetail(this, -1);
     intervalID = window.setInterval(() => {
       updateDetail(this, -1);
     }, cdsSpeed);
+    debouncedUpdate = _debounce(() => {
+      computeBoundaries();
+      centerPieChart(this);
+    }, 200);
+     window.addEventListener("resize", debouncedUpdate);
+
   },
   beforeDestroy() {
+    window.removeEventListener("resize", debouncedUpdate);
     window.clearInterval(intervalID);
   }
 };

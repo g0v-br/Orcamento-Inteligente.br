@@ -3,7 +3,9 @@
     <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">
         <h3 class="subheading">{{ subset.title }}</h3>
-        <Totalizer :total="total_subset(subset)" />
+        <Totalizer 
+        :total="subset.total"
+        :filtered="subset.total_filtered" />
       </div>
     </div>
     <svg ref="vis" id="vis" />

@@ -26,7 +26,9 @@
 
       <div class="meta">
         Metadata, sul cellulare solo il totale, per il resto c'è il popup
-        <Totalizer :total="total" />
+        <Totalizer 
+        :total="total"
+        :filtered="total_filtered" />
       </div>
 
       <div ref="chart" class="chart">
@@ -90,7 +92,8 @@ export default {
       searchPaneLabel: "",
       search: null,
       tags: [],
-      total: "",
+      total: 0,
+      total_filtered: 0,
       isNodeHovered: false,
       hoveredNode: {}
     };
@@ -123,7 +126,8 @@ export default {
       });
     },
     onTotalChanged(data) {
-      this.total = "" + data.total + ";" + data.total_filtered;
+      this.total = data.total;
+      this.total_filtered = data.total_filtered;
     },
     onNodeOver(node) {
       const tooltipHeight = 100;

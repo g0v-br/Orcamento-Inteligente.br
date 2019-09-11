@@ -3,8 +3,7 @@
     <div class="g0v-table-container">
       <v-card>
         <v-card-title>
-          <Totalizer :total="total +';'+total" />
-          <!-- {{title}} : {{total}} -->
+          <Totalizer :total="total"/>
           <v-spacer></v-spacer>
 
           <v-text-field
@@ -65,8 +64,8 @@ export default {
     filteredAccounts() {
       return this.accounts.filter(node => {
         let search = this.search.toLowerCase(),
-          title = node.title.toLowerCase().includes(search),
-          description = node.description.toLowerCase().includes(search);
+        title = node.title.toLowerCase().includes(search),
+        description = node.description.toLowerCase().includes(search);
 
         return title || description;
       });
@@ -135,18 +134,6 @@ function fetchData(app) {
       description
     });
 
-    //i'm already here so i can just calculate the total
-    //app.total += parseInt(amount);
-
-    // Get the partitions using the hasAccount attribute
-    // let partitionLabel, partitionLabels =[];
-    // let partitions = bgoStore.each(undefined, ns.bgo('hasAccount'), account);
-    // partitions.forEach((partition) => {
-    //     partitionLabels.push(bgoStore.anyValue(partition, ns.bgo('title')));
-    // });
-
-    //Format partition labels
-    //description = partitionLabels.join(', ');
   });
 }
 </script>

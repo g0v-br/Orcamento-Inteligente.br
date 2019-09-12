@@ -1,6 +1,7 @@
 <template>
     <div  class="container">
     	<StringFormatter :string="abstract"/>
+    	<!-- Warning: removing or changing the following statement breaks the LODMAP2D license -->
 	    <div class="ldc-credits" >
 	    	<p>
 	    		This application includes the <a href="https://github.com/linkeddatacenter/LODMAP2D">LODMAP2D software</a> developed by 

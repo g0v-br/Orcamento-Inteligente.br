@@ -81,11 +81,18 @@ resource:credits_page a bgo:CreditsView ;
 	bgo:title "Credits"@en ;
 	bgo:abstract
 """
-Grazie a
---------
- - x
- - y
- - z
+This code is written by:
+
+- [Miah Mohd Ehtesham](https://github.com/miahmohd)
+- [Leonardo Longhi](https://github.com/LeonardoLonghi)
+- [Yassine Ouahidi](https://github.com/YassineOuahidi)
+- [Enrico Fagnoni](https://github.com/ecow)
+
+Using following libraries and framework:
+
+- The [D3.js library](https://d3js.org/)
+- [Evan You](http://evanyou.me/) and the [Vue community](https://vuejs.org) for the great javascript framework
+- TimBL & LinkedData team for SOLID and [rdflib project](https://github.com/linkeddata/rdflib.js)
 """^^bgo:MDString.
 
 
@@ -100,6 +107,7 @@ here palace your **Terms & conditions** about published service.
 #### Table ###################
 resource:table_view a bgo:TableView ;
 	bgo:title "Table view";
+    bgo:hasTotalizer resource:totalizer ;
     bgo:hasSearchPane resource:search_pane ;
 
     bgo:headerTitle "Title" ;
@@ -261,14 +269,17 @@ resource:tag_cloud a bgo:TagCloud ;
 # Accounts perspectives
 #############################################
 resource:metadata_perspective a bgo:MetadataPerspective ;
+    bgo:hasTotalizer resource:totalizer ;
    	bgo:notAvailableTrendAccountLabel "Non disponibile"
 .
 
 resource:historical_perspective a bgo:HistoricalPerspective ;
+    bgo:hasTotalizer resource:totalizer ;
 	bgo:title "Storico dell'azione"
 .
 
 resource:breakdown_perspective a bgo:BreakdownPerspective ;
+    bgo:hasTotalizer resource:totalizer ;
 	bgo:title "Dettaglio capitoli di spesa"
 .
 

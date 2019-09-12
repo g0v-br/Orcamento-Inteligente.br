@@ -1,5 +1,5 @@
 <template>
-  <div id="display"></div>
+  <div :id="string.value"></div>
 </template>
 
 <script>
@@ -8,11 +8,12 @@
   export default {
     props: {
       string: {
-        type: Object
+        type: Object,
+        default: {value : "default"}
       }
     },
     mounted() {
-      let divDisplay = document.getElementById("display");
+      let divDisplay = document.getElementById(this.string.value);
       let md = new Markdown();
       
       let display;

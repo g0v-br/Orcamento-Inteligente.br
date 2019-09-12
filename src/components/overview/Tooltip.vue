@@ -3,20 +3,25 @@
     <h4>{{node.title}}</h4>
 
     <div class="row">
-      <p class="amount">{{node.amount}}</p>
+      <p class="amount">{{formatAmount( node.amount)}}</p>
 
-      <p class="rate">{{ Math.floor(node.rate *100) }}</p>
+      <p class="rate">{{ formatPercentage(node.rate) }}</p>
     </div>
   </v-sheet>
 </template>
 
 <script>
+import { formatPercentage, formatAmount } from "@/utils/utils.js";
 export default {
   name: "tooltip",
   props: {
     node: {
       type: Object
     }
+  },
+  methods: {
+    formatPercentage,
+    formatAmount
   }
   //   created() {
   //     // console.log("tooltip node", this.node);

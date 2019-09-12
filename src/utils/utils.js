@@ -4,3 +4,9 @@ export const formatPercentage = (rate, withSimbol = true) => {
         maximumFractionDigits: 2
     }).format(rate)
 }
+
+export const formatAmount = (amount, format = "%s") => {
+    return format.replace("%s", new Intl.NumberFormat({ maximumFractionDigits: 2 }).format(
+        amount
+    ))
+}

@@ -3,7 +3,7 @@
     <div class="g0v-table-container">
       <v-card>
         <v-card-title>
-          <Totalizer :total="total"/>
+          <Totalizer :total="total" />
           <v-spacer></v-spacer>
 
           <v-text-field
@@ -36,6 +36,7 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import Totalizer from "@/components/Totalizer";
 import StringFormatter from "@/components/StringFormatter.vue";
+import { formatPercentage } from "@/utils/utils.js";
 export default {
   name: "Table",
   components: {
@@ -64,8 +65,8 @@ export default {
     filteredAccounts() {
       return this.accounts.filter(node => {
         let search = this.search.toLowerCase(),
-        title = node.title.toLowerCase().includes(search),
-        description = node.description.toLowerCase().includes(search);
+          title = node.title.toLowerCase().includes(search),
+          description = node.description.toLowerCase().includes(search);
 
         return title || description;
       });
@@ -88,7 +89,6 @@ function fetchData(app) {
 
   //fetch Title
   app.title = bgoStore.anyValue(tableView, ns.bgo("title"));
-
 
   //Fetch Headers
   //TODO decide where to get the width values
@@ -125,7 +125,7 @@ function fetchData(app) {
       amount = bgoStore.anyValue(account, ns.bgo("amount")),
       description = bgoStore.anyValue(account, ns.bgo("description")),
       previousValue = bgoStore.anyValue(account, ns.bgo("referenceAmount")),
-      trend = (amount - previousValue) / previousValue;
+      trend = formatPercentage((amount - previousValue) / previousValue);
 
     app.accounts.push({
       title,
@@ -133,7 +133,6 @@ function fetchData(app) {
       trend,
       description
     });
-
   });
 }
 </script>

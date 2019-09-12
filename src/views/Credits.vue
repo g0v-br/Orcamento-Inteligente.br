@@ -1,6 +1,13 @@
 <template>
-    
-    <StringFormatter :string="abstract"/>
+    <div>
+    	<StringFormatter :string="abstract"/>
+	    <div class="ldc-credits" >
+	    	<p>
+	    		This application includes the <a href="https://github.com/linkeddatacenter/LODMAP2D">LODMAP2D software</a> developed by 
+	    		<a href="http://LinkedData.Center/">LinkedData.Center</a> and contributors.
+	    	</p>
+	    </div>
+    </div>
 </template>
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js"; 
@@ -23,3 +30,13 @@ export default {
   }
 };
 </script>
+
+
+<style scoped>
+.ldc-credits {
+  margin-left: auto;
+  margin-top: 15px;
+  font-style: italic;
+  color: rgba(100, 100, 100, 1);
+}
+</style>

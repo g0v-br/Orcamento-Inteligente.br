@@ -46,7 +46,6 @@ function fetchData(app) {
 .copyright {
   margin-left: auto;
   margin-right: 10px;
-  font-style: italic;
   color: rgba(100, 100, 100, 1);
 }
 .footer-btn {

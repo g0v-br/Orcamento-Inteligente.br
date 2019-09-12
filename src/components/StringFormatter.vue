@@ -12,6 +12,11 @@
         default: {value : "default"}
       }
     },
+    data(){
+      return {
+        id: string.value
+      }
+    },
     mounted() {
       let divDisplay = document.getElementById(this.string.value);
       let md = new Markdown();

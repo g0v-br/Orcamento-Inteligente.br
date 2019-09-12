@@ -1,11 +1,13 @@
 <template>
   <div class="content-grid">
-    <div class="metadata"></div>
+    <div class="metadata">
+      <Metadata :accountId="accountId"/>
+    </div>
     <div class="bar">
-      <BarChart :historic-rec="historicRec.records" :title="historicRec.title"></BarChart>
+      <BarChart :historic-rec="historicRec.records" :title="historicRec.title"/>
     </div>
     <div class="pie">
-      <PieChart :breakdown="breakDown.records" :title="breakDown.title" :total="breakDown.total"></PieChart>
+      <PieChart :breakdown="breakDown.records" :title="breakDown.title" :total="breakDown.total"/>
     </div>
   </div>
 </template>
@@ -106,7 +108,6 @@ let fetchData = app => {
 }
 
 .metadata {
-  background-color: salmon;
 }
 .bar {
 }

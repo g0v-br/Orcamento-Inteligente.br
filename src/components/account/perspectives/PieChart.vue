@@ -4,7 +4,7 @@
     <svg class="chart js-chart pie-chart" />
     <div class="detail">
       <p class="desc">{{ bd_title }}</p>
-      <Totalizer :total="bd_amount"/>
+      <Totalizer :total="bd_amount" :filtered="bd_filtered"/>
     </div>
   </div>
 </template>
@@ -31,7 +31,8 @@ let updateDetail = function(context, overed_index) {
     currentElement = overed_index;
   }
   slices[currentElement].classList.add("selected");
-  context.bd_amount = context.total+";"+slices[currentElement].__data__.data.amount;
+  context.bd_amount = context.total;
+  context.bd_filtered = slices[currentElement].__data__.data.amount;
   context.bd_title = slices[currentElement].__data__.data.title;
   currentElement = (currentElement + 1) % slices.length;
 };
@@ -164,7 +165,8 @@ export default {
   data() {
     return {
       bd_title: undefined,
-      bd_amount: "0;0"
+      bd_filtered: 0,
+      bd_amount: 0
     };
   },
 

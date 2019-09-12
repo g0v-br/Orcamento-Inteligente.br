@@ -9,7 +9,13 @@
     props: {
       string: {
         type: Object,
-        default: {value : "default"}
+        default: () => {
+          return {
+            value : "default",
+            datatype: {
+              value : "default"
+            }
+        }}
       }
     },
     mounted() {

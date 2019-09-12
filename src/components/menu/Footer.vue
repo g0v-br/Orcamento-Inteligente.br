@@ -13,20 +13,24 @@
       <v-icon size="24px">{{ el.icon }}</v-icon>
     </v-btn>
     <span class="copyright">
-      <i>{{copyright}}</i>
+      <StringFormatter :string="copyright"/>
     </span>
   </v-footer>
 </template>
 <script>
 import { bgoStore, fetcher, ns, getDefaultMenuItems } from "@/models/bgo.js";
+import StringFormatter from "@/components/StringFormatter"
 export default {
+  components:{
+    StringFormatter
+  },
   data() {
     return {
       footerItems: [],
-      copyright: ""
+      copyright: undefined
     };
   },
-  mounted() {
+  created() {
     fetchData(this);
   }
 };
@@ -42,6 +46,7 @@ function fetchData(app) {
 .copyright {
   margin-left: auto;
   margin-right: 10px;
+  font-style: italic;
   color: rgba(100, 100, 100, 1);
 }
 .footer-btn {

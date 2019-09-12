@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div  class="container">
     	<StringFormatter :string="abstract"/>
 	    <div class="ldc-credits" >
 	    	<p>
@@ -31,12 +31,20 @@ export default {
 };
 </script>
 
-
 <style scoped>
-.ldc-credits {
-  margin-left: auto;
-  margin-top: 15px;
-  font-style: italic;
-  color: rgba(100, 100, 100, 1);
-}
+  .container{
+    margin:0px;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+   .container div{
+    width: 100%;
+    height: 100%;
+  }
+  .ldc-credits {
+	margin-left: auto;
+	margin-top: 1em;
+	font-style: italic;
+	color: rgba(100, 100, 100, 1);
+  }
 </style>

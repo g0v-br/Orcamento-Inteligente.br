@@ -1,6 +1,7 @@
 <template>
-    
+  <div class="container">
     <StringFormatter :string="abstract"/>
+  </div>
 </template>
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js"; 
@@ -23,3 +24,14 @@ export default {
   }
 };
 </script>
+<style scoped>
+  .container{
+    margin:0px;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+   .container div{
+    width: 100%;
+    height: 100%;
+  }
+</style>

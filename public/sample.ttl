@@ -192,45 +192,20 @@ resource:p2_2 a bgo:AccountSet ;
 
 ###### Trend Color Scheme #######
 resource:trend_color_scheme a bgo:TrendColorScheme ;
-    bgo:title "Variazione rispetto alla precedente legge di bilancio" ;
+    bgo:title "Variazione rispetto al valore di acquisto" ;
     bgo:noTrendColor "#cdcdcd" ;
-
-
-    # sarebbe meglio qualcosa tipo:
-    # bgo:rateTresholds [
-	#	( -0.5 "#d73027" )
-	#	( -1 "#a50026" )
-	#	..
-    #] ;
-    #Gestendo il sort delle threshold a applic azione
-
-
-	bgo:rateTresholds(
-		-1
-		-0.5
-		-0.25
-		-0.10
-		-0.05
-		0
-		0.05
-		0.10
-		0.25
-		0.5
-		10
-    ) ;
-	bgo:colorTresholds(
-		"#a50026"
-		"#d73027"
-		"#f46d43"
-		"#fdae61"
-		"#fee08b"
-		"#ffffbf"
-		"#d9ef8b"
-		"#a6d96a"
-		"#66bd63"
-		"#1a9850"
-		"#006837"
-	);
+    bgo:rateTreshold
+		( -1	"#a50026" ) ,
+		( -0.5	"#d73027" ) ,
+		( -0.25	"#f46d43" ) ,
+		( -0.10	"#fdae61" ) ,
+		( -0.05	"#fee08b" ) ,
+		( 0		"#ffffbf" ) ,
+		( 0.05	"#d9ef8b" ) ,
+		( 0.10	"#a6d96a" ) ,
+		( 0.25	"#66bd63" ) ,
+		( 0.5	"#1a9850" ) ,
+		( 10  	"#006837" )
 .
 
 
@@ -308,7 +283,7 @@ resource:account_1 a bgo:Account, bgo:ProfiledAccount ;
     bgo:hasBreakdown
     	[ bgo:title "account_1_part 1" ; bgo:amount 110.00 ] ,
     	[ bgo:title "account_1_part 2" ; bgo:amount 120.00 ] ,
-    	[ bgo:title "account_1_part 3" ; bgo:amount 130.00 ] 
+    	[ bgo:title "account_1_part 3" ; bgo:amount 130.00 ]
     ;
 
     bgo:usesHistoricalPerspective resource:historical_perspective ;

@@ -1,5 +1,6 @@
 <template>
     <div  class="container">
+        <h1><StringFormatter :string="title"/></h1>
     	<StringFormatter :string="abstract"/>
     	<!-- Warning: removing or changing the following statement breaks the LODMAP2D license -->
 	    <div class="ldc-credits" >
@@ -14,7 +15,7 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js"; 
 import StringFormatter from "@/components/StringFormatter.vue";
 export default {
-  name: "Table",
+  name: "Credits",
   components: {
     StringFormatter
   },

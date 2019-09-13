@@ -3,7 +3,7 @@
     <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">
         <h3 class="subheading">{{ subset.title }}</h3>
-        <Totalizer 
+        <Totalizer
         :total="subset.total"
         :filtered="subset.total_filtered" />
       </div>
@@ -15,7 +15,6 @@
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BubbleChart from "@/components/overview/BubbleChart/BubbleChart.js";
-import * as d3 from "d3";
 import _debounce from "lodash/debounce";
 import Totalizer from "@/components/Totalizer.vue"
 let debouncedUpdate;

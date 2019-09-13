@@ -26,9 +26,7 @@
 
       <div class="meta">
         Metadata, sul cellulare solo il totale, per il resto c'è il popup
-        <Totalizer 
-        :total="total"
-        :filtered="total_filtered" />
+        <Totalizer :total="total" :filtered="total_filtered" />
       </div>
 
       <div ref="chart" class="chart">
@@ -51,7 +49,7 @@
       <div class="tools">
         <div class="tagcloud">
           <router-link
-            v-for="tag in tags"
+            v-for="tag in tags.slice(0,30)"
             :key="tag.label"
             :to="{ name: 'accounts-partition',
              params: { partitionId: activePartitionId },
@@ -60,6 +58,13 @@
             class="tag"
           >{{tag.label}}</router-link>
         </div>
+        <Legend
+          :label="legendData.label"
+          :no-trend-color="legendData.noTrendColor"
+          :color-tresholds="legendData.colorTresholds"
+          :range-tresholds="legendData.rangeTresholds"
+          class="legend-bottom"
+        />
       </div>
     </div>
   </div>
@@ -68,6 +73,7 @@
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BubbleChart from "@/components/overview/BubbleChart";
+import Legend from "@/components/overview/Legend";
 import Totalizer from "@/components/Totalizer";
 import Tooltip from "@/components/overview/Tooltip";
 import { debounce } from "lodash";
@@ -76,6 +82,7 @@ export default {
   name: "overview",
   components: {
     BubbleChart,
+    Legend,
     Totalizer,
     Tooltip
   },
@@ -95,7 +102,13 @@ export default {
       total: 0,
       total_filtered: 0,
       isNodeHovered: false,
-      hoveredNode: {}
+      hoveredNode: {},
+      legendData: {
+        label: "",
+        noTrendColor: "",
+        colorTresholds: [],
+        rangeTresholds: []
+      }
     };
   },
 
@@ -166,9 +179,9 @@ function fetchData(app) {
   });
   const partitions = bgoStore.any(overview, ns.bgo("hasPartitionList"))
     .elements;
+  //add other partitions
+  //fetch partitions data
   for (const partition of partitions) {
-    //add other partitions
-    //fetch partitions data
     let id = bgoStore.anyValue(partition, ns.bgo("partitionId"));
     let label = bgoStore.anyValue(partition, ns.bgo("label"));
     let title = bgoStore.anyValue(partition, ns.bgo("title"));
@@ -185,8 +198,8 @@ function fetchData(app) {
     let subsets_uri = bgoStore.each(partition, ns.bgo("hasAccountSubSet"));
 
     let subsets = [];
+    //for each partition add its subsets
     subsets_uri.forEach(subset => {
-      //for each partition add its subsets
       let s_title = bgoStore.anyValue(subset, ns.bgo("title"));
       let s_label = bgoStore.anyValue(subset, ns.bgo("label")) || "";
       let description = bgoStore.anyValue(subset, ns.bgo("description")) || "";
@@ -218,12 +231,28 @@ function fetchData(app) {
 
   // TagCloud metadata
   const tagCloud = bgoStore.any(overview, ns.bgo("hasTagCloud"));
-
   bgoStore.each(tagCloud, ns.bgo("hasTag")).forEach(tag => {
     const label = bgoStore.anyValue(tag, ns.bgo("label"));
     const weight = bgoStore.anyValue(tag, ns.bgo("tagWeight"));
     app.tags.push({ label, weight });
   });
+
+  // Legend metadata
+  const colorScheme = bgoStore.any(overview, ns.bgo("hasTrendColorScheme"));
+  app.legendData.label = bgoStore.anyValue(colorScheme, ns.bgo("title"));
+  app.legendData.noTrendColor = bgoStore.anyValue(
+    colorScheme,
+    ns.bgo("noTrendColor")
+  );
+  bgoStore
+    .each(colorScheme, ns.bgo("rateTreshold"))
+    .sort((a, b) => {
+      return a.elements[0].value - b.elements[0].value;
+    })
+    .forEach(treshold => {
+      app.legendData.rangeTresholds.push(treshold.elements[0].value);
+      app.legendData.colorTresholds.push(treshold.elements[1].value);
+    });
 }
 </script>
 
@@ -281,8 +310,13 @@ function fetchData(app) {
 }
 .tools {
   grid-area: tools;
+  display: flex;
+  flex-direction: column;
 }
-
+.legend-bottom {
+  height: 80px;
+  margin-top: auto;
+}
 .tagcloud {
   display: flex;
   align-items: center;

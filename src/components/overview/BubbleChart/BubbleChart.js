@@ -1,4 +1,11 @@
-import * as d3 from 'd3';
+import { select } from "d3-selection";
+import { transition } from "d3-transition";
+import { rgb } from "d3-color";
+import { scaleLinear, scalePow } from "d3-scale";
+import { forceSimulation, forceManyBody, forceX, forceY } from "d3-force";
+
+
+
 
 function updateTotals(node, partitions_table, total, ns) {
     //update overview total
@@ -159,23 +166,27 @@ export default class BubbleChart {
     //called only the first time
     render(searchText) {
         this.nodes = createNodes(this.store, this.ns, this.width, this.height, searchText, this.partitions);
-        // console.table(this.nodes)
         const overview = this.store.any(null, this.ns.rdf('type'), this.ns.bgo('Overview'));
+
+        // Colore schema
         const colorScheme = this.store.any(overview, this.ns.bgo('hasTrendColorScheme'));
         const noTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('noTrendColor'));
-        const domainColor = [];
-        const rangeColor = [];
-        this.store.any(colorScheme, this.ns.bgo("rateTresholds")).elements.forEach((c) => {
-            domainColor.push(parseFloat(c.value));
-        });
-        this.store.any(colorScheme, this.ns.bgo("colorTresholds")).elements.forEach((c) => {
-            rangeColor.push(c.value);
-        });
+        const colorTresholds = [];
+        const rangeTresholds = [];
+        this.store.each(colorScheme, this.ns.bgo("rateTreshold"))
+            .sort((a, b) => {
+                return a.elements[0].value - b.elements[0].value
+            })
+            .forEach(treshold => {
+                rangeTresholds.push(treshold.elements[0].value)
+                colorTresholds.push(treshold.elements[1].value)
+            })
+
 
         const colorScale = (val) => {
-            let fill = d3.scaleLinear()
-                .domain(domainColor)
-                .range(rangeColor)
+            let fill = scaleLinear()
+                .domain(rangeTresholds)
+                .range(colorTresholds)
                 .clamp(true);
 
             if (isFinite(val)) {
@@ -185,7 +196,7 @@ export default class BubbleChart {
         }
 
         const self = this;
-        let bubbles = d3.select("svg#vis")
+        let bubbles = select("svg#vis")
             .selectAll("circle")
             .data(this.nodes)
             .enter()
@@ -200,7 +211,7 @@ export default class BubbleChart {
                 return colorScale(d.rate);
             })
             .attr("stroke", function (d) {
-                return d3.rgb(colorScale(d.rate)).darker();
+                return rgb(colorScale(d.rate)).darker();
             })
             .on("mouseover", function (d) {
                 this.style["stroke-width"] = 4;
@@ -234,8 +245,7 @@ export default class BubbleChart {
                 });
         }
 
-        this.simulation = d3
-            .forceSimulation()
+        this.simulation = forceSimulation()
             .velocityDecay(this.velocityDecay)
             .nodes(this.nodes)
             .on("tick", ticked)
@@ -249,7 +259,7 @@ export default class BubbleChart {
     // Update bubbles radius and update the simulation obj with the new charge force according to the new radius
     updateSimulation(radiusUpdate = true) {
         const maxAmount = this.nodes[0].amount;
-        const radiusScale = d3.scalePow().exponent(0.5)
+        const radiusScale = scalePow().exponent(0.5)
             .domain([0, maxAmount]).range([2, 100]);
 
         if (this.totalDefaultArea == 0) {
@@ -263,11 +273,10 @@ export default class BubbleChart {
         // Radius multiplier
         const radiusChangeRate = radiusUpdate ? maxArea / this.totalDefaultArea : 1;
 
-        let bubbles = d3.select("svg#vis")
+        let bubbles = select("svg#vis")
             .selectAll("circle");
 
-        bubbles
-            .transition()
+        bubbles.transition()
             .duration(2000)
             .attr("r", function (d) {
                 return radiusScale(d.amount) * Math.sqrt(radiusChangeRate);
@@ -277,7 +286,7 @@ export default class BubbleChart {
             return -Math.pow(radiusScale(d.amount) * Math.sqrt(radiusChangeRate), 2.0) * this.forceStrength;
         }
 
-        this.simulation.force("charge", d3.forceManyBody().strength(charge)).stop()
+        this.simulation.force("charge", forceManyBody().strength(charge)).stop()
     }
 
     // called when partition change, group or split bubbles
@@ -307,8 +316,7 @@ export default class BubbleChart {
             // TODO aggiungere ai gridblock un blocco per i default, i nodi senza partizioni sono a posto
             this.simulation.force(
                 "x",
-                d3
-                    .forceX()
+                forceX()
                     .strength(this.forceStrength)
                     .x(function (d) {
                         let nodePartition = d.partitions[activePartitionId];
@@ -321,8 +329,7 @@ export default class BubbleChart {
             );
             this.simulation.force(
                 "y",
-                d3
-                    .forceY()
+                forceY()
                     .strength(this.forceStrength)
                     .y(function (d) {
                         let nodePartition = d.partitions[activePartitionId];
@@ -341,15 +348,15 @@ export default class BubbleChart {
     }
 
     groupBubble() {
-        this.simulation.force("x", d3.forceX().strength(this.forceStrength).x(this.width / 2));
-        this.simulation.force("y", d3.forceY().strength(this.forceStrength).y(this.height / 2));
+        this.simulation.force("x", forceX().strength(this.forceStrength).x(this.width / 2));
+        this.simulation.force("y", forceY().strength(this.forceStrength).y(this.height / 2));
         this.simulation.alpha(1).restart();
     }
 
     //called when filter changhe filter bubble and compute new filtered totals
     filterBubbles(searchText) {
         resetTotal(this.partitions);
-        d3.select("svg#vis")
+        select("svg#vis")
             .selectAll("circle")
             .classed("disabled", d => {
                 d.active = match(d, searchText);

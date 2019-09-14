@@ -184,7 +184,7 @@ function fetchData(app) {
   for (const partition of partitions) {
     let id = bgoStore.anyValue(partition, ns.bgo("partitionId"));
     let label = bgoStore.anyValue(partition, ns.bgo("label"));
-    let title = bgoStore.anyValue(partition, ns.bgo("title"));
+    let title = bgoStore.any(partition, ns.bgo("title"));
     let sortOrder =
       bgoStore.anyValue(partition, ns.bgo("sortOrder")) ||
       ns.bgo("descending_sort").value;
@@ -200,10 +200,10 @@ function fetchData(app) {
     let subsets = [];
     //for each partition add its subsets
     subsets_uri.forEach(subset => {
-      let s_title = bgoStore.anyValue(subset, ns.bgo("title"));
+      let s_title = bgoStore.any(subset, ns.bgo("title"));
       let s_label = bgoStore.anyValue(subset, ns.bgo("label")) || "";
       let description = bgoStore.anyValue(subset, ns.bgo("description")) || "";
-      let abstract = bgoStore.anyValue(subset, ns.bgo("abstract")) || "";
+      let abstract = bgoStore.any(subset, ns.bgo("abstract")) || "";
       subsets.push({
         id: subset.value,
         title: s_title,

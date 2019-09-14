@@ -36,7 +36,7 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import Totalizer from "@/components/Totalizer";
 import StringFormatter from "@/components/StringFormatter.vue";
-import { formatPercentage } from "@/utils/utils.js";
+import { formatPercentage, formatAmount , unformatAmount} from "@/utils/utils.js";
 export default {
   name: "Table",
   components: {
@@ -59,7 +59,7 @@ export default {
   computed: {
     total() {
       return this.filteredAccounts.reduce((sum, node) => {
-        return sum + parseInt(node.amount);
+        return sum + parseInt(unformatAmount(node.amount));
       }, 0);
     },
     filteredAccounts() {
@@ -125,7 +125,13 @@ function fetchData(app) {
       amount = bgoStore.anyValue(account, ns.bgo("amount")),
       description = bgoStore.anyValue(account, ns.bgo("description")),
       previousValue = bgoStore.anyValue(account, ns.bgo("referenceAmount")),
-      trend = formatPercentage((amount - previousValue) / previousValue);
+      trend = (amount - previousValue) / previousValue;
+      
+    //Format Numbers
+    amount = formatAmount(amount);
+    trend = formatPercentage(trend);
+
+
 
     app.accounts.push({
       title,

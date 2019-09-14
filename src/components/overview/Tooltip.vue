@@ -3,15 +3,22 @@
     <h4>{{node.title}}</h4>
 
     <div class="row">
-      <p class="amount">{{formatAmount( node.amount, totalizer.minimalTotalPrintTemplate)}}</p>
+      <p class="amount">{{printf(totalizer.minimalTotalPrintTemplate, formatAmount(node.amount))}}</p>
 
-      <p class="rate">{{ formatPercentage(node.rate) }}</p>
+      <p class="rate">
+        <v-icon
+          v-if="withIcon"
+          :color="node.rate <0?'red':'green'"
+          small
+        >{{ (node.rate < 0) ? "mdi-arrow-bottom-right":"mdi-arrow-top-right"}}</v-icon>
+        {{ formatPercentage(node.rate) }}
+      </p>
     </div>
   </v-sheet>
 </template>
 
 <script>
-import { formatPercentage, formatAmount } from "@/utils/utils.js";
+import { formatPercentage, formatAmount, printf } from "@/utils/utils.js";
 export default {
   name: "tooltip",
   props: {
@@ -20,8 +27,15 @@ export default {
   },
   methods: {
     formatPercentage,
-    formatAmount
+    formatAmount,
+    printf
+  },
+  computed: {
+    withIcon: function() {
+      return isFinite(this.node.rate);
+    }
   }
+
   //   created() {
   //     // console.log("tooltip node", this.node);
   //   }
@@ -30,12 +44,14 @@ export default {
 
 <style scoped>
 .tooltip {
+  position: relative;
   display: grid;
   grid-gap: 16px;
   padding: 16px;
   height: 100px;
   width: 350px;
 }
+
 .tooltip h4 {
   white-space: nowrap;
   overflow: hidden;

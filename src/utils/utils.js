@@ -1,5 +1,4 @@
 export const formatPercentage = (rate, precisionTreshold = 0.00005) => {
-
     if (isFinite(rate)) {
         if (rate == 0)
             return "0%";
@@ -17,12 +16,11 @@ export const formatPercentage = (rate, precisionTreshold = 0.00005) => {
     return "N/A";
 }
 
-export const formatAmount = (amount, format = "%s") => {
-    return format.replace("%s", new Intl.NumberFormat({ maximumFractionDigits: 2 }).format(
+export const formatAmount = (amount) => {
+    return new Intl.NumberFormat({ maximumFractionDigits: 2 }).format(
         amount
-    ))
+    )
 }
-
 
 // Same as C/C++ solo per %s
 export const printf = (format = "%s", ...args) => {
@@ -32,3 +30,5 @@ export const printf = (format = "%s", ...args) => {
     }
     return res;
 }
+
+

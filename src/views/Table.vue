@@ -28,10 +28,8 @@
         >
           <template
             v-slot:item.amount="{ item }"
-          >{{formatAmount(item.amount, totalizer.minimalTotalPrintTemplate)}}</template>
-          <template
-            v-slot:item.trend="{ item }"
-          >{{formatPercentage(item.trend)}}</template>
+          >{{ printf(totalizer.minimalTotalPrintTemplate, formatAmount(item.amount)) }}</template>
+          <template v-slot:item.trend="{ item }">{{formatPercentage(item.trend)}}</template>
         </v-data-table>
       </v-card>
     </div>
@@ -58,8 +56,6 @@ export default {
       search: "",
       label: "",
       totalizer: {
-        treshold: 0.01,
-        tresholdPrintTemplate: "< 0.01%",
         totalPrintfTemplate: "",
         minimalTotalPrintTemplate: ""
       }
@@ -93,7 +89,8 @@ export default {
       });
     },
     formatPercentage,
-    formatAmount
+    formatAmount,
+    printf
   }
 };
 
@@ -159,11 +156,6 @@ function fetchData(app) {
   app.totalizer.minimalTotalPrintTemplate = bgoStore.anyValue(
     totalizer,
     ns.bgo("minimalTotalPrintTemplate")
-  );
-  app.totalizer.treshold = bgoStore.anyValue(totalizer, ns.bgo("treshold"));
-  app.totalizer.tresholdPrintTemplate = bgoStore.anyValue(
-    totalizer,
-    ns.bgo("tresholdPrintTemplate")
   );
 }
 </script>

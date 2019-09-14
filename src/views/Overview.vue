@@ -40,6 +40,7 @@
         ></BubbleChart>
         <Tooltip
           v-if="isNodeHovered"
+          :totalizer="totalizer"
           :node="hoveredNode"
           :style="{top: hoveredNode.top+'px', left:hoveredNode.left+'px'}"
           class="tooltip"
@@ -108,6 +109,11 @@ export default {
         noTrendColor: "",
         colorTresholds: [],
         rangeTresholds: []
+      },
+      totalizer: {
+
+        totalPrintfTemplate: "",
+        minimalTotalPrintTemplate: ""
       }
     };
   },
@@ -253,6 +259,18 @@ function fetchData(app) {
       app.legendData.rangeTresholds.push(treshold.elements[0].value);
       app.legendData.colorTresholds.push(treshold.elements[1].value);
     });
+
+  // Totalizer
+  let totalizer = bgoStore.any(overview, ns.bgo("hasTotalizer"));
+  app.totalizer.totalPrintfTemplate = bgoStore.anyValue(
+    totalizer,
+    ns.bgo("totalPrintfTemplate")
+  );
+  app.totalizer.minimalTotalPrintTemplate = bgoStore.anyValue(
+    totalizer,
+    ns.bgo("minimalTotalPrintTemplate")
+  );
+
 }
 </script>
 

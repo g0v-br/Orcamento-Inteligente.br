@@ -3,7 +3,7 @@
 </template>
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
-import { formatPercentage } from "@/utils/utils.js";
+import { formatPercentage, formatAmount, printf } from "@/utils/utils.js";
 export default {
   props: {
     total: {
@@ -18,12 +18,8 @@ export default {
       let text, data;
       let total, filtered, rate; //Numbers
 
-      total = new Intl.NumberFormat({ maximumFractionDigits: 2 }).format(
-        this.total
-      );
-      filtered = new Intl.NumberFormat({ maximumFractionDigits: 2 }).format(
-        this.filtered
-      );
+      total = formatAmount(this.total);
+      filtered = formatAmount(this.filtered);
 
       this.filtered == this.total
         ? (data = fetchData(false))

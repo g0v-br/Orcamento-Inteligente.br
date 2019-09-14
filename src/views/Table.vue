@@ -25,7 +25,12 @@
               nextIcon: 'mdi-arrow-right'
           }"
           class="elevation-1 fixed"
-        ></v-data-table>
+        >
+          <template
+            v-slot:item.amount="{ item }"
+          >{{ printf(totalizer.minimalTotalPrintTemplate, formatAmount(item.amount)) }}</template>
+          <template v-slot:item.trend="{ item }">{{formatPercentage(item.trend)}}</template>
+        </v-data-table>
       </v-card>
     </div>
   </div>
@@ -36,7 +41,7 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import Totalizer from "@/components/Totalizer";
 import StringFormatter from "@/components/StringFormatter.vue";
-import { formatPercentage, formatAmount , unformatAmount} from "@/utils/utils.js";
+import { formatPercentage, formatAmount, printf } from "@/utils/utils.js";
 export default {
   name: "Table",
   components: {
@@ -49,7 +54,11 @@ export default {
       headers: [],
       accounts: [],
       search: "",
-      label: ""
+      label: "",
+      totalizer: {
+        totalPrintfTemplate: "",
+        minimalTotalPrintTemplate: ""
+      }
     };
   },
   created() {
@@ -78,7 +87,10 @@ export default {
         name: "table",
         query: { s: this.search }
       });
-    }
+    },
+    formatPercentage,
+    formatAmount,
+    printf
   }
 };
 
@@ -126,7 +138,7 @@ function fetchData(app) {
       description = bgoStore.anyValue(account, ns.bgo("description")),
       previousValue = bgoStore.anyValue(account, ns.bgo("referenceAmount")),
       trend = (amount - previousValue) / previousValue;
-      
+
     //Format Numbers
     amount = formatAmount(amount);
     trend = formatPercentage(trend);
@@ -140,6 +152,17 @@ function fetchData(app) {
       description
     });
   });
+
+  // Totalizer
+  let totalizer = bgoStore.any(tableView, ns.bgo("hasTotalizer"));
+  app.totalizer.totalPrintfTemplate = bgoStore.anyValue(
+    totalizer,
+    ns.bgo("totalPrintfTemplate")
+  );
+  app.totalizer.minimalTotalPrintTemplate = bgoStore.anyValue(
+    totalizer,
+    ns.bgo("minimalTotalPrintTemplate")
+  );
 }
 </script>
 

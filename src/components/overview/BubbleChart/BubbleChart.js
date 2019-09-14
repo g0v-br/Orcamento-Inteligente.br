@@ -1,7 +1,8 @@
 import { select } from "d3-selection";
+import * as d3 from 'd3'
 import { transition } from "d3-transition";
 import { rgb } from "d3-color";
-import { scaleLinear, scalePow } from "d3-scale";
+import { scaleLinear, scaleThreshold, scalePow } from "d3-scale";
 import { forceSimulation, forceManyBody, forceX, forceY } from "d3-force";
 
 
@@ -186,8 +187,7 @@ export default class BubbleChart {
         const colorScale = (val) => {
             let fill = scaleLinear()
                 .domain(rangeTresholds)
-                .range(colorTresholds)
-                .clamp(true);
+                .range(colorTresholds).clamp(true);
 
             if (isFinite(val)) {
                 return fill(val);

@@ -3,7 +3,7 @@
     <h4>{{node.title}}</h4>
 
     <div class="row">
-      <p class="amount">{{formatAmount( node.amount)}}</p>
+      <p class="amount">{{formatAmount( node.amount, totalizer.minimalTotalPrintTemplate)}}</p>
 
       <p class="rate">{{ formatPercentage(node.rate) }}</p>
     </div>
@@ -15,9 +15,8 @@ import { formatPercentage, formatAmount } from "@/utils/utils.js";
 export default {
   name: "tooltip",
   props: {
-    node: {
-      type: Object
-    }
+    node: Object,
+    totalizer: Object
   },
   methods: {
     formatPercentage,

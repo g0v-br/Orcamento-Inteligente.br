@@ -31,7 +31,7 @@
           >{{formatAmount(item.amount, totalizer.minimalTotalPrintTemplate)}}</template>
           <template
             v-slot:item.trend="{ item }"
-          >{{formatPercentage(item.trend, totalizer.treshold, totalizer.tresholdPrintTemplate)}}</template>
+          >{{formatPercentage(item.trend)}}</template>
         </v-data-table>
       </v-card>
     </div>
@@ -43,7 +43,7 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import Totalizer from "@/components/Totalizer";
 import StringFormatter from "@/components/StringFormatter.vue";
-import { formatPercentage, formatAmount } from "@/utils/utils.js";
+import { formatPercentage, formatAmount, printf } from "@/utils/utils.js";
 export default {
   name: "Table",
   components: {

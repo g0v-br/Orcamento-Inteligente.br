@@ -57,6 +57,7 @@ let fetchData = app => {
     value: ""
   };
   app.abstract = bgoStore.any(account, ns.bgo("abstract")) || { value: "" };
+  console.log(app.abstract);
   app.total = bgoStore.anyValue(account, ns.bgo("amount"));
   let reference = bgoStore.anyValue(account, ns.bgo("referenceAmount"));
   app.rate = (app.total - reference) / reference;

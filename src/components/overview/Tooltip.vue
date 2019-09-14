@@ -34,10 +34,6 @@ export default {
     withIcon: function() {
       return isFinite(this.node.rate);
     }
-  },
-  methods: {
-    formatPercentage,
-    formatAmount
   }
 
   //   created() {

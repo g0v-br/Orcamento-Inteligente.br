@@ -190,7 +190,7 @@ function fetchData(app) {
   for (const partition of partitions) {
     let id = bgoStore.anyValue(partition, ns.bgo("partitionId"));
     let label = bgoStore.anyValue(partition, ns.bgo("label"));
-    let title = bgoStore.any(partition, ns.bgo("title"));
+    let title = bgoStore.anyValue(partition, ns.bgo("title"));
     let sortOrder =
       bgoStore.anyValue(partition, ns.bgo("sortOrder")) ||
       ns.bgo("descending_sort").value;

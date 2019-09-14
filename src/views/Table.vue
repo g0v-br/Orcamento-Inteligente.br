@@ -68,7 +68,7 @@ export default {
   computed: {
     total() {
       return this.filteredAccounts.reduce((sum, node) => {
-        return sum + parseInt(unformatAmount(node.amount));
+        return sum + parseInt(node.amount);
       }, 0);
     },
     filteredAccounts() {
@@ -138,10 +138,6 @@ function fetchData(app) {
       description = bgoStore.anyValue(account, ns.bgo("description")),
       previousValue = bgoStore.anyValue(account, ns.bgo("referenceAmount")),
       trend = (amount - previousValue) / previousValue;
-
-    //Format Numbers
-    amount = formatAmount(amount);
-    trend = formatPercentage(trend);
 
 
 

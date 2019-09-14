@@ -1,13 +1,20 @@
 <template>
-  <div class="content-grid">
-    <div class="metadata">
-      <Metadata :accountId="accountId"/>
-    </div>
-    <div class="bar">
-      <BarChart :historic-rec="historicRec.records" :title="historicRec.title"/>
-    </div>
-    <div class="pie">
-      <PieChart :breakdown="breakDown.records" :title="breakDown.title" :total="breakDown.total"/>
+  <div>
+    <v-system-bar window class="status">
+      <div class="flex-grow-1"></div>
+      <v-icon v-on:click="$router.push('/overview' + '?s='+title)">fas fa-search</v-icon>
+      <v-icon v-on:click="$router.push('/overview')">fas fa-times</v-icon>
+    </v-system-bar>
+    <div class="content-grid">
+      <div class="metadata">
+        <Metadata :accountId="accountId" />
+      </div>
+      <div class="bar">
+        <BarChart :historic-rec="historicRec.records" :title="historicRec.title" />
+      </div>
+      <div class="pie">
+        <PieChart :breakdown="breakDown.records" :title="breakDown.title" :total="breakDown.total" />
+      </div>
     </div>
   </div>
 </template>
@@ -39,27 +46,29 @@ export default {
         title: "",
         records: [],
         total: 0
-      }
+      },
+      title :""
+
     };
   },
   created() {
     fetchData(this);
+  },
+  methods:{
+    back: ()=>{
+      console.log("BACK")
+    },
+    backWithFilter: ()=>{
+      console.log("BACK WITH FILTER")
+    }
   }
 };
 
 let fetchData = app => {
   let accountId = app.accountId;
   let account = bgoStore.any(undefined, ns.bgo("accountId"), accountId);
-  /*
-   const tagCloud = bgoStore.any(overview, ns.bgo("hasTagCloud"));
-
-  bgoStore.each(tagCloud, ns.bgo("hasTag")).forEach(tag => {
-    const label = bgoStore.anyValue(tag, ns.bgo("label"));
-    const weight = bgoStore.anyValue(tag, ns.bgo("tagWeight"));
-    app.tags.push({ label, weight });
-  });
-   */
-  
+ 
+  app.title=bgoStore.anyValue(account,ns.bgo("title"))
   //Bar chart data
   let historical_perspective = bgoStore.any(
     account,
@@ -78,41 +87,41 @@ let fetchData = app => {
   app.historicRec.records.sort((a, b) => {
     return a.x.localeCompare(b.x);
   });
-   //pie chart data
+  //pie chart data
   let breakdown_perspective = bgoStore.any(
     account,
     ns.bgo("usesBreakdownPerspective")
   );
   //pie chart title
-  app.breakDown.title = bgoStore.anyValue(breakdown_perspective, ns.bgo("title")) || "";
+  app.breakDown.title =
+    bgoStore.anyValue(breakdown_perspective, ns.bgo("title")) || "";
   //total amount
-  app.breakDown.total = parseFloat(bgoStore.anyValue(account, ns.bgo('amount')));
+  app.breakDown.total = parseFloat(
+    bgoStore.anyValue(account, ns.bgo("amount"))
+  );
   //breakdown set
   bgoStore.each(account, ns.bgo("hasBreakdown")).forEach(br => {
     const title = bgoStore.anyValue(br, ns.bgo("title"));
     const amount = bgoStore.anyValue(br, ns.bgo("amount"));
     app.breakDown.records.push({ title, amount });
   });
-
- 
 };
 </script>
 
 <style scoped>
+.status{
+  background-color:#f5f5f5;
+}
+.status i{
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
 .content-grid {
   padding: 24px 12px;
   display: grid;
   grid-gap: 2em;
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
   grid-auto-rows: 30em;
-}
-
-.metadata {
-}
-.bar {
-}
-.pie {
- 
 }
 
 @media (max-width: 768px) {

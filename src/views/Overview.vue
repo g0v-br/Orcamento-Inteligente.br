@@ -111,8 +111,7 @@ export default {
         rangeTresholds: []
       },
       totalizer: {
-        treshold: 0.01,
-        tresholdPrintTemplate: "< 0.01%",
+
         totalPrintfTemplate: "",
         minimalTotalPrintTemplate: ""
       }
@@ -271,11 +270,7 @@ function fetchData(app) {
     totalizer,
     ns.bgo("minimalTotalPrintTemplate")
   );
-  app.totalizer.treshold = parseFloat( bgoStore.anyValue(totalizer, ns.bgo("treshold")));
-  app.totalizer.tresholdPrintTemplate = bgoStore.anyValue(
-    totalizer,
-    ns.bgo("tresholdPrintTemplate")
-  );
+
 }
 </script>
 

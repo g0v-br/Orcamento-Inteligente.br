@@ -25,7 +25,14 @@
               nextIcon: 'mdi-arrow-right'
           }"
           class="elevation-1 fixed"
-        ></v-data-table>
+        >
+          <template
+            v-slot:item.amount="{ item }"
+          >{{formatAmount(item.amount, totalizer.minimalTotalPrintTemplate)}}</template>
+          <template
+            v-slot:item.trend="{ item }"
+          >{{formatPercentage(item.trend, totalizer.treshold, totalizer.tresholdPrintTemplate)}}</template>
+        </v-data-table>
       </v-card>
     </div>
   </div>
@@ -36,7 +43,7 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import Totalizer from "@/components/Totalizer";
 import StringFormatter from "@/components/StringFormatter.vue";
-import { formatPercentage } from "@/utils/utils.js";
+import { formatPercentage, formatAmount } from "@/utils/utils.js";
 export default {
   name: "Table",
   components: {
@@ -49,7 +56,13 @@ export default {
       headers: [],
       accounts: [],
       search: "",
-      label: ""
+      label: "",
+      totalizer: {
+        treshold: 0.01,
+        tresholdPrintTemplate: "< 0.01%",
+        totalPrintfTemplate: "",
+        minimalTotalPrintTemplate: ""
+      }
     };
   },
   created() {
@@ -78,7 +91,9 @@ export default {
         name: "table",
         query: { s: this.search }
       });
-    }
+    },
+    formatPercentage,
+    formatAmount
   }
 };
 
@@ -125,7 +140,7 @@ function fetchData(app) {
       amount = bgoStore.anyValue(account, ns.bgo("amount")),
       description = bgoStore.anyValue(account, ns.bgo("description")),
       previousValue = bgoStore.anyValue(account, ns.bgo("referenceAmount")),
-      trend = formatPercentage((amount - previousValue) / previousValue);
+      trend = (amount - previousValue) / previousValue;
 
     app.accounts.push({
       title,
@@ -134,6 +149,22 @@ function fetchData(app) {
       description
     });
   });
+
+  // Totalizer
+  let totalizer = bgoStore.any(tableView, ns.bgo("hasTotalizer"));
+  app.totalizer.totalPrintfTemplate = bgoStore.anyValue(
+    totalizer,
+    ns.bgo("totalPrintfTemplate")
+  );
+  app.totalizer.minimalTotalPrintTemplate = bgoStore.anyValue(
+    totalizer,
+    ns.bgo("minimalTotalPrintTemplate")
+  );
+  app.totalizer.treshold = bgoStore.anyValue(totalizer, ns.bgo("treshold"));
+  app.totalizer.tresholdPrintTemplate = bgoStore.anyValue(
+    totalizer,
+    ns.bgo("tresholdPrintTemplate")
+  );
 }
 </script>
 

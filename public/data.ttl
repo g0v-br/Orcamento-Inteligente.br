@@ -7493,56 +7493,32 @@ bgo:description "amministrazione penitenziaria";
 
 ###### Trend Color Scheme #######
 resource:trend_color_scheme a bgo:TrendColorScheme ;
-    bgo:title "Variazione rispetto alla precedente legge di bilancio" ;
+    bgo:title "Variazione rispetto al valore di acquisto" ;
     bgo:noTrendColor "#cdcdcd" ;
-
-
-    # sarebbe meglio qualcosa tipo:
-    # bgo:rateTresholds [
-	#	( -0.5 "#d73027" )
-	#	( -1 "#a50026" )
-	#	..
-    #] ;
-    #Gestendo il sort delle threshold a applic azione
-
-
-	bgo:rateTresholds(
-		-1
-		-0.5
-		-0.25
-		-0.10
-		-0.05
-		0
-		0.05
-		0.10
-		0.25
-		0.5
-		10
-    ) ;
-	bgo:colorTresholds(
-		"#a50026"
-		"#d73027"
-		"#f46d43"
-		"#fdae61"
-		"#fee08b"
-		"#ffffbf"
-		"#d9ef8b"
-		"#a6d96a"
-		"#66bd63"
-		"#1a9850"
-		"#006837"
-	);
+    bgo:rateTreshold
+		( -1	"#a50026" ) ,
+		( -0.5	"#d73027" ) ,
+		( -0.25	"#f46d43" ) ,
+		( -0.10	"#fdae61" ) ,
+		( -0.05	"#fee08b" ) ,
+		( 0		"#ffffbf" ) ,
+		( 0.05	"#d9ef8b" ) ,
+		( 0.10	"#a6d96a" ) ,
+		( 0.25	"#66bd63" ) ,
+		( 0.5	"#1a9850" ) ,
+		( 10  	"#006837" )
 .
+
 
 
 ##### Totalizer #######
 resource:totalizer a bgo:Totalizer ;
+    bgo:minimalTotalPrintTemplate "€ %s" ;
     bgo:totalPrintfTemplate "Totale: € %s" ;
     bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s del tot.)" ;
     bgo:treshold 0.01 ;
     bgo:tresholdPrintTemplate "Meno del 0,01%" ;
 .
-
 
 ### Search and tag clouds #######
 resource:search_pane a bgo:SearchWidget ;

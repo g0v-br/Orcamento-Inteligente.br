@@ -1,11 +1,12 @@
 <template>
     <p class="rate">
+        
+        {{ formatPercentage(rate) }}
         <v-icon
           v-if="show_icon"
           :color="color"
-          x-large
+          large
         >{{icon}}</v-icon>
-        {{ formatPercentage(rate) }}
       </p>
 </template>
 <script>
@@ -71,3 +72,9 @@ let fetchData=(app)=>{
             })
 }
 </script>
+
+<style scoped>
+    .rate{
+        margin: 0px;
+    }
+</style>

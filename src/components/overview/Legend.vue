@@ -24,9 +24,7 @@ export default {
   components: {
     Rate
   },
-  mounted(){
-    console.log(this.rangeTresholds)
-  }
+ 
 
 };
 </script>

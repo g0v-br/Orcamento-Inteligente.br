@@ -1,42 +1,52 @@
 <template>
-<div>
-  <div 
-  :id="hash(string.value)"
-  @click="dialog=true"
-  ></div>
-  <v-dialog v-model="dialog">
+  <div>
+    <span 
+    class="stringDisplayed"
+    :id="hash(string.value)"
+    ></span>
+    <v-icon
+    v-if="hasPopup"
+    @click="dialog=true"
+    medium
+    >mdi-information-outline</v-icon>
+    <v-dialog v-model="dialog" max-width="290" clearable>
       <v-card>
         <v-card-text>
-          Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+          {{popup.value}}
         </v-card-text>
       </v-card>
     </v-dialog>
-</div>
+  </div>
 </template>
 
 <script>
+  let defaultObject = {
+    value : "default",
+    datatype: {
+      value : "default"
+    }
+  }
   import { ns } from "@/models/bgo.js";
   import Markdown from "markdown-it";
   export default {
     props: {
-      hasPopup: {
-          type: Object
+      popup: {
+        type: Object,
+        default: () => {
+          return defaultObject;
+        }
       },
       string: {
         type: Object,
         default: () => {
-          return {
-            value : "default",
-            datatype: {
-              value : "default"
-            }
-          }
+          return defaultObject;
         }
       }
     },
     data () {
       return {
-        dialog: false
+        dialog: false,
+        hasPopup: true
       }
     },
     mounted() {
@@ -53,8 +63,10 @@
         display = this.string.value;
         break;
       }
-
       divDisplay.innerHTML = display;
+
+      //if it has popup
+      this.hasPopup = (this.popup == undefined || this.popup.value == defaultObject.value) ? false : true;
     },
     methods: {
       hash(string) {
@@ -72,3 +84,12 @@
     }
   };
 </script>
+<style type="text/css" media="screen">
+.icon {
+  display:inline-block
+}
+.stringDisplayed{
+  margin: 3 em
+}
+
+</style>

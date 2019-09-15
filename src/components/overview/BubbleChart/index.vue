@@ -2,7 +2,7 @@
   <div ref="bound" class="bc-container">
     <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">
-        <h3 class="subheading"><StringFormatter :string="subset.title"/></h3>
+        <h3 class="subheading"><StringFormatter :string="subset.title" :popup="subset.abstract"/></h3>
         <Totalizer
         :total="subset.total"
         :filtered="subset.total_filtered" />

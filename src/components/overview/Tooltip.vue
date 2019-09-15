@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     withIcon: function() {
-      return isFinite(this.node.rate);
+      return isFinite(this.node.rate) && this.node.rate != 0;
     }
   }
 

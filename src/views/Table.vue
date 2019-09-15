@@ -29,7 +29,7 @@
           <template
             v-slot:item.amount="{ item }"
           >{{ printf(totalizer.minimalTotalPrintTemplate, formatAmount(item.amount)) }}</template>
-          <template v-slot:item.trend="{ item }">{{formatPercentage(item.trend)}}</template>
+          <template v-slot:item.trend="{ item }"><Rate :rate="item.trend" :show_icon="true"/></template>
         </v-data-table>
       </v-card>
     </div>
@@ -41,12 +41,15 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import Totalizer from "@/components/Totalizer";
 import StringFormatter from "@/components/StringFormatter.vue";
-import { formatPercentage, formatAmount, printf } from "@/utils/utils.js";
+import Rate from "@/components/Rate";
+import { formatAmount, printf } from "@/utils/utils.js";
+
 export default {
   name: "Table",
   components: {
     Totalizer,
-    StringFormatter
+    StringFormatter,
+    Rate
   },
   data() {
     return {
@@ -88,7 +91,6 @@ export default {
         query: { s: this.search }
       });
     },
-    formatPercentage,
     formatAmount,
     printf
   }

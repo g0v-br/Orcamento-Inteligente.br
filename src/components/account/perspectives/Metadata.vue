@@ -12,7 +12,7 @@
     </div>
     <div class="numbers">
       <Totalizer :total="total" />
-      <div class="rate">{{formatPercentage(rate)}}</div>
+      <Rate :rate="rate" :show_icon="true"/>
     </div>
   </div>
 </template>
@@ -20,11 +20,12 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import Totalizer from "@/components/Totalizer";
 import StringFormatter from "@/components/StringFormatter";
-import { formatPercentage } from "@/utils/utils.js";
+import Rate from "@/components/Rate";
 export default {
   components: {
     Totalizer,
-    StringFormatter
+    StringFormatter,
+    Rate
   },
   props: {
     accountId: {
@@ -44,9 +45,7 @@ export default {
   created() {
     fetchData(this);
   },
-  methods: {
-    formatPercentage
-  }
+ 
 };
 
 let fetchData = app => {

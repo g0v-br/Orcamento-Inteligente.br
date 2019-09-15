@@ -4,29 +4,24 @@
 
     <div class="row">
       <p class="amount">{{printf(totalizer.minimalTotalPrintTemplate, formatAmount(node.amount))}}</p>
-
-      <p class="rate">
-        <v-icon
-          v-if="withIcon"
-          :color="node.rate <0?'red':'green'"
-          small
-        >{{ (node.rate < 0) ? "mdi-arrow-bottom-right":"mdi-arrow-top-right"}}</v-icon>
-        {{ formatPercentage(node.rate) }}
-      </p>
+    <Rate :rate="node.rate" :show_icon="true"/>
     </div>
   </v-sheet>
 </template>
 
 <script>
-import { formatPercentage, formatAmount, printf } from "@/utils/utils.js";
+import { formatAmount, printf } from "@/utils/utils.js";
+import Rate from "@/components/Rate";
 export default {
   name: "tooltip",
   props: {
     node: Object,
     totalizer: Object
   },
+  components:{
+    Rate
+  },
   methods: {
-    formatPercentage,
     formatAmount,
     printf
   },
@@ -35,10 +30,6 @@ export default {
       return isFinite(this.node.rate);
     }
   }
-
-  //   created() {
-  //     // console.log("tooltip node", this.node);
-  //   }
 };
 </script>
 

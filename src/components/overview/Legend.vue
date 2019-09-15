@@ -5,13 +5,13 @@
       <li v-for="(color, i) in colorTresholds" :key="i" :style="{background: color}"></li>
     </ul>
     <ul class="ranges">
-      <li v-for="(range, i) in rangeTresholds" :key="i">{{formatPercentage(range)}}</li>
+      <li v-for="(range, i) in rangeTresholds" :key="i"><Rate :rate="parseFloat(range)" :show_icon="false"/></li>
     </ul>
   </div>
 </template>
 
 <script>
-import { formatPercentage } from "@/utils/utils.js";
+import Rate from "@/components/Rate";
 import { Stream } from "stream";
 export default {
   props: {
@@ -21,9 +21,13 @@ export default {
     rangeTresholds: Array
   },
 
-  methods: {
-    formatPercentage
+  components: {
+    Rate
+  },
+  mounted(){
+    console.log(this.rangeTresholds)
   }
+
 };
 </script>
 

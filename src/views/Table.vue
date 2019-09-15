@@ -139,6 +139,8 @@ function fetchData(app) {
       previousValue = bgoStore.anyValue(account, ns.bgo("referenceAmount")),
       trend = (amount - previousValue) / previousValue;
 
+
+
     app.accounts.push({
       title,
       amount,

@@ -30,5 +30,3 @@ export const printf = (format = "%s", ...args) => {
     }
     return res;
 }
-
-

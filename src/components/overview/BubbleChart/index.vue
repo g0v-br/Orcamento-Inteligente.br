@@ -2,7 +2,7 @@
   <div ref="bound" class="bc-container">
     <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">
-        <h3 class="subheading">{{ subset.title }}</h3>
+        <h3 class="subheading"><StringFormatter :string="subset.title"/></h3>
         <Totalizer
         :total="subset.total"
         :filtered="subset.total_filtered" />
@@ -17,12 +17,14 @@ import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BubbleChart from "@/components/overview/BubbleChart/BubbleChart.js";
 import _debounce from "lodash/debounce";
 import Totalizer from "@/components/Totalizer.vue"
+import StringFormatter from "@/components/StringFormatter.vue"
 let debouncedUpdate;
 let debouncedSearch;
 let chart;
 export default {
   components:{
-    Totalizer
+    Totalizer,
+    StringFormatter
   },
   props: {
     activePartitionId: {
@@ -162,6 +164,7 @@ function sortSubset(partition_active, ns) {
 
 #vis {
   /* background-color: aqua; */
+  pointer-events: none;
   height: 100%;
   width: 100%;
   position: absolute;
@@ -171,7 +174,7 @@ function sortSubset(partition_active, ns) {
 
 /* buuble svg el */
 #vis circle.bubble {
-  /* pointer-events: all; */
+  pointer-events: all;
   stroke-width: 1px;
   opacity: 1;
   transition: opacity 0.5s;

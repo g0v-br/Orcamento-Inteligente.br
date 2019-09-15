@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <h1><StringFormatter :string="title"/></h1>
     <StringFormatter :string="abstract"/>
     </div>
 </template>
@@ -7,7 +8,7 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js"; 
 import StringFormatter from "@/components/StringFormatter.vue";
 export default {
-  name: "Table",
+  name: "TermsAndCond",
   components: {
     StringFormatter
   },

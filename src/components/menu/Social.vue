@@ -1,5 +1,5 @@
 <template>
-  <v-dialog width="500">
+  <v-dialog class="dialog" width="500">
     <template v-slot:activator="{ on }">
       <v-icon v-on="on">fas fa-share-alt</v-icon>
     </template>
@@ -76,12 +76,8 @@
       </SocialSharing>
       <hr>
       <div class="copy-url">
-        <div class="input-link">
-        <input  type="text" readonly ref="url" :value="getUrl" />
-        </div>
-        <div class="icon-copy">
-        <v-icon  v-on:click="copyToClipboard()">mdi-content-copy</v-icon>
-        </div>
+        <input class="input-link" type="text" readonly ref="url" :value="getUrl" />
+        <v-icon   class="icon-copy" v-on:click="copyToClipboard()">mdi-content-copy</v-icon>
       </div>
     </v-card>
   </v-dialog>
@@ -137,10 +133,9 @@ function fetchData(app){
   
 }
 .icon-copy{
-  display: inline;
-};
+}
 .input-link{
-  display: inline;
+  width: 95%!important;
 };
   .container-social-link{
     padding: 0.5em;

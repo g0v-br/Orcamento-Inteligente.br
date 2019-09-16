@@ -132,8 +132,7 @@ function fetchData(app){
   padding: 0.5em;
   
 }
-.icon-copy{
-}
+
 .input-link{
   width: 95%!important;
 };

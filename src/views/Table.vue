@@ -5,101 +5,113 @@
         <v-card-title>
           <Totalizer :total="total" />
           <v-spacer></v-spacer>
-
           <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            :placeholder="label"
-            single-line
-            hide-details
-            @input="onSearchInput"
+          v-model="search"
+          append-icon="mdi-magnify"
+          :placeholder="label"
+          single-line
+          hide-details
+          @input="onSearchInput"
           ></v-text-field>
         </v-card-title>
         <v-data-table
-          :headers="headers"
-          :items="accounts"
-          :search="search"
-          :items-per-page="25"
-          :footer-props="{
-              prevIcon: 'mdi-arrow-left',
-              nextIcon: 'mdi-arrow-right'
-          }"
-          class="elevation-1 fixed"
+        :headers="headers"
+        :items="accounts"
+        :search="search"
+        :items-per-page="25"
+        :footer-props="{
+          prevIcon: 'mdi-arrow-left',
+          nextIcon: 'mdi-arrow-right'
+        }"
+        class="elevation-1 fixed"
         >
-          <template
-            v-slot:item.amount="{ item }"
-          >{{ printf(totalizer.minimalTotalPrintTemplate, formatAmount(item.amount)) }}</template>
-          <template v-slot:item.trend="{ item }"><Rate :rate="item.trend" :show_icon="true"/></template>
-        </v-data-table>
-      </v-card>
-    </div>
-  </div>
+        <template class="text-cell" v-slot:item.title="{ item }">
+          {{item.title}}
+          <v-icon class="link-icon" @click="goToAccount(item.accountId)" small color="blue">
+            mdi-link
+          </v-icon>
+        </template>
+        <template
+        v-slot:item.amount="{ item }">
+        {{ printf(totalizer.minimalTotalPrintTemplate, formatAmount(item.amount)) }}
+      </template>
+      <template v-slot:item.trend="{ item }"><Rate :rate="item.trend" :show_icon="true"/></template>
+    </v-data-table>
+  </v-card>
+</div>
+</div>
 </template>
 
 
 <script>
-import { bgoStore, fetcher, ns } from "@/models/bgo.js";
-import Totalizer from "@/components/Totalizer";
-import StringFormatter from "@/components/StringFormatter.vue";
-import Rate from "@/components/Rate";
-import { formatAmount, printf } from "@/utils/utils.js";
+  import { bgoStore, fetcher, ns } from "@/models/bgo.js";
+  import Totalizer from "@/components/Totalizer";
+  import StringFormatter from "@/components/StringFormatter.vue";
+  import Rate from "@/components/Rate";
+  import { formatAmount, printf } from "@/utils/utils.js";
 
-export default {
-  name: "Table",
-  components: {
-    Totalizer,
-    StringFormatter,
-    Rate
-  },
-  data() {
-    return {
-      title: "",
-      headers: [],
-      accounts: [],
-      search: "",
-      label: "",
-      totalizer: {
-        totalPrintfTemplate: "",
-        minimalTotalPrintTemplate: ""
-      }
-    };
-  },
-  created() {
-    fetchData(this);
-    this.search = this.$route.query.s || "";
-  },
-  computed: {
-    total() {
-      return this.filteredAccounts.reduce((sum, node) => {
-        return sum + parseInt(node.amount);
-      }, 0);
+  export default {
+    name: "Table",
+    components: {
+      Totalizer,
+      StringFormatter,
+      Rate
     },
-    filteredAccounts() {
-      return this.accounts.filter(node => {
-        let search = this.search.toLowerCase(),
+    data() {
+      return {
+        title: "",
+        headers: [],
+        accounts: [],
+        search: "",
+        label: "",
+        totalizer: {
+          totalPrintfTemplate: "",
+          minimalTotalPrintTemplate: ""
+        }
+      };
+    },
+    created() {
+      fetchData(this);
+      this.search = this.$route.query.s || "";
+    },
+    computed: {
+      total() {
+        return this.filteredAccounts.reduce((sum, node) => {
+          return sum + parseInt(node.amount);
+        }, 0);
+      },
+      filteredAccounts() {
+        return this.accounts.filter(node => {
+          let search = this.search.toLowerCase(),
           title = node.title.toLowerCase().includes(search),
           description = node.description.toLowerCase().includes(search);
 
-        return title || description;
-      });
-    }
-  },
-  methods: {
-    onSearchInput() {
-      this.$router.replace({
-        name: "table",
-        query: { s: this.search }
-      });
+          return title || description;
+        });
+      }
     },
-    formatAmount,
-    printf
-  }
-};
+    methods: {
+      onSearchInput() {
+        this.$router.replace({
+          name: "table",
+          query: { s: this.search }
+        });
+      },
+      goToAccount(accountId) {
+        this.$router.push({
+          name: "account",
+          params: { accountId: accountId }
+        });
+      },
+      formatAmount,
+      printf
+    }
+  };
 
-function fetchData(app) {
+  function fetchData(app) {
   //Fetch tableView and searchPane
   let tableView = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("TableView")),
-    searchPane = bgoStore.any(tableView, ns.bgo("hasSearchPane"));
+  searchPane = bgoStore.any(tableView, ns.bgo("hasSearchPane"));
 
   //fetch Title
   app.title = bgoStore.anyValue(tableView, ns.bgo("title"));
@@ -136,18 +148,18 @@ function fetchData(app) {
   let accounts = bgoStore.each(undefined, ns.rdf("type"), ns.bgo("Account"));
   accounts.forEach(account => {
     let title = bgoStore.anyValue(account, ns.bgo("title")),
-      amount = bgoStore.anyValue(account, ns.bgo("amount")),
-      description = bgoStore.anyValue(account, ns.bgo("description")),
-      previousValue = bgoStore.anyValue(account, ns.bgo("referenceAmount")),
-      trend = (amount - previousValue) / previousValue;
-
-
+    amount = bgoStore.anyValue(account, ns.bgo("amount")),
+    description = bgoStore.anyValue(account, ns.bgo("description")),
+    previousValue = bgoStore.anyValue(account, ns.bgo("referenceAmount")),
+    accountId = bgoStore.anyValue(account, ns.bgo("accountId")),
+    trend = (amount - previousValue) / previousValue;
 
     app.accounts.push({
       title,
       amount,
       trend,
-      description
+      description,
+      accountId
     });
   });
 
@@ -156,11 +168,11 @@ function fetchData(app) {
   app.totalizer.totalPrintfTemplate = bgoStore.anyValue(
     totalizer,
     ns.bgo("totalPrintfTemplate")
-  );
+    );
   app.totalizer.minimalTotalPrintTemplate = bgoStore.anyValue(
     totalizer,
     ns.bgo("minimalTotalPrintTemplate")
-  );
+    );
 }
 </script>
 
@@ -168,6 +180,7 @@ function fetchData(app) {
 
 <!-- CSS -->
 <style scoped>
+
 .g0v-table-container {
   background-color: #aaaaaa;
 }
@@ -175,7 +188,7 @@ function fetchData(app) {
   font-weight: 400;
   margin-bottom: 0.5em;
 }
-td::first-letter {
+.text-cell::first-letter {
   text-transform: uppercase;
 }
 .download-csv {

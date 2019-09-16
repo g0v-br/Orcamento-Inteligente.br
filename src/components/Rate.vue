@@ -1,8 +1,13 @@
 <template>
-  <p class="rate">
-    <v-icon v-if="show_icon" :color="color">{{icon}}</v-icon>
-    {{ formatPercentage(rate) }}
-  </p>
+    <p class="rate">
+        
+        {{ formatPercentage(rate) }}
+        <v-icon
+          v-if="show_icon"
+          :color="color"
+          large
+        >{{icon}}</v-icon>
+      </p>
 </template>
 <script>
 import { formatPercentage } from "@/utils/utils.js";
@@ -64,3 +69,9 @@ let fetchData = app => {
     });
 };
 </script>
+
+<style scoped>
+    .rate{
+        margin: 0px;
+    }
+</style>

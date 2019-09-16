@@ -9,11 +9,11 @@
       <div class="metadata">
         <Metadata :accountId="accountId" />
       </div>
-      <div class="bar">
+      <div v-if="this.historicRec.records.length!=0" class="bar">      
         <BarChart :historic-rec="historicRec.records" :title="historicRec.title" />
       </div>
-      <div class="pie">
-        <PieChart :breakdown="breakDown.records" :title="breakDown.title" :total="breakDown.total" />
+      <div v-if="breakDown.records.length!=0" class="pie">
+        <PieChart  :breakdown="breakDown.records" :title="breakDown.title" :total="breakDown.total" />
       </div>
     </div>
   </div>
@@ -54,14 +54,6 @@ export default {
   created() {
     fetchData(this);
   },
-  methods:{
-    back: ()=>{
-      console.log("BACK")
-    },
-    backWithFilter: ()=>{
-      console.log("BACK WITH FILTER")
-    }
-  }
 };
 
 let fetchData = app => {
@@ -75,18 +67,16 @@ let fetchData = app => {
     ns.bgo("usesHistoricalPerspective")
   );
 
-  app.historicRec.title =
-    bgoStore.anyValue(historical_perspective, ns.bgo("title")) || "";
-
-  bgoStore.each(account, ns.bgo("hasHistoryRec")).forEach(rec => {
-    const version = bgoStore.anyValue(rec, ns.bgo("versionLabel"));
-    const amount = bgoStore.anyValue(rec, ns.bgo("amount"));
-    app.historicRec.records.push({ x: version, y: amount });
-  });
-
+  app.historicRec.title =bgoStore.anyValue(historical_perspective, ns.bgo("title")) || "";
+    bgoStore.each(account, ns.bgo("hasHistoryRec")).forEach(rec => {
+      const version = bgoStore.anyValue(rec, ns.bgo("versionLabel"));
+      const amount = bgoStore.anyValue(rec, ns.bgo("amount"));
+      app.historicRec.records.push({ x: version, y: amount });
+    });
   app.historicRec.records.sort((a, b) => {
     return a.x.localeCompare(b.x);
   });
+
   //pie chart data
   let breakdown_perspective = bgoStore.any(
     account,

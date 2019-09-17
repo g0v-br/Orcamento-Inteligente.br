@@ -105,7 +105,7 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
         let rate = (amount - refAmount) / refAmount;
         rate = isFinite(rate) ? rate : NaN;
 
-        let bg = store.anyValue(account, ns.bgo('background'));
+        let bg = store.anyValue(account, ns.bgo('depiction'));
         let partitions = {};
         let subSetUris = store.each(undefined, ns.bgo("hasAccount"), account);
         subSetUris.forEach(subSetUri => {

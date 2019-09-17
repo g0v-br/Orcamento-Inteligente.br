@@ -56,7 +56,7 @@ resource:domain a bgo:Domain ;
     # This domain likes social
     bgo:hasSocialSharing  true;
 
-    # This should be used if copyright is not present, to hide use the empty string
+    # This should be used if copyright is not present
     bgo:hasCopyrigth "(c) [LinkedData.Center](http://linkeddata.center)"^^bgo:MDString ;
 .
 
@@ -223,13 +223,12 @@ resource:trend_color_scheme a bgo:TrendColorScheme ;
 
 ##### Totalizer #######
 resource:totalizer a bgo:Totalizer ;
+    bgo:minimalTotalPrintTemplate "€ %s" ;
     bgo:totalPrintfTemplate "Totale: € %s" ;
     bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s del tot.)" ;
     bgo:treshold 0.01 ;
     bgo:tresholdPrintTemplate "Meno del 0,01%" ;
 .
-
-
 
 ### Search and tag clouds #######
 resource:search_pane a bgo:SearchWidget ;

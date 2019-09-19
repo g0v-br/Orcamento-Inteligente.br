@@ -25,8 +25,9 @@
       </div>
 
       <div class="meta">
-        Metadata, sul cellulare solo il totale, per il resto c'è il popup
+        <p class="meta-description">{{metadata.description}}</p>
         <Totalizer :total="total" :filtered="total_filtered" />
+        <StringFormatter class="meta-abstract" :string="metadata.abstract" />
       </div>
 
       <div ref="chart" class="chart">
@@ -77,6 +78,7 @@ import BubbleChart from "@/components/overview/BubbleChart";
 import Legend from "@/components/overview/Legend";
 import Totalizer from "@/components/Totalizer";
 import Tooltip from "@/components/overview/Tooltip";
+import StringFormatter from "@/components/StringFormatter.vue";
 import { debounce } from "lodash";
 
 export default {
@@ -85,7 +87,8 @@ export default {
     BubbleChart,
     Legend,
     Totalizer,
-    Tooltip
+    Tooltip,
+    StringFormatter
   },
   props: {
     partitionId: {
@@ -111,9 +114,12 @@ export default {
         rangeTresholds: []
       },
       totalizer: {
-
         totalPrintfTemplate: "",
         minimalTotalPrintTemplate: ""
+      },
+      metadata: {
+        description: "",
+        abstract: null
       }
     };
   },
@@ -154,7 +160,7 @@ export default {
       const boundHeight = this.$refs.chart.offsetHeight;
       const boundWidth = this.$refs.chart.offsetWidth;
       // let top = node.y + node.r / 1.4142;
-      let top = node.y - node.r - tooltipHeight - 12;
+      let top = node.y - node.r - tooltipHeight - 8;
       // let left = node.x + node.r / 1.4142;
       let left = node.x - tooltipWidth / 2;
       left = left < 0 ? 0 : left;
@@ -175,6 +181,10 @@ export default {
 
 function fetchData(app) {
   const overview = bgoStore.any(null, ns.rdf("type"), ns.bgo("Overview"));
+  const domain = bgoStore.any(null, ns.rdf("type"), ns.bgo("Domain"));
+  // Domain Metadata
+  app.metadata.description = bgoStore.anyValue(domain, ns.bgo("description"));
+  app.metadata.abstract = bgoStore.any(domain, ns.bgo("abstract"));
   // Partition metadata
   // Push default partition with id 'overview'
   app.partitions.push({
@@ -270,7 +280,6 @@ function fetchData(app) {
     totalizer,
     ns.bgo("minimalTotalPrintTemplate")
   );
-
 }
 </script>
 
@@ -288,9 +297,8 @@ function fetchData(app) {
   grid-gap: 0.5em;
   grid-template-areas:
     "part part search"
-    "meta chart tools"
     "meta chart tools";
-  grid-template-rows: auto 11fr;
+  grid-template-rows: 80px 1fr;
   grid-template-columns: 1fr 2fr 1fr;
 }
 
@@ -298,7 +306,6 @@ function fetchData(app) {
 .content-grid.partitioned {
   grid-template-areas:
     "part part search"
-    "chart chart chart"
     "chart chart chart";
 }
 
@@ -315,8 +322,21 @@ function fetchData(app) {
   grid-area: search;
 }
 .meta {
+  position: relative;
   grid-area: meta;
+  /* height: 70vh;
+  overflow: auto; */
+  /* line-height: 1.5em; */
+  /* height: calc(50% - 80px); */
+  /* overflow: hidden; */
 }
+/* .meta-description {
+  overflow: auto;
+} */
+
+.meta-abstract {
+}
+
 .chart {
   position: relative;
   grid-area: chart;
@@ -358,7 +378,6 @@ function fetchData(app) {
   .content-grid {
     grid-template-areas:
       "part part search"
-      "meta chart chart"
       "meta chart chart";
 
     grid-template-columns: 1fr 1fr 1fr;
@@ -372,17 +391,18 @@ function fetchData(app) {
 /* Landscape phones and down */
 @media (max-width: 768px) {
   .container-fluid {
-    min-height: 120vh;
+    /* min-height: 120vh; */
   }
   .content-grid {
     grid-template-areas:
       "part"
       "search"
       "meta"
-      "chart";
+      "chart" ;
 
-    grid-template-rows: 1fr 1fr 1fr 9fr;
+    grid-template-rows: auto auto auto 100vw;
     grid-template-columns: 1fr;
+    grid-gap: 1.5em;
   }
 
   .content-grid.partitioned {

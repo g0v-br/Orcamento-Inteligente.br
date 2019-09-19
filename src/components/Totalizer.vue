@@ -71,7 +71,7 @@ function fetchData(filterActive) {
 </script>
 
 <style scoped>
-p {
+/* p {
   margin: 0;
-}
+} */
 </style>

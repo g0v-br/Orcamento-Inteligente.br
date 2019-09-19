@@ -73,6 +73,9 @@ function fetchData(app){
 </script>
 
 <style scoped>
+html, body{
+height: 100%;
+}
 .title, .shariing, .option{
   margin-left: 1em;
   margin-right: 1em;

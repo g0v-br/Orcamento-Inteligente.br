@@ -1,7 +1,7 @@
 <template>
   <v-menu v-model="menuShow" :close-on-content-click="false">
     <template v-slot:activator="{ on }">
-      <v-icon v-on="on">fas fa-bars</v-icon>
+      <v-icon v-on="on">mdi-menu</v-icon>
     </template>
     <v-list>
       <!--overview-->

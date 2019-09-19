@@ -39,7 +39,7 @@ export default {
   display: grid;
   grid-gap: 16px;
   padding: 16px;
-  height: 110px;
+  height: 100px;
   width: 350px;
 }
 

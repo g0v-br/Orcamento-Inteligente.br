@@ -195,17 +195,14 @@ resource:trend_color_scheme a bgo:TrendColorScheme ;
     bgo:title "Variazione rispetto al valore di acquisto" ;
     bgo:noTrendColor "#cdcdcd" ;
     bgo:rateTreshold
-		( -1	"#a50026" ) ,
-		( -0.5	"#d73027" ) ,
-		( -0.25	"#f46d43" ) ,
-		( -0.10	"#fdae61" ) ,
+
+		( -0.25	"#a50026" ) ,
+		( -0.10	"#d73027" ) ,
 		( -0.05	"#fee08b" ) ,
 		( 0		"#ffffbf" ) ,
 		( 0.05	"#d9ef8b" ) ,
-		( 0.10	"#a6d96a" ) ,
-		( 0.25	"#66bd63" ) ,
-		( 0.5	"#1a9850" ) ,
-		( 10  	"#006837" )
+		( 0.10	"#1a9850" ) ,
+		( 0.25	"#006837" )
 .
 
 

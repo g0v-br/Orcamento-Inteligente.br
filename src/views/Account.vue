@@ -2,18 +2,18 @@
   <div>
     <v-system-bar window class="status">
       <div class="flex-grow-1"></div>
-      <v-icon v-on:click="$router.push('/overview' + '?s='+title)">fas fa-search</v-icon>
-      <v-icon v-on:click="$router.push('/overview')">fas fa-times</v-icon>
+      <v-icon v-on:click="$router.push('/overview' + '?s='+title)">mdi-magnify</v-icon>
+      <v-icon v-on:click="$router.push('/overview')">mdi-close</v-icon>
     </v-system-bar>
     <div class="content-grid">
       <div class="metadata">
         <Metadata :accountId="accountId" />
       </div>
-      <div v-if="this.historicRec.records.length!=0" class="bar">      
+      <div v-if="this.historicRec.records.length!=0" class="bar">
         <BarChart :historic-rec="historicRec.records" :title="historicRec.title" />
       </div>
       <div v-if="breakDown.records.length!=0" class="pie">
-        <PieChart  :breakdown="breakDown.records" :title="breakDown.title" :total="breakDown.total" />
+        <PieChart :breakdown="breakDown.records" :title="breakDown.title" :total="breakDown.total" />
       </div>
     </div>
   </div>
@@ -47,32 +47,32 @@ export default {
         records: [],
         total: 0
       },
-      title :""
-
+      title: ""
     };
   },
   created() {
     fetchData(this);
-  },
+  }
 };
 
 let fetchData = app => {
   let accountId = app.accountId;
   let account = bgoStore.any(undefined, ns.bgo("accountId"), accountId);
- 
-  app.title=bgoStore.anyValue(account,ns.bgo("title"))
+
+  app.title = bgoStore.anyValue(account, ns.bgo("title"));
   //Bar chart data
   let historical_perspective = bgoStore.any(
     account,
     ns.bgo("usesHistoricalPerspective")
   );
 
-  app.historicRec.title =bgoStore.anyValue(historical_perspective, ns.bgo("title")) || "";
-    bgoStore.each(account, ns.bgo("hasHistoryRec")).forEach(rec => {
-      const version = bgoStore.anyValue(rec, ns.bgo("versionLabel"));
-      const amount = bgoStore.anyValue(rec, ns.bgo("amount"));
-      app.historicRec.records.push({ x: version, y: amount });
-    });
+  app.historicRec.title =
+    bgoStore.anyValue(historical_perspective, ns.bgo("title")) || "";
+  bgoStore.each(account, ns.bgo("hasHistoryRec")).forEach(rec => {
+    const version = bgoStore.anyValue(rec, ns.bgo("versionLabel"));
+    const amount = bgoStore.anyValue(rec, ns.bgo("amount"));
+    app.historicRec.records.push({ x: version, y: amount });
+  });
   app.historicRec.records.sort((a, b) => {
     return a.x.localeCompare(b.x);
   });
@@ -99,10 +99,10 @@ let fetchData = app => {
 </script>
 
 <style scoped>
-.status{
-  background-color:#f5f5f5;
+.status {
+  background-color: #f5f5f5;
 }
-.status i{
+.status i {
   margin-left: 0.5em;
   margin-right: 0.5em;
 }

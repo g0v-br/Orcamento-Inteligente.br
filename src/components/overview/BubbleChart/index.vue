@@ -2,10 +2,8 @@
   <div ref="bound" class="bc-container">
     <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">
-        <h3 class="subheading"><StringFormatter :string="subset.title" :popup="subset.abstract"/></h3>
-        <Totalizer
-        :total="subset.total"
-        :filtered="subset.total_filtered" />
+        <StringFormatter class="title" :string="subset.title" :popup="subset.abstract" />
+        <Totalizer :total="subset.total" :filtered="subset.total_filtered" />
       </div>
     </div>
     <svg ref="vis" id="vis" />
@@ -16,13 +14,13 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BubbleChart from "@/components/overview/BubbleChart/BubbleChart.js";
 import _debounce from "lodash/debounce";
-import Totalizer from "@/components/Totalizer.vue"
-import StringFormatter from "@/components/StringFormatter.vue"
+import Totalizer from "@/components/Totalizer.vue";
+import StringFormatter from "@/components/StringFormatter.vue";
 let debouncedUpdate;
 let debouncedSearch;
 let chart;
 export default {
-  components:{
+  components: {
     Totalizer,
     StringFormatter
   },
@@ -157,10 +155,12 @@ function sortSubset(partition_active, ns) {
   grid-template-columns: repeat(auto-fit, minmax(384px, 1fr));
   grid-auto-rows: 30em;
 }
-/*
+
+.grid-block {
+  text-align: center;
+}
 .grid-block:nth-child(odd) {
-  background-color: salmon;
-} */
+}
 
 #vis {
   /* background-color: aqua; */

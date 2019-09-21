@@ -211,7 +211,6 @@ export default class BubbleChart {
             .attr("patternUnits", "objectBoundingBox")
             .append("image")
             .attr("xlink:href", function (d) {
-                console.log('d prima', d.amount);
                 const regex = RegExp('#[0-9a-fA-F]{6}')
                 if (!regex.test(d.bg))
                     return d.bg;

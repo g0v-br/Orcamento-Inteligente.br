@@ -12,7 +12,7 @@
     </div>
     <div class="numbers">
       <Totalizer :total="total" />
-      <Rate :rate="rate" :show_icon="true"/>
+      <Rate class="rate" :rate="rate" :show_icon="true"/>
     </div>
   </div>
 </template>
@@ -45,7 +45,7 @@ export default {
   created() {
     fetchData(this);
   },
- 
+
 };
 
 let fetchData = app => {
@@ -67,6 +67,8 @@ let fetchData = app => {
   padding-left: 2em;
   height: 100%;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 .title div {
   margin-bottom: 0.5em;
@@ -82,7 +84,13 @@ let fetchData = app => {
   margin-top: 0.5em;
 }
 .numbers {
-  position: absolute;
+  margin-top: auto;
+  display: flex;
+  font-size: 1.4em;
+  /* position: absolute; */
   bottom: 0;
+}
+.rate{
+  margin-left: auto;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
    <v-menu>
         <template v-slot:activator="{ on }">
-          <v-icon v-on="on">fas fa-ellipsis-v</v-icon>
+          <v-icon v-on="on">mdi-dots-vertical</v-icon>
         </template>
         <v-list>
           <v-list-item-group color="primary">
@@ -16,7 +16,7 @@
             </v-list-item>
           </v-list-item-group>
         </v-list>
-      </v-menu> 
+      </v-menu>
 </template>
 <script>
 import { bgoStore, fetcher, ns, getDefaultMenuItems } from "@/models/bgo.js";
@@ -28,7 +28,7 @@ export default {
   },
   mounted(){
       fetchData(this)
-  }   
+  }
 }
 function fetchData(app){
     let domain = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("Domain"));

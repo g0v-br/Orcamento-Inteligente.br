@@ -1,10 +1,9 @@
 <template>
   <v-sheet elevation="1" class="tooltip">
-    <h4>{{node.title}}</h4>
-
+    <h4 class="title">{{node.title}}</h4>
     <div class="row">
       <p class="amount">{{printf(totalizer.minimalTotalPrintTemplate, formatAmount(node.amount))}}</p>
-    <Rate :rate="node.rate" :show_icon="true"/>
+      <Rate :rate="node.rate" :show_icon="true" />
     </div>
   </v-sheet>
 </template>
@@ -18,7 +17,7 @@ export default {
     node: Object,
     totalizer: Object
   },
-  components:{
+  components: {
     Rate
   },
   methods: {
@@ -37,7 +36,7 @@ export default {
 .tooltip {
   position: relative;
   display: grid;
-  grid-gap: 16px;
+  /* grid-gap: 16px; */
   padding: 16px;
   height: 100px;
   width: 350px;
@@ -53,7 +52,7 @@ export default {
   align-items: center;
   flex-direction: row;
   margin: 0;
-  font-size: 1.2em;
+  font-size: 1.3em;
   color: #5c5c5c;
 }
 .amount {
@@ -61,6 +60,7 @@ export default {
 }
 .rate {
   margin-left: auto;
+
 }
 p {
   margin-bottom: 0;

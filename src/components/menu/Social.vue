@@ -1,7 +1,7 @@
 <template>
   <v-dialog class="dialog" width="500">
     <template v-slot:activator="{ on }">
-      <v-icon v-on="on">fas fa-share-alt</v-icon>
+      <v-icon v-on="on">mdi-share-variant</v-icon>
     </template>
 
     <v-card>
@@ -130,7 +130,7 @@ function fetchData(app){
 <style>
 .copy-url{
   padding: 0.5em;
-  
+
 }
 
 .input-link{
@@ -152,15 +152,15 @@ function fetchData(app){
 	-ms-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
-    
+
 }
 
-.social-link:hover, .social-link:active { 
+.social-link:hover, .social-link:active {
  	-webkit-transform: scale(1.1);
 	-moz-transform: scale(1.1);
 	-ms-transform: scale(1.1);
 	-o-transform: scale(1.1);
-	transform: scale(1.1); 
+	transform: scale(1.1);
 }
 .facebook-link{ color:#3C599F;}
 .line-link{color:#00c300;}

@@ -34,21 +34,15 @@ export function getDefaultMenuItems(parent) {
 }
 
 
-export function dref(uri) {
+export function dref(uri, rules = config.dereferencingRules) {
 	const results = [];
-	const rules = config.dereferencingRules;
-
 	// default match
 	rules.push({ "regexp": uri, "targets": [uri] })
-
 	for (const rule of rules) {
-
 		const re = RegExp(rule.regexp);
-
 		if (re.test(uri)) {
 			rule.targets.forEach(target => {
-				const newTarget = uri.replace(re, target);
-				results.push(newTarget);
+				results.push(uri.replace(re, target));
 			});
 
 			if (rule.isLast) {

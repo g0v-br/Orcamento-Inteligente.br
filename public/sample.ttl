@@ -27,12 +27,12 @@ resource:domain a bgo:Domain ;
     bgo:hasOptionMenu [
     	bgo:withCustomMenuItems (
     		[
-				bgo:icon "far fa-building" ;
+				bgo:icon "mdi-domain" ;
 				bgo:title "About this app..." ;
 				bgo:link <http://bit.ly/lodmap2d_p>
 			]
     		[
-				bgo:icon "fas fa-shield-alt" ;
+				bgo:icon "mdi-protocol" ;
 				bgo:title "About WebID-OIDC ..." ;
 				bgo:link <https://github.com/solid/webid-oidc-spec>
 			]
@@ -43,11 +43,11 @@ resource:domain a bgo:Domain ;
     bgo:hasFooterMenu [
     	bgo:withCustomMenuItems (
     		[
-		    	bgo:icon "fas fa-table" ;
+		    	bgo:icon "mdi-table" ;
 				bgo:link "/table"  # this is internal link example
 			]
     		[
-		    	bgo:icon "fab fa-github-square" ;
+		    	bgo:icon "mdi-github-circle" ;
 				bgo:link <https://github.com/linkeddatacenter/LODMAP2D>
 			]
 		)
@@ -195,17 +195,14 @@ resource:trend_color_scheme a bgo:TrendColorScheme ;
     bgo:title "Variazione rispetto al valore di acquisto" ;
     bgo:noTrendColor "#cdcdcd" ;
     bgo:rateTreshold
-		( -1	"#a50026" ) ,
-		( -0.5	"#d73027" ) ,
-		( -0.25	"#f46d43" ) ,
-		( -0.10	"#fdae61" ) ,
-		( -0.05	"#fee08b" ) ,
-		( 0		"#ffffbf" ) ,
-		( 0.05	"#d9ef8b" ) ,
-		( 0.10	"#a6d96a" ) ,
-		( 0.25	"#66bd63" ) ,
-		( 0.5	"#1a9850" ) ,
-		( 10  	"#006837" )
+
+		( -0.25	"#b2182b" ) ,
+		( -0.10	"#ef8a62" ) ,
+		( -0.05	"#fddbc7" ) ,
+		( 0		"#f7f7f7" ) ,
+		( 0.05	"#d9f0d3" ) ,
+		( 0.10	"#7fbf7b" ) ,
+		( 0.25	"#1b7837" )
 .
 
 
@@ -272,7 +269,7 @@ resource:account_1 a bgo:Account, bgo:ProfiledAccount ;
     bgo:title "titolo account_1" ;
     bgo:description "descrizione account_1" ;
     bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: \n- pagamento delle quote capitale sui titoli del debito statale\n- rimborso del capitale relativo a buoni postali fruttiferi\n- rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione\n- rimborso passività a carico dello Stato"^^bgo:MDString ;
-    bgo:background <http://bit.ly/2MxbJWQ> ;
+    bgo:depiction <http://bit.ly/2MxbJWQ> ;
     bgo:versionLabel "2019" ;
 
 	bgo:hasHistoryRec
@@ -299,10 +296,18 @@ resource:account_1 a bgo:Account, bgo:ProfiledAccount ;
 resource:account_2 a bgo:Account ;
 	bgo:accountId "account_2" ;
     bgo:amount 100.00 ;
+    bgo:referenceAmount 200.00 ;
+    bgo:title "titolo account_2" ;
+    bgo:description "descrizione account_2" ;
+    bgo:depiction "#0095ff"
+.
+
+resource:account_3 a bgo:Account ;
+	bgo:accountId "account_3" ;
+    bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
     bgo:title "titolo account_2" ;
     bgo:description "descrizione account_2" ;
-    bgo:background <http://bit.ly/2MxbJWQ>
 .
 
 # resource:account_3 a bgo:Account ;

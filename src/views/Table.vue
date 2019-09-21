@@ -13,6 +13,7 @@
           hide-details
           @input="onSearchInput"
           ></v-text-field>
+          <v-icon @click="downloadCSV()">mdi-cloud-download</v-icon>
         </v-card-title>
         <v-data-table
         :headers="headers"
@@ -103,6 +104,35 @@
           params: { accountId: accountId }
         });
       },
+      downloadCSV() {
+        let element, csv;
+
+        element = document.createElement('a');
+        csv = this.buildCSV();
+        element.setAttribute('href', 'data:csv/plain;charset=utf-8,' + encodeURIComponent(csv));
+        element.setAttribute('download', 'filtered-accounts.csv');
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+      },
+      buildCSV(){
+        let csv = this.buildHeader() + "\r\n";
+        this.filteredAccounts.forEach(account=> {
+          csv += Object.values(account).join(",")+ "\r\n";
+        });
+        return csv;
+      },
+      buildHeader() {
+        let top = 'accountId,';
+        this.headers.forEach(header => {
+          top += header.text + ",";
+        });
+        return top.substring(0, top.length - 1);
+      },
       formatAmount,
       printf
     }
@@ -155,11 +185,11 @@
     trend = (amount - previousValue) / previousValue;
 
     app.accounts.push({
+      accountId,
       title,
       amount,
       trend,
-      description,
-      accountId
+      description
     });
   });
 

@@ -105,7 +105,7 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
         let rate = (amount - refAmount) / refAmount;
         rate = isFinite(rate) ? rate : NaN;
 
-        let bg = store.anyValue(account, ns.bgo('depiction'));
+        let bg = store.anyValue(account, ns.bgo('depiction')) || null;
         let partitions = {};
         let subSetUris = store.each(undefined, ns.bgo("hasAccount"), account);
         subSetUris.forEach(subSetUri => {
@@ -167,6 +167,7 @@ export default class BubbleChart {
     //called only the first time
     render(searchText) {
         this.nodes = createNodes(this.store, this.ns, this.width, this.height, searchText, this.partitions);
+        // console.log('nodes', this.nodes);
         const overview = this.store.any(null, this.ns.rdf('type'), this.ns.bgo('Overview'));
 
         // Colore schema
@@ -195,6 +196,29 @@ export default class BubbleChart {
             return noTrendColor;
         }
 
+        // Appends patterns for circle bg without dimension
+        select("svg#vis")
+            .append("defs")
+            .selectAll("pattern")
+            .data(this.nodes)
+            .enter()
+            .append("pattern")
+            .attr("id", function (d) {
+                return d.id;
+            })
+            .attr("width", 1)
+            .attr("height", 1)
+            .attr("patternUnits", "objectBoundingBox")
+            .append("image")
+            .attr("xlink:href", function (d) {
+                console.log('d prima', d.amount);
+                const regex = RegExp('#[0-9a-fA-F]{6}')
+                if (!regex.test(d.bg))
+                    return d.bg;
+            });
+
+
+
         const self = this;
         let bubbles = select("svg#vis")
             .selectAll("circle")
@@ -205,12 +229,20 @@ export default class BubbleChart {
             .classed("disabled", d => { return !d.active })
             .attr("r", 0)
             .attr("fill", function (d) {
-                return colorScale(d.rate);
-            })
-            .attr("fill", function (d) {
+                if (d.bg) {
+                    const colorRegex = RegExp('#[0-9a-fA-F]{6}')
+                    if (colorRegex.test(d.bg))
+                        return d.bg;
+                    return `url(#${d.id})`;
+                }
                 return colorScale(d.rate);
             })
             .attr("stroke", function (d) {
+                if (d.bg) {
+                    const colorRegex = RegExp('#[0-9a-fA-F]{6}')
+                    if (colorRegex.test(d.bg))
+                        return rgb(d.bg).darker();
+                }
                 return rgb(colorScale(d.rate)).darker();
             })
             .on("mouseover", function (d) {
@@ -229,10 +261,6 @@ export default class BubbleChart {
                 });
             });
 
-        // native tooltip
-        // bubbles.append('title').text(function (d) {
-        //     return `${d.title}\n${d.rate * 100}%`;
-        // })
 
 
         const ticked = () => {
@@ -271,19 +299,35 @@ export default class BubbleChart {
         const maxRadius = (this.width > this.height) ? this.height : this.width;
         const maxArea = (3.14 * (((maxRadius / 2) - (maxRadius / 10)) ** 2));
         // Radius multiplier
-        const radiusChangeRate = radiusUpdate ? maxArea / this.totalDefaultArea : 1;
+        const radiusChangeRate = Math.sqrt(radiusUpdate ? maxArea / this.totalDefaultArea : 1);
 
-        let bubbles = select("svg#vis")
-            .selectAll("circle");
+        // Update patterns dimensions
+        select("svg#vis")
+            .selectAll("pattern")
+            .select('image')
+            .attr("x", function (d) {
+                return -radiusScale(d.amount) * radiusChangeRate / 2;
+            })
+            .attr("y", function (d) {
+                return -radiusScale(d.amount) * radiusChangeRate / 3;
+            })
+            .attr("width", function (d) {
+                return radiusScale(d.amount) * radiusChangeRate * 3;
+            })
+            .attr("height", function (d) {
+                return radiusScale(d.amount) * radiusChangeRate * 3;
+            });
 
-        bubbles.transition()
+        // Update radius
+        select("svg#vis")
+            .selectAll("circle").transition()
             .duration(2000)
             .attr("r", function (d) {
-                return radiusScale(d.amount) * Math.sqrt(radiusChangeRate);
+                return radiusScale(d.amount) * radiusChangeRate;
             });
 
         const charge = (d) => {
-            return -Math.pow(radiusScale(d.amount) * Math.sqrt(radiusChangeRate), 2.0) * this.forceStrength;
+            return -Math.pow(radiusScale(d.amount) * radiusChangeRate, 2.0) * this.forceStrength;
         }
 
         this.simulation.force("charge", forceManyBody().strength(charge)).stop()

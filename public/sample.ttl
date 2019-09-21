@@ -196,13 +196,13 @@ resource:trend_color_scheme a bgo:TrendColorScheme ;
     bgo:noTrendColor "#cdcdcd" ;
     bgo:rateTreshold
 
-		( -0.25	"#a50026" ) ,
-		( -0.10	"#d73027" ) ,
-		( -0.05	"#fee08b" ) ,
-		( 0		"#ffffbf" ) ,
-		( 0.05	"#d9ef8b" ) ,
-		( 0.10	"#1a9850" ) ,
-		( 0.25	"#006837" )
+		( -0.25	"#b2182b" ) ,
+		( -0.10	"#ef8a62" ) ,
+		( -0.05	"#fddbc7" ) ,
+		( 0		"#f7f7f7" ) ,
+		( 0.05	"#d9f0d3" ) ,
+		( 0.10	"#7fbf7b" ) ,
+		( 0.25	"#1b7837" )
 .
 
 

@@ -1,0 +1,32 @@
+@prefix bgo: <http://linkeddata.center/lodmap-bgo/v1#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix resource: <http://example.com/resource/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+resource:p2 a bgo:Partition;
+	bgo:partitionId "2" ;
+	bgo:label "partition2" ;
+	bgo:title "P2 title" ;
+    bgo:hasAccountSubSet
+        resource:p2_1 ,
+        resource:p2_2
+
+    ;
+
+    # Note no default partition is present : a default one should be create with title "Unassigned"
+.
+
+resource:p2_1 a bgo:AccountSet ;
+    bgo:title "Subset 1 title" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        resource:account_1
+.
+
+resource:p2_2 a bgo:AccountSet ;
+    bgo:label "subset 2" ;
+    bgo:title "Subset 2 title" ;
+    bgo:hasAccount
+        resource:account_2
+.

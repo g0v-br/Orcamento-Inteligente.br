@@ -210,12 +210,42 @@ function fetchData(app) {
     let groupFunction =
       bgoStore.anyValue(partition, ns.bgo("groupFunction")) ||
       ns.bgo("amounts_sum").value;
-    //fetch subset data
-    let subsets_uri = bgoStore.each(partition, ns.bgo("hasAccountSubSet"));
 
+    //fetch subset data
+    let subsets_uris = bgoStore.each(partition, ns.bgo("hasAccountSubSet"));
     let subsets = [];
+
+    // Add default subset
+    let defaultSubset = bgoStore.any(
+      partition,
+      ns.bgo("hasDefaultAccountSubSet")
+    );
+    if (defaultSubset) {
+      let label = bgoStore.anyValue(defaultSubset, ns.bgo("label")) || "";
+      let title = bgoStore.any(defaultSubset, ns.bgo("title"));
+      subsets.push({
+        id: "default",
+        title,
+        label,
+        total: 0,
+        total_filtered: 0,
+        description: "",
+        abstract: undefined
+      });
+    } else {
+      subsets.push({
+        id: "default",
+        title: undefined, //TODO "Unassigned", sistemare lo string formatter in modo che gestica le stringhe non gli oggetti
+        label: "",
+        total: 0,
+        total_filtered: 0,
+        description: "",
+        abstract: undefined
+      });
+    }
+
     //for each partition add its subsets
-    subsets_uri.forEach(subset => {
+    subsets_uris.forEach(subset => {
       let s_title = bgoStore.any(subset, ns.bgo("title"));
       let s_label = bgoStore.anyValue(subset, ns.bgo("label")) || "";
       let description = bgoStore.anyValue(subset, ns.bgo("description")) || "";
@@ -398,7 +428,7 @@ function fetchData(app) {
       "part"
       "search"
       "meta"
-      "chart" ;
+      "chart";
 
     grid-template-rows: auto auto auto 100vw;
     grid-template-columns: 1fr;

@@ -107,12 +107,19 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
 
         let bg = store.anyValue(account, ns.bgo('depiction')) || null;
         let partitions = {};
+
+        partitions_table.slice(1).forEach(p => {
+            partitions[p.id] = "default";
+        })
         let subSetUris = store.each(undefined, ns.bgo("hasAccount"), account);
         subSetUris.forEach(subSetUri => {
             let partition = store.any(undefined, ns.bgo("hasAccountSubSet"), subSetUri);
             let partitionId = store.anyValue(partition, ns.bgo("partitionId"))
-            partitions[partitionId] = subSetUri.value;
+            const isPartitionPresent = partitions_table.some(p => p.id == partitionId);
+            if (isPartitionPresent)
+                partitions[partitionId] = subSetUri.value;
         });
+
         newNode = {
             id,
             title,
@@ -392,7 +399,8 @@ export default class BubbleChart {
 
     groupBubble() {
         this.simulation.force("x", forceX().strength(this.forceStrength).x(this.width / 2));
-        this.simulation.force("y", forceY().strength(this.forceStrength).y(this.height / 2));
+        let height = this.height > this.width ? this.width : this.height;
+        this.simulation.force("y", forceY().strength(this.forceStrength).y(height / 2));
         this.simulation.alpha(1).restart();
     }
 

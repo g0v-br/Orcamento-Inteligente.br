@@ -48,12 +48,11 @@ docker rm -f lodmap2d
 
 ## Using LODMAP2D
 
-LODMAP2D is a semantic web browser able to recognize the concepts described in the [Bubble Graph Ontology(BGO)](http://linkeddata.center/lodmap-bgo/v1)
 
 
 LODMAP2D functions are available from any recent browser by some routes managed directly by the application (i.e. without accessing the network), and in particular:
 
-| route template                 | expected behavior                     |
+| route template                | expected behavior                     |
 |------------------------------ |-------------------------------------- |
 | /                             | redirects to /partition/overview		|
 | /partition/overview{?s}       | renders a bgo:Overview subject		|
@@ -70,7 +69,10 @@ The optional parameter *s* allows filtering the displayed objects whose title,  
 
 ## Development
 
-From a technical point of view, LODMAP2D is a single page application  (SPA) developed with the [Vue framework](https://vuejs.org/) according to the [SOLID specifications](https://github.com/solid/solid-spec) and based on the [Data Driven Document (d3)](https://d3js.org/) library.
+From a conceptual point of view LODMAP2D a [Bubble Graph Ontology(BGO)](http://linkeddata.center/lodmap-bgo/v1) browser.
+
+From a technical point of view, LODMAP2D is a single page web application (SPA) developed with the [Vue framework](https://vuejs.org/) according to the [SOLID specifications](https://github.com/solid/solid-spec) and based on the [Data Driven Document (d3)](https://d3js.org/) library.
+
 
 The data model adopts the [Resource Description Framework (RDF)](https://www.w3.org/RDF/) and the [Semantic Web standards](https://www.w3.org/standards/semanticweb/data). 
 LODMAP2D recognizes the [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
@@ -115,6 +117,8 @@ resource | payload
 *VUE_APP_LODMAP2D_DATA*/credits.ttl | contains credits data 
 *VUE_APP_LODMAP2D_DATA*/terms.ttl | contains terms & conditions data 
 *VUE_APP_LODMAP2D_DATA*/accounts.ttl | contains an index of all accounts, including just information used to render account tooltips
+
+For an example of a endpoint see [LODMAP2D-api project](https://github.com/linkeddatacenter/LODMAP2D-api).
 
 When the variable *VUE_APP_LODMAP2D_DATA* is undefined, it is also  possible to write custom configurations, for istance to sues as data provider RESTful APIs, LDP, SPARQL endpoints, etc., etc.
 To customize data dereferencing, modify the [config.js](config.js) file.

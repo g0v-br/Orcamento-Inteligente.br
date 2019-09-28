@@ -220,29 +220,21 @@ function fetchData(app) {
       partition,
       ns.bgo("hasDefaultAccountSubSet")
     );
+    let subsetLabel;
+    let subsetTitle;
     if (defaultSubset) {
-      let label = bgoStore.anyValue(defaultSubset, ns.bgo("label")) || "";
-      let title = bgoStore.any(defaultSubset, ns.bgo("title"));
-      subsets.push({
-        id: "default",
-        title,
-        label,
-        total: 0,
-        total_filtered: 0,
-        description: "",
-        abstract: undefined
-      });
-    } else {
-      subsets.push({
-        id: "default",
-        title: undefined, //TODO "Unassigned", sistemare lo string formatter in modo che gestica le stringhe non gli oggetti
-        label: "",
-        total: 0,
-        total_filtered: 0,
-        description: "",
-        abstract: undefined
-      });
+      subsetLabel = bgoStore.anyValue(defaultSubset, ns.bgo("label")) || "";
+      subsetTitle = bgoStore.any(defaultSubset, ns.bgo("title"));
     }
+    subsets.push({
+      id: "default",
+      title: subsetTitle, //TODO "Unassigned", sistemare lo string formatter in modo che gestica le stringhe non gli oggetti
+      label: subsetLabel ? subsetLabel : "",
+      total: 0,
+      total_filtered: 0,
+      description: "",
+      abstract: undefined
+    });
 
     //for each partition add its subsets
     subsets_uris.forEach(subset => {

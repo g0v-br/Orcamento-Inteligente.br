@@ -5,14 +5,14 @@
     	<!-- Warning: removing or changing the following statement breaks the LODMAP2D license -->
 	    <div class="ldc-credits" >
 	    	<p>
-	    		This application includes the <a href="https://github.com/linkeddatacenter/LODMAP2D">LODMAP2D software</a> developed by 
+	    		This application includes the <a href="https://github.com/linkeddatacenter/LODMAP2D">LODMAP2D software</a> developed by
 	    		<a href="http://LinkedData.Center/">LinkedData.Center</a> and contributors.
 	    	</p>
 	    </div>
     </div>
 </template>
 <script>
-import { bgoStore, fetcher, ns } from "@/models/bgo.js"; 
+import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import StringFormatter from "@/components/StringFormatter.vue";
 export default {
   name: "Credits",

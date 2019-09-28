@@ -230,10 +230,10 @@ resource:tag_cloud a bgo:TagCloud ;
 		[ bgo:label "Tedgst4"; bgo:tagWeight 0.2 ] ,
 		[ bgo:label "Tefgst5"; bgo:tagWeight 0.7 ] ,
 		[ bgo:label "Teefst6"; bgo:tagWeight 0.3 ],
-        	[ bgo:label "Testsdf4"; bgo:tagWeight 0.2 ] ,
+        [ bgo:label "Testsdf4"; bgo:tagWeight 0.2 ] ,
 		[ bgo:label "Tegsgsbst5"; bgo:tagWeight 0.7 ] ,
 		[ bgo:label "Testeag6"; bgo:tagWeight 0.3 ],
-        	[ bgo:label "Tesbgbt4"; bgo:tagWeight 0.2 ] ,
+        [ bgo:label "Tesbgbt4"; bgo:tagWeight 0.2 ] ,
 		[ bgo:label "Twrfegest5"; bgo:tagWeight 0.7 ] ,
 		[ bgo:label "Tesqr3hyt6"; bgo:tagWeight 0.3 ]
 .

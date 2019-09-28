@@ -6,40 +6,34 @@ import store from './store'
 import vuetify from './plugins/vuetify';
 import { bgoStore, fetcher, ns, dref } from './models/bgo.js';
 
-console.table(dref("/partition/overview"));
+// console.table(dref("/partition/p1"));
+// new Vue({
+//   router,
+//   store,
+//   vuetify,
+//   render: h => h(App)
+// }).$mount('#app')
 
-try {
 
-  fetcher.load("http://localhost:8080/sample.ttl").then(
+fetcher.load(dref(process.env.VUE_APP_LODMAP2D_DATA + "/app.ttl")).then(
+  response => {
+    new Vue({
+      router,
+      store,
+      vuetify,
+      render: h => h(App)
+    }).$mount('#app')
+  },
+  error => {
+    new Vue({
+      vuetify,
+      render: h => h(Error)
+    }).$mount('#app')
+  }
+).catch(err => {
+  console.log("errore")
+});
 
-    response => {
-      new Vue({
-        router,
-        store,
-        vuetify,
-        render: h => h(App)
-      }).$mount('#app')
-    },
-
-    error => {
-      new Vue({
-        vuetify,
-        render: h => h(Error)
-      }).$mount('#app')
-    }
-  ).catch(err => {
-    console.log("errore")
-  })
-    ;
-
-} catch (error) {
-
-  new Vue({
-    vuetify,
-    render: h => h(Error)
-  }).$mount('#app')
-
-}
 
 
 

@@ -6,13 +6,13 @@
       <v-icon v-on:click="$router.push('/overview')">mdi-close</v-icon>
     </v-system-bar>
     <div class="content-grid">
-      <div class="metadata">
+      <div v-if="hasPerspective.metadata" class="metadata">
         <Metadata :accountId="accountId" />
       </div>
-      <div v-if="this.historicRec.records.length!=0" class="bar">
+      <div v-if="hasPerspective.historical" class="bar">
         <BarChart :historic-rec="historicRec.records" :title="historicRec.title" />
       </div>
-      <div v-if="breakDown.records.length!=0" class="pie">
+      <div v-if="hasPerspective.breakDown" class="pie">
         <PieChart :breakdown="breakDown.records" :title="breakDown.title" :total="breakDown.total" />
       </div>
     </div>
@@ -24,6 +24,7 @@ import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BarChart from "@/components/account/perspectives/BarChart";
 import Metadata from "@/components/account/perspectives/Metadata";
 import PieChart from "@/components/account/perspectives/PieChart";
+import { isNullOrUndefined } from "util";
 export default {
   components: {
     BarChart,
@@ -38,6 +39,11 @@ export default {
   },
   data() {
     return {
+      hasPerspective: {
+        historical: false,
+        breakDown: false,
+        metadat: false
+      },
       historicRec: {
         title: "",
         records: []
@@ -60,11 +66,22 @@ let fetchData = app => {
   let account = bgoStore.any(undefined, ns.bgo("accountId"), accountId);
 
   app.title = bgoStore.anyValue(account, ns.bgo("title"));
+
+  //Metadata
+  let metadata_perspective = bgoStore.any(
+    account,
+    ns.bgo("usesMetadataPerspective")
+  );
+  if (!isNullOrUndefined(metadata_perspective))
+    app.hasPerspective.metadata = true;
+
   //Bar chart data
   let historical_perspective = bgoStore.any(
     account,
     ns.bgo("usesHistoricalPerspective")
   );
+  if (!isNullOrUndefined(historical_perspective))
+    app.hasPerspective.historical = true;
 
   app.historicRec.title =
     bgoStore.anyValue(historical_perspective, ns.bgo("title")) || "";
@@ -82,6 +99,8 @@ let fetchData = app => {
     account,
     ns.bgo("usesBreakdownPerspective")
   );
+  if (!isNullOrUndefined(breakdown_perspective))
+    app.hasPerspective.breakDown = true;
   //pie chart title
   app.breakDown.title =
     bgoStore.anyValue(breakdown_perspective, ns.bgo("title")) || "";

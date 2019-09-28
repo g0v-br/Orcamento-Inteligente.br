@@ -1,0 +1,42 @@
+@prefix bgo: <http://linkeddata.center/lodmap-bgo/v1#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix resource: <http://example.com/resource/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+## Account 1 with all the details
+resource:account_1 a bgo:Account;
+	bgo:accountId "account_1" ;
+    bgo:amount 1000.00 ;
+    bgo:referenceAmount 950.00 ;
+    bgo:title "titolo account_1" ;
+    bgo:description "descrizione account_1" ;
+    bgo:depiction <http://bit.ly/2MxbJWQ> ;
+ .
+ 
+resource:account_2 a bgo:Account ;
+	bgo:accountId "account_2" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_2" ;
+    bgo:description "descrizione account_2" ;
+    bgo:depiction <http://bit.ly/2MxbJWQ>
+.
+
+resource:account_3 a bgo:Account ;
+	bgo:accountId "account_3" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_3" ;
+    bgo:depiction "#fcba03"  # as RGB solid color
+.
+
+resource:account_4 a bgo:Account ;
+ 	bgo:accountId "account_4" ;
+     bgo:amount 100.00 ;
+     bgo:referenceAmount 95.00
+.
+	
+resource:account_5 a bgo:Account ;
+ 	bgo:accountId "account_5" ;
+    bgo:amount 100.00
+.

@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { bgoStore, fetcher, dref } from './models/bgo.js';
+
+console.table(dref("http://localhost:8080/app"));
 
 Vue.use(Router)
+
 
 export default new Router({
     mode: 'history',
@@ -10,7 +14,11 @@ export default new Router({
         {
             path: '/credits',
             name: 'credits',
-            component: () => import('./views/Credits.vue')
+            component: () => import('./views/Credits.vue'),
+            beforeEnter: async (to, from, next) => {
+                await fetcher.load(dref(to.path))
+                next();
+            }
         },
         {
             path: '/table',

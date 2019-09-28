@@ -1,0 +1,13 @@
+@prefix bgo: <http://linkeddata.center/lodmap-bgo/v1#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix resource: <http://example.com/resource/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+	
+resource:account_3 a bgo:Account ;
+	bgo:accountId "account_3" ;
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_3" ;
+    bgo:depiction "#fcba03"  # as RGB solid color
+.

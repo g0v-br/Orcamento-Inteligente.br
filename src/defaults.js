@@ -17,7 +17,7 @@ if (process.env.VUE_APP_LODMAP2D_DATA) {
 
 
 export default
-{
-	"dereferencingRules": [{ "regexp":".*" , "targets": [ "/data.ttl"], "isLast": true }],
-	...config
-}
+	{
+		"dereferencingRules": [{ "regexp": ".*", "targets": ["http://localhost:8080/data.ttl"], "isLast": true }],
+		...config
+	}

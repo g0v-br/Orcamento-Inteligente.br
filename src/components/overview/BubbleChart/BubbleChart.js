@@ -1,3 +1,4 @@
+
 import { select } from "d3-selection";
 import * as d3 from 'd3'
 import { transition } from "d3-transition";
@@ -94,6 +95,8 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
         let title = store.anyValue(account, ns.bgo('title')) || "";
 
         let description = store.anyValue(account, ns.bgo('description')) || "";
+
+        let abstract = store.anyValue(account, ns.bgo('abstract')) || "";
         // description = description ? description : "";
 
         let amount = store.anyValue(account, ns.bgo('amount'));
@@ -124,6 +127,7 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
             id,
             title,
             description,
+            abstract,
             amount,
             referenceAmount: refAmount,
             rate,
@@ -142,7 +146,7 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
 
 // if account contains text return true, false otherwise
 function match(account, text) {
-    return account.title.includes(text) || account.description.includes(text);
+    return account.title.toLowerCase().includes(text) || account.description.toLowerCase().includes(text) || account.abstract.toLowerCase().includes(text);
 }
 
 function getCenters(gridBlocks) {
@@ -410,7 +414,7 @@ export default class BubbleChart {
         select("svg#vis")
             .selectAll("circle")
             .classed("disabled", d => {
-                d.active = match(d, searchText);
+                d.active = match(d, searchText.toLowerCase());
                 updateTotals(d, this.partitions, "filtered", this.ns);
                 return !d.active // if is active disabled must be false
             });

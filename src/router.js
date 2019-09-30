@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { bgoStore, fetcher, dref } from './models/bgo.js';
 
-console.table(dref("http://localhost:8080/app"));
+// console.table(dref("http://localhost:8080/app"));
 
 Vue.use(Router)
 
@@ -21,26 +21,42 @@ export default new Router({
             }
         },
         {
-            path: '/table',
-            name: 'table',
-            component: () => import('./views/Table.vue')
-        },
-        {
             path: '/terms',
             name: 'terms',
-            component: () => import('./views/TermsAndConditions.vue')
+            component: () => import('./views/TermsAndConditions.vue'),
+            beforeEnter: async (to, from, next) => {
+                await fetcher.load(dref(to.path))
+                next();
+            }
+        },
+        {
+            path: '/table',
+            name: 'table',
+            component: () => import('./views/Table.vue'),
+            beforeEnter: async (to, from, next) => {
+                await fetcher.load(dref(to.path))
+                next();
+            }
         },
         {
             path: '/account/:accountId',
             name: 'account',
             component: () => import('./views/Account.vue'),
-            props: true
+            props: true,
+            beforeEnter: async (to, from, next) => {
+                await fetcher.load(dref(to.path))
+                next();
+            }
         },
         {
             path: '/partition/:partitionId',
             name: 'accounts-partition',
             component: () => import('./views/Overview.vue'),
-            props: true
+            props: true,
+            beforeEnter: async (to, from, next) => {
+                await fetcher.load(dref(to.path))
+                next();
+            }
         },
         {
             path: '/',

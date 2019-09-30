@@ -8,7 +8,7 @@ import config from "./../config.js"
 if (process.env.VUE_APP_LODMAP2D_DATA) {
 	const namespace = process.env.VUE_APP_LODMAP2D_DATA;
 	config.dereferencingRules = [
-		{ "regexp": ".*", "targets": [`${namespace}app.ttl`] },
+		{ "regexp": "/app", "targets": [`${namespace}app.ttl`], "isLast": true },
 		{ "regexp": ".*/account/(.+)", "targets": [`${namespace}account/$1.ttl`], "isLast": true },
 		{ "regexp": ".*/partition/(.+)", "targets": [`${namespace}accounts.ttl`, `${namespace}partition/$1.ttl`], "isLast": true },
 		{ "regexp": ".*/(credits|terms)$", "targets": [`${namespace}$1.ttl`], "isLast": true },

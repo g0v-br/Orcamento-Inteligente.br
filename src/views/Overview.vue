@@ -125,8 +125,7 @@ export default {
   },
 
   beforeRouteUpdate(to, from, next) {
-    // Update activePartition and search when the view is reused with new id
-    this.activePartitionId = to.params.partitionId;
+    // Necessary when the component  si reused after a tag is cliked
     this.search = to.query.s || "";
     next();
   },
@@ -143,7 +142,7 @@ export default {
       });
     },
     onSearchInput() {
-      this.selectedTag = null;
+      // this.selectedTag = null;
       this.$router.replace({
         name: "accounts-partition",
         params: { partitionId: this.activePartitionId },
@@ -156,7 +155,7 @@ export default {
     },
     onNodeOver(node) {
       const tooltipHeight = 100;
-      const tooltipWidth = 350;
+      const tooltipWidth = 400;
       const boundHeight = this.$refs.chart.offsetHeight;
       const boundWidth = this.$refs.chart.offsetWidth;
       // let top = node.y + node.r / 1.4142;

@@ -39,7 +39,7 @@ export default {
   /* grid-gap: 16px; */
   padding: 16px;
   height: 100px;
-  width: 350px;
+  width: 400px;
 }
 
 .tooltip h4 {

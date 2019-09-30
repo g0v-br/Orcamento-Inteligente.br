@@ -154,7 +154,7 @@ export default {
       this.total_filtered = data.total_filtered;
     },
     onNodeOver(node) {
-      const tooltipHeight = 100;
+      const tooltipHeight = 130;
       const tooltipWidth = 400;
       const boundHeight = this.$refs.chart.offsetHeight;
       const boundWidth = this.$refs.chart.offsetWidth;

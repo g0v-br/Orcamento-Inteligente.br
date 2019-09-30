@@ -2,7 +2,10 @@
   <v-sheet elevation="1" class="tooltip">
     <h4 class="title">{{node.title}}</h4>
     <div class="row">
-      <p class="amount">{{printf(totalizer.minimalTotalPrintTemplate, formatAmount(node.amount))}}</p>
+      <div><p class="description">{{node.description}}</p></div>
+    </div>
+    <div class="row">
+      <div><p class="amount">{{printf(totalizer.minimalTotalPrintTemplate, formatAmount(node.amount))}}</p></div>
       <Rate :rate="node.rate" :show_icon="true" />
     </div>
   </v-sheet>
@@ -26,6 +29,7 @@ export default {
   },
   computed: {
     withIcon: function() {
+      
       return isFinite(this.node.rate) && this.node.rate != 0;
     }
   }
@@ -38,7 +42,6 @@ export default {
   display: grid;
   /* grid-gap: 16px; */
   padding: 16px;
-  height: 100px;
   width: 400px;
 }
 
@@ -58,9 +61,12 @@ export default {
 .amount {
   vertical-align: bottom;
 }
+.description{
+  font-size: 15px;
+  padding:0.5em;
+}
 .rate {
   margin-left: auto;
-
 }
 p {
   margin-bottom: 0;

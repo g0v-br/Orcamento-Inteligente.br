@@ -1,7 +1,7 @@
 <template>
   <!-- <div style="display:flex; align-items:center;"> -->
   <div>
-    <span class="stringDisplayed" :id="hash(string.value)">{{string.value}}</span>
+    <span class="stringDisplayed" v-html="getFormattedString(string)" :id="hash(string.value)"></span>
     <v-icon class="info-icon" v-if="hasPopup" @click="dialog=true">mdi-information-outline</v-icon>
     <v-dialog v-model="dialog" max-width="290" clearable>
       <v-card>

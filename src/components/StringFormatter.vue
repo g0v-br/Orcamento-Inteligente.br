@@ -1,7 +1,7 @@
 <template>
   <!-- <div style="display:flex; align-items:center;"> -->
   <div>
-    <span class="stringDisplayed" :id="hash(string.value)"></span>
+    <span class="stringDisplayed" :id="hash(string.value)">{{string.value}}</span>
     <v-icon class="info-icon" v-if="hasPopup" @click="dialog=true">mdi-information-outline</v-icon>
     <v-dialog v-model="dialog" max-width="290" clearable>
       <v-card>
@@ -42,10 +42,10 @@ export default {
   },
   mounted() {
     let element;
-    if (this.isDefined(this.string)) {
-      element = document.getElementById(this.hash(this.string.value));
-      element.innerHTML = this.getFormattedString(this.string);
-    }
+    // if (this.isDefined(this.string)) {
+    //   element = document.getElementById(this.hash(this.string.value));
+    //   element.innerHTML = this.getFormattedString(this.string);
+    // }
 
     if (this.isDefined(this.popup)) {
       /*element = document.getElementById("ekkle");*/

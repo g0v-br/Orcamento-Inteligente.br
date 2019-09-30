@@ -146,7 +146,7 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
 
 // if account contains text return true, false otherwise
 function match(account, text) {
-    return account.title.toLowerCase().includes(text) || account.description.toLowerCase().includes(text) || account.abstract.toLowerCase().includes(text);
+    return account.id==text||account.title.toLowerCase().includes(text) || account.description.toLowerCase().includes(text) || account.abstract.toLowerCase().includes(text);
 }
 
 function getCenters(gridBlocks) {

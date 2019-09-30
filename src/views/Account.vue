@@ -2,7 +2,7 @@
   <div>
     <v-system-bar window class="status">
       <div class="flex-grow-1"></div>
-      <v-icon v-on:click="$router.push('/overview' + '?s='+title)">mdi-magnify</v-icon>
+      <v-icon v-on:click="$router.push('/overview' + '?s='+accountId)">mdi-magnify</v-icon>
       <v-icon v-on:click="$router.push('/overview')">mdi-close</v-icon>
     </v-system-bar>
     <div class="content-grid">

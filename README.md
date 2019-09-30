@@ -71,6 +71,12 @@ The optional parameter *s* allows filtering the displayed objects whose title,  
 
 From a conceptual point of view LODMAP2D a [Bubble Graph Ontology(BGO)](http://linkeddata.center/lodmap-bgo/v1) browser.
 
+It uses following restrictions:
+
+- **bgo:icon**: if its datatype is a string, it is considered as the name of an icon in fab library.
+- **bgo:link**: if it is a string, it is considered an route (e.g. "/table" ).
+
+
 From a technical point of view, LODMAP2D is a single page web application (SPA) developed with the [Vue framework](https://vuejs.org/) according to the [SOLID specifications](https://github.com/solid/solid-spec) and based on the [Data Driven Document (d3)](https://d3js.org/) library.
 
 

@@ -20,7 +20,7 @@ resource:domain a bgo:Domain ;
 	bgo:title "Live test of LODMAP2D" ;
     bgo:description "Here a short description of the data domain" ;
     bgo:abstract "These are **demo data** without a real meaning."^^bgo:MDString ;
-
+    bgo:hasAccountView  :account_view ;
 
     # Just use the default navigation menu
 
@@ -305,14 +305,22 @@ resource:metadata_perspective a bgo:MetadataPerspective ;
    	bgo:notAvailableTrendAccountLabel "Non disponibile"
 .
 
-resource:historical_perspective a bgo:HistoricalPerspective ;
-    bgo:hasTotalizer resource:totalizer ;
-	bgo:title "Storico dell'azione"
-.
-
-resource:breakdown_perspective a bgo:BreakdownPerspective ;
-    bgo:hasTotalizer resource:totalizer ;
-	bgo:title "Dettaglio capitoli di spesa"
+:account_view
+	# a bgo:AccountView ;
+    bgo:amountFormatter :amount_formatter;
+    bgo:referenceFormatter :amount_formatter;
+    bgo:trendFormatter :trend_formatter;
+    
+	bgo:hasHistoricalPerspective [
+		# a bgo:HistoricalPerspective ;
+		bgo:title "Storico dell'azione" ;
+	    bgo:amountFormatter :smart_formatter
+	];
+	bgo:hasBreakdownPerspective [
+		# a bgo:BreakdownPerspective ;
+		bgo:title "Dettaglio capitoli di spesa" ;
+	    bgo:amountFormatter :smart_formatter
+	]
 .
 
 
@@ -340,10 +348,6 @@ resource:account_1 a bgo:Account, bgo:ProfiledAccount ;
     	[ bgo:title "account_1_part 2" ; bgo:amount 120.00 ] ,
     	[ bgo:title "account_1_part 3" ; bgo:amount 130.00 ]
     ;
-
-    bgo:usesHistoricalPerspective resource:historical_perspective ;
-    bgo:usesBreakdownPerspective resource:breakdown_perspective ;
-    bgo:usesMetadataPerspective resource:metadata_perspective ;
 .
 
 

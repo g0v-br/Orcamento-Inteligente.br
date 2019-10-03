@@ -281,15 +281,21 @@ function fetchData(app) {
     colorScheme,
     ns.bgo("noTrendColor")
   );
-  bgoStore
-    .each(colorScheme, ns.bgo("rateTreshold"))
-    .sort((a, b) => {
-      return a.elements[0].value - b.elements[0].value;
-    })
-    .forEach(treshold => {
-      app.legendData.rangeTresholds.push(treshold.elements[0].value);
-      app.legendData.colorTresholds.push(treshold.elements[1].value);
-    });
+ bgoStore.each(colorScheme, ns.bgo("rateTreshold"))
+            .sort((tresholdA, tresholdB) => {
+                let rateA=bgoStore.anyValue(tresholdA,ns.bgo("rate"));
+                let rateB=bgoStore.anyValue(tresholdB,ns.bgo("rate"));
+                return rateA-rateB;
+            })
+            .forEach(treshold => {
+
+                app.legendData.rangeTresholds.push(bgoStore.anyValue(treshold,ns.bgo("rate")));
+                app.legendData.colorTresholds.push(bgoStore.anyValue(treshold,ns.bgo("colorId")))
+                
+            })
+            console.log(app.legendData.rangeTresholds);
+            console.log(app.legendData.colorTresholds);
+            
 
   // Totalizer
   let totalizer = bgoStore.any(overview, ns.bgo("hasTotalizer"));

@@ -205,20 +205,22 @@ resource:p2_2 a bgo:AccountSet ;
 ###### Trend Color Scheme #######
 resource:trend_color_scheme a bgo:TrendColorScheme ;
     bgo:title "Variazione percentuale rispetto al valore di acquisto" ;
-    bgo:noTrendColor "#cdcdcd" ;
+    bgo:noTrendColor "#cdcdcd"^^bgo:RGB ;
     bgo:rateTreshold
-		( -1	"#a50026" ) ,
-		( -0.5	"#d73027" ) ,
-		( -0.25	"#f46d43" ) ,
-		( -0.10	"#fdae61" ) ,
-		( -0.05	"#fee08b" ) ,
-		( 0		"#ffffbf" ) ,
-		( 0.05	"#d9ef8b" ) ,
-		( 0.10	"#a6d96a" ) ,
-		( 0.25	"#66bd63" ) ,
-		( 0.5	"#1a9850" ) ,
-		( 10  	"#006837" )
+		[ bgo:rate -1 ; 	bgo:colorId "#a50026"^^bgo:RGB ] ,
+		[ bgo:rate -0.5 ;	bgo:colorId "#d73027"^^bgo:RGB ] ,
+		[ bgo:rate -0.25 ;	bgo:colorId "#f46d43"^^bgo:RGB ] ,
+		[ bgo:rate -0.10 ; bgo:colorId "#fdae61"^^bgo:RGB ] ,
+		[ bgo:rate -0.05 ; bgo:colorId "#fee08b"^^bgo:RGB ] ,
+		[ bgo:rate  0 ;	bgo:colorId "#ffffbf"^^bgo:RGB ] ,
+		[ bgo:rate  0.05 ;	bgo:colorId "#d9ef8b"^^bgo:RGB ] ,
+		[ bgo:rate  0.10 ;	bgo:colorId "#a6d96a"^^bgo:RGB ] ,
+		[ bgo:rate 0.25 ;	bgo:colorId "#66bd63"^^bgo:RGB ] ,
+		[ bgo:rate 0.5	;	bgo:colorId "#1a9850"^^bgo:RGB ] ,
+		[ bgo:rate 1 ;	bgo:colorId "#006837"^^bgo:RGB ] 
 .
+
+
 
 
 

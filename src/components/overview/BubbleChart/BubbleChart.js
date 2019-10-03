@@ -187,12 +187,15 @@ export default class BubbleChart {
         const colorTresholds = [];
         const rangeTresholds = [];
         this.store.each(colorScheme, this.ns.bgo("rateTreshold"))
-            .sort((a, b) => {
-                return a.elements[0].value - b.elements[0].value
+            .sort((tresholdA, tresholdB) => {
+                let rateA=this.store.anyValue(tresholdA,this.ns.bgo("rate"));
+                let rateB=this.store.anyValue(tresholdB,this.ns.bgo("rate"));
+                return rateA-rateB;
             })
             .forEach(treshold => {
-                rangeTresholds.push(treshold.elements[0].value)
-                colorTresholds.push(treshold.elements[1].value)
+
+                rangeTresholds.push(this.store.anyValue(treshold,this.ns.bgo("rate")));
+                colorTresholds.push(this.store.anyValue(treshold,this.ns.bgo("colorId")))
             })
 
 

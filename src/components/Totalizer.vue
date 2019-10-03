@@ -6,12 +6,9 @@ import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import { formatPercentage, formatAmount, printf } from "@/utils/utils.js";
 export default {
   props: {
-    total: {
-      type: [String, Number]
-    },
-    filtered: {
-      type: [String, Number]
-    }
+    total:[String, Number],
+    filtered: [String, Number],
+    options: Object
   },
   computed: {
     display() {
@@ -21,23 +18,17 @@ export default {
       total = formatAmount(this.total);
       filtered = formatAmount(this.filtered);
 
-      this.filtered == this.total
-        ? (data = fetchData(false))
-        : (data = fetchData(this.filtered));
-
-      text = data.text;
-      if (!this.filtered) text = text.replace("%s", total);
+      if (Math.round(this.filtered) == Math.round(this.total)) 
+        text = this.options.format.replace("%s", total);
       else {
         rate = parseFloat(this.filtered) / parseFloat(this.total);
+        text = this.options.filteredFormat.replace("%s", filtered);
 
-        if (rate < data.treshold)
-          text = text
-            .replace("%s", filtered)
-            .replace("%s", data.tresholdPrintTemplate);
+        if (Math.abs(rate) < this.options.rateFormatter.minValue)
+          text = text + this.options.rateFormatter.lessThanMinFormat;
         else {
           rate = formatPercentage(rate);
-
-          text = text.replace("%s", filtered).replace("%s", rate);
+          text = text + this.options.rateFormatter.format.replace("%s", rate);
         }
       }
 

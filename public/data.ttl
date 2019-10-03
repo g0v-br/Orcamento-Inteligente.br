@@ -64,17 +64,25 @@ resource:domain a bgo:Domain ;
 #######################################################
 # Views
 #######################################################
-resource:overview a bgo:Overview, bgo:DefaultAccountSet ;
-	bgo:label "stato" ;
-	bgo:title "Overview" ;
+resource:overview a bgo:Overview ;
+    bgo:label "Stato" ; 
+    bgo:icon "fas fa-atom" ;
+    bgo:title "Overview" ;
+    
     bgo:hasPartitionList (
         resource:p1
         resource:p2
-    ) ;
-	bgo:hasTrendColorScheme resource:trend_color_scheme ;
-    bgo:hasTotalizer resource:totalizer ;
+    );
+
+    bgo:hasTrendColorScheme resource:trend_color_scheme ;
+    bgo:hasTotalizer resource:filtered_total_formatter ;
     bgo:hasTagCloud resource:tag_cloud ;
     bgo:hasSearchPane resource:search_pane ;
+    bgo:hasTooltip [
+        bgo:amountFormatter resource:amount_formatter;
+        bgo:referenceFormatter resource:amount_formatter;
+        bgo:trendFormatter resource:trend_formatter
+    ] ;
 .
 
 ### Credits page ##########
@@ -119,7 +127,7 @@ here palace your **Terms & conditions** about published service.
 #### Table ###################
 resource:table_view a bgo:TableView ;
 	bgo:title "Table view";
-    bgo:hasTotalizer resource:totalizer ;
+    bgo:hasTotalizer resource:filtered_total_formatter ;
     bgo:hasSearchPane resource:search_pane ;
 
     bgo:headerTitle "Title" ;
@@ -221,17 +229,51 @@ resource:trend_color_scheme a bgo:TrendColorScheme ;
 .
 
 
-
-
-
-##### Totalizer #######
-resource:totalizer a bgo:Totalizer ;
-    bgo:minimalTotalPrintTemplate "€ %s" ;
-    bgo:totalPrintfTemplate "Totale: € %s" ;
-    bgo:totalFilteredPrintfTemplate "Spese evidenziate: € %s (%s del tot.)" ;
-    bgo:treshold 0.01 ;
-    bgo:tresholdPrintTemplate "Meno del 0,01%" ;
+############################################
+# Formatters
+############################################
+resource:filtered_total_formatter a bgo:Totalizer ;
+    bgo:format "Totale:  € %s" ;
+    bgo:filteredFormat "In evidenza: € %s"^^bgo:Template  ;
+    bgo:precision 2 ;
+    bgo:rateFormatter [
+        bgo:format " ( %s% del tot.)"^^bgo:Template  ;
+        bgo:precision 2 ;
+        bgo:scaleFactor 100 ;
+        bgo:maxValue 100 ;
+        bgo:minValue 1 ; 
+        bgo:moreThanMaxFormat "" ;
+        bgo:lessThanMinFormat " (< 1% del tot.)"
+    ]
 .
+
+resource:amount_formatter a bgo:NumberFormatter ;
+    bgo:format "€ %s"^^bgo:Template  ;
+    bgo:precision 2 ;
+.
+
+resource:smart_formatter a bgo:NumberFormatter ;
+    bgo:format "€ %s"^^bgo:Template  ;
+    bgo:precision 0 ;
+    bgo:maxValue 999999999.99 ;
+    bgo:minValue 0.005 ; 
+    bgo:nanFormat "non definito" ;
+    bgo:moreThanMaxFormat "> 1 Mrd"^^bgo:Template ;
+    bgo:lessThanMinFormat "N.A."^^bgo:Template
+.
+
+resource:trend_formatter a bgo:NumberFormatter ;
+    bgo:format "%s%"^^bgo:Template  ;
+    bgo:scaleFactor 100 ;
+    bgo:precision 2 ;
+    bgo:maxValue 100;
+    bgo:minValue -100 ; 
+    bgo:nanFormat "N.A." ;
+    bgo:moreThanMaxFormat ">100%"^^bgo:Template ;
+    bgo:lessThanMinFormat "<-100%"^^bgo:Template
+.
+
+
 
 ### Search and tag clouds #######
 resource:search_pane a bgo:SearchWidget ;
@@ -319,26 +361,35 @@ resource:account_2 a bgo:Account ;
 
 resource:account_3 a bgo:Account ;
 	bgo:accountId "account_3" ;
-    bgo:amount 100.00 ;
+     bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_3" ;
-    bgo:depiction "#fcba03"  # as RGB solid color
+    bgo:title "titolo account_2" ;
+    bgo:description "descrizione account_2" ;
+    bgo:depiction <http://bit.ly/2MxbJWQ>
 .
 
 resource:account_4 a bgo:Account ;
  	bgo:accountId "account_4" ;
-     bgo:amount 100.00 ;
-     bgo:referenceAmount 95.00
+   bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_2" ;
+    bgo:description "descrizione account_2" ;
+    bgo:depiction <http://bit.ly/2MxbJWQ>
 .
 
 
 resource:account_5 a bgo:Account ;
  	bgo:accountId "account_5" ;
-    bgo:amount 100.00
+     bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00 ;
+    bgo:title "titolo account_2" ;
+    bgo:description "descrizione account_2" ;
+    bgo:depiction <http://bit.ly/2MxbJWQ>
 .
 
 # no amounts default to amount=0
 resource:account_6 a bgo:Account ;
-	bgo:accountId "account_6"
+	bgo:accountId "account_6";
+    
 .
 

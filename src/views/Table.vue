@@ -3,7 +3,7 @@
     <div class="g0v-table-container">
       <v-card>
         <v-card-title>
-          <Totalizer :total="total" />
+          <Totalizer :total="total" :filtered="total" :options="totalizerOptions"/>
           <v-spacer></v-spacer>
           <v-text-field
           v-model="search"
@@ -34,7 +34,7 @@
         </template>
         <template
         v-slot:item.amount="{ item }">
-        {{ printf(totalizer.minimalTotalPrintTemplate, formatAmount(item.amount)) }}
+        {{ printf(totalizerOptions.format, formatAmount(item.amount)) }}
       </template>
       <template v-slot:item.trend="{ item }"><Rate :rate="item.trend" :show_icon="true"/></template>
     </v-data-table>
@@ -65,11 +65,21 @@
         accounts: [],
         search: "",
         label: "",
-        totalizer: {
-          totalPrintfTemplate: "",
-          minimalTotalPrintTemplate: ""
+        totalizerOptions: {
+          format : "",
+          filteredFormat : "",
+          precision : 0,
+          rateFormatter : {
+            format: "",
+            precision: 0,
+            scaleFactor: 0,
+            maxValue: 0,
+            minValue: 0,
+            moreThanMaxFormat: "",
+            lessThanMinFormat: ""
+          }
         }
-      };
+      }
     },
     created() {
       fetchData(this);
@@ -84,6 +94,7 @@
       filteredAccounts() {
         return this.accounts.filter(node => {
           let search = this.search.toLowerCase(),
+          //let search = "1";
           title = node.title.toLowerCase().includes(search),
           description = node.description.toLowerCase().includes(search);
 
@@ -147,7 +158,6 @@
   app.title = bgoStore.anyValue(tableView, ns.bgo("title"));
 
   //Fetch Headers
-  //TODO decide where to get the width values
   app.headers.push({
     text: bgoStore.anyValue(tableView, ns.bgo("headerTitle")),
     value: "title",
@@ -177,11 +187,11 @@
   //Fetch Accounts
   let accounts = bgoStore.each(undefined, ns.rdf("type"), ns.bgo("Account"));
   accounts.forEach(account => {
-    let title = bgoStore.anyValue(account, ns.bgo("title")),
-    amount = bgoStore.anyValue(account, ns.bgo("amount")),
-    description = bgoStore.anyValue(account, ns.bgo("description")),
-    previousValue = bgoStore.anyValue(account, ns.bgo("referenceAmount")),
-    accountId = bgoStore.anyValue(account, ns.bgo("accountId")),
+    let title = bgoStore.anyValue(account, ns.bgo("title")) || "",
+    amount = bgoStore.anyValue(account, ns.bgo("amount")) || 1,
+    description = bgoStore.anyValue(account, ns.bgo("description")) || "",
+    previousValue = bgoStore.anyValue(account, ns.bgo("referenceAmount")) || 1,
+    accountId = bgoStore.anyValue(account, ns.bgo("accountId")) || "",
     trend = (amount - previousValue) / previousValue;
 
     app.accounts.push({
@@ -195,14 +205,19 @@
 
   // Totalizer
   let totalizer = bgoStore.any(tableView, ns.bgo("hasTotalizer"));
-  app.totalizer.totalPrintfTemplate = bgoStore.anyValue(
-    totalizer,
-    ns.bgo("totalPrintfTemplate")
-    );
-  app.totalizer.minimalTotalPrintTemplate = bgoStore.anyValue(
-    totalizer,
-    ns.bgo("minimalTotalPrintTemplate")
-    );
+  let rateFormatter = bgoStore.any(totalizer, ns.bgo("rateFormatter"));
+
+  app.totalizerOptions.format = bgoStore.anyValue(totalizer, ns.bgo("format"));
+  app.totalizerOptions.filteredFormat = bgoStore.anyValue(totalizer, ns.bgo("filteredFormat"));
+  app.totalizerOptions.precision = bgoStore.anyValue(totalizer, ns.bgo("precision"));
+
+  app.totalizerOptions.rateFormatter.format = bgoStore.anyValue(rateFormatter, ns.bgo("format"));
+  app.totalizerOptions.rateFormatter.precision = bgoStore.anyValue(rateFormatter, ns.bgo("precision"));
+  app.totalizerOptions.rateFormatter.scaleFactor = bgoStore.anyValue(rateFormatter, ns.bgo("scaleFactor"));
+  app.totalizerOptions.rateFormatter.maxValue = bgoStore.anyValue(rateFormatter, ns.bgo("maxValue"));
+  app.totalizerOptions.rateFormatter.minValue = bgoStore.anyValue(rateFormatter, ns.bgo("minValue"));
+  app.totalizerOptions.rateFormatter.moreThanMaxFormat = bgoStore.anyValue(rateFormatter, ns.bgo("moreThanMaxFormat"));
+  app.totalizerOptions.rateFormatter.lessThanMinFormat = bgoStore.anyValue(rateFormatter, ns.bgo("lessThanMinFormat"));
 }
 </script>
 

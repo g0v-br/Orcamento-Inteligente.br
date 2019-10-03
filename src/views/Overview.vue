@@ -5,67 +5,67 @@
       <div class="partitions">
         <v-btn-toggle v-model="activePartitionId" mandatory active-class="primary--text">
           <v-btn
-            v-for="partition in partitions"
-            :key="partition.id"
-            :value="partition.id"
-            @click="onPartitionChange(partition.id)"
+          v-for="partition in partitions"
+          :key="partition.id"
+          :value="partition.id"
+          @click="onPartitionChange(partition.id)"
           >{{partition.label}}</v-btn>
         </v-btn-toggle>
       </div>
 
       <div class="search">
         <v-text-field
-          append-icon="mdi-magnify"
-          outlined
-          clearable
-          v-model="search"
-          :placeholder="searchPaneLabel"
-          @input="onSearchInput"
+        append-icon="mdi-magnify"
+        outlined
+        clearable
+        v-model="search"
+        :placeholder="searchPaneLabel"
+        @input="onSearchInput"
         ></v-text-field>
       </div>
 
       <div class="meta">
         <p class="meta-description">{{metadata.description}}</p>
-        <Totalizer :total="total" :filtered="total_filtered" />
+        <Totalizer :total="total" :filtered="total_filtered" :options="totalizerOptions" />
         <StringFormatter class="meta-abstract" :string="metadata.abstract" />
       </div>
 
       <div ref="chart" class="chart">
         <BubbleChart
-          :active-partition-id="activePartitionId"
-          :partitions="partitions"
-          :search="search"
-          @total_changed="onTotalChanged"
-          @nodeover="onNodeOver"
-          @nodeout="isNodeHovered = false"
+        :active-partition-id="activePartitionId"
+        :partitions="partitions"
+        :search="search"
+        @total_changed="onTotalChanged"
+        @nodeover="onNodeOver"
+        @nodeout="isNodeHovered = false"
         ></BubbleChart>
-        <Tooltip
-          v-if="isNodeHovered"
-          :totalizer="totalizer"
-          :node="hoveredNode"
-          :style="{top: hoveredNode.top+'px', left:hoveredNode.left+'px'}"
-          class="tooltip"
-        />
+        <!-- <Tooltip
+        v-if="isNodeHovered"
+        :totalizer="totalizer"
+        :node="hoveredNode"
+        :style="{top: hoveredNode.top+'px', left:hoveredNode.left+'px'}"
+        class="tooltip"
+        /> -->
       </div>
 
       <div class="tools">
         <div class="tagcloud">
           <router-link
-            v-for="tag in tags.slice(0,30)"
-            :key="tag.label"
-            :to="{ name: 'accounts-partition',
-             params: { partitionId: activePartitionId },
-             query: { s: tag.label }}"
-            :style="{fontSize: tag.weight *1.4 +0.5 +'em'}"
-            class="tag"
+          v-for="tag in tags.slice(0,30)"
+          :key="tag.label"
+          :to="{ name: 'accounts-partition',
+          params: { partitionId: activePartitionId },
+          query: { s: tag.label }}"
+          :style="{fontSize: tag.weight *1.4 +0.5 +'em'}"
+          class="tag"
           >{{tag.label}}</router-link>
         </div>
         <Legend
-          :label="legendData.label"
-          :no-trend-color="legendData.noTrendColor"
-          :color-tresholds="legendData.colorTresholds"
-          :range-tresholds="legendData.rangeTresholds"
-          class="legend-bottom"
+        :label="legendData.label"
+        :no-trend-color="legendData.noTrendColor"
+        :color-tresholds="legendData.colorTresholds"
+        :range-tresholds="legendData.rangeTresholds"
+        class="legend-bottom"
         />
       </div>
     </div>
@@ -73,58 +73,68 @@
 </template>
 
 <script>
-import { bgoStore, fetcher, ns } from "@/models/bgo.js";
-import BubbleChart from "@/components/overview/BubbleChart";
-import Legend from "@/components/overview/Legend";
-import Totalizer from "@/components/Totalizer";
-import Tooltip from "@/components/overview/Tooltip";
-import StringFormatter from "@/components/StringFormatter.vue";
-import { debounce } from "lodash";
+  import { bgoStore, fetcher, ns } from "@/models/bgo.js";
+  import BubbleChart from "@/components/overview/BubbleChart";
+  import Legend from "@/components/overview/Legend";
+  import Totalizer from "@/components/Totalizer";
+  import Tooltip from "@/components/overview/Tooltip";
+  import StringFormatter from "@/components/StringFormatter.vue";
+  import { debounce } from "lodash";
 
-export default {
-  name: "overview",
-  components: {
-    BubbleChart,
-    Legend,
-    Totalizer,
-    Tooltip,
-    StringFormatter
-  },
-  props: {
-    partitionId: {
-      type: String,
-      default: "overview"
-    }
-  },
-  data() {
-    return {
-      activePartitionId: this.partitionId,
-      partitions: [],
-      searchPaneLabel: "",
-      search: null,
-      tags: [],
-      total: 0,
-      total_filtered: 0,
-      isNodeHovered: false,
-      hoveredNode: {},
-      legendData: {
-        label: "",
-        noTrendColor: "",
-        colorTresholds: [],
-        rangeTresholds: []
-      },
-      totalizer: {
-        totalPrintfTemplate: "",
-        minimalTotalPrintTemplate: ""
-      },
-      metadata: {
-        description: "",
-        abstract: null
+  export default {
+    name: "overview",
+    components: {
+      BubbleChart,
+      Legend,
+      Totalizer,
+      Tooltip,
+      StringFormatter
+    },
+    props: {
+      partitionId: {
+        type: String,
+        default: "overview"
       }
-    };
-  },
+    },
+    data() {
+      return {
+        activePartitionId: this.partitionId,
+        partitions: [],
+        searchPaneLabel: "",
+        search: null,
+        tags: [],
+        total: 0,
+        total_filtered: 0,
+        isNodeHovered: false,
+        hoveredNode: {},
+        legendData: {
+          label: "",
+          noTrendColor: "",
+          colorTresholds: [],
+          rangeTresholds: []
+        },
+        totalizerOptions: {
+          format : "",
+          filteredFormat : "",
+          precision : 0,
+          rateFormatter : {
+            format: "",
+            precision: 0,
+            scaleFactor: 0,
+            maxValue: 0,
+            minValue: 0,
+            moreThanMaxFormat: "",
+            lessThanMinFormat: ""
+          }
+        },
+        metadata: {
+          description: "",
+          abstract: null
+        }
+      };
+    },
 
-  beforeRouteUpdate(to, from, next) {
+    beforeRouteUpdate(to, from, next) {
     // Necessary when the component  si reused after a tag is cliked
     this.search = to.query.s || "";
     next();
@@ -193,7 +203,7 @@ function fetchData(app) {
     total_filtered: 0
   });
   const partitions = bgoStore.any(overview, ns.bgo("hasPartitionList"))
-    .elements;
+  .elements;
   //add other partitions
   //fetch partitions data
   for (const partition of partitions) {
@@ -201,14 +211,14 @@ function fetchData(app) {
     let label = bgoStore.anyValue(partition, ns.bgo("label"));
     let title = bgoStore.anyValue(partition, ns.bgo("title"));
     let sortOrder =
-      bgoStore.anyValue(partition, ns.bgo("sortOrder")) ||
-      ns.bgo("descending_sort").value;
+    bgoStore.anyValue(partition, ns.bgo("sortOrder")) ||
+    ns.bgo("descending_sort").value;
     let sortCriteria =
-      bgoStore.anyValue(partition, ns.bgo("sortCriteria")) ||
-      ns.bgo("abs_sort").value;
+    bgoStore.anyValue(partition, ns.bgo("sortCriteria")) ||
+    ns.bgo("abs_sort").value;
     let groupFunction =
-      bgoStore.anyValue(partition, ns.bgo("groupFunction")) ||
-      ns.bgo("amounts_sum").value;
+    bgoStore.anyValue(partition, ns.bgo("groupFunction")) ||
+    ns.bgo("amounts_sum").value;
 
     //fetch subset data
     let subsets_uris = bgoStore.each(partition, ns.bgo("hasAccountSubSet"));
@@ -218,7 +228,7 @@ function fetchData(app) {
     let defaultSubset = bgoStore.any(
       partition,
       ns.bgo("hasDefaultAccountSubSet")
-    );
+      );
     let subsetLabel;
     let subsetTitle;
     if (defaultSubset) {
@@ -280,33 +290,37 @@ function fetchData(app) {
   app.legendData.noTrendColor = bgoStore.anyValue(
     colorScheme,
     ns.bgo("noTrendColor")
-  );
- bgoStore.each(colorScheme, ns.bgo("rateTreshold"))
-            .sort((tresholdA, tresholdB) => {
-                let rateA=bgoStore.anyValue(tresholdA,ns.bgo("rate"));
-                let rateB=bgoStore.anyValue(tresholdB,ns.bgo("rate"));
-                return rateA-rateB;
-            })
-            .forEach(treshold => {
+    );
+  bgoStore.each(colorScheme, ns.bgo("rateTreshold"))
+  .sort((tresholdA, tresholdB) => {
+    let rateA=bgoStore.anyValue(tresholdA,ns.bgo("rate"));
+    let rateB=bgoStore.anyValue(tresholdB,ns.bgo("rate"));
+    return rateA-rateB;
+  })
+  .forEach(treshold => {
 
-                app.legendData.rangeTresholds.push(bgoStore.anyValue(treshold,ns.bgo("rate")));
-                app.legendData.colorTresholds.push(bgoStore.anyValue(treshold,ns.bgo("colorId")))
-                
-            })
-            console.log(app.legendData.rangeTresholds);
-            console.log(app.legendData.colorTresholds);
-            
+    app.legendData.rangeTresholds.push(bgoStore.anyValue(treshold,ns.bgo("rate")));
+    app.legendData.colorTresholds.push(bgoStore.anyValue(treshold,ns.bgo("colorId")))
+
+  });
+
 
   // Totalizer
   let totalizer = bgoStore.any(overview, ns.bgo("hasTotalizer"));
-  app.totalizer.totalPrintfTemplate = bgoStore.anyValue(
-    totalizer,
-    ns.bgo("totalPrintfTemplate")
-  );
-  app.totalizer.minimalTotalPrintTemplate = bgoStore.anyValue(
-    totalizer,
-    ns.bgo("minimalTotalPrintTemplate")
-  );
+  let rateFormatter = bgoStore.any(totalizer, ns.bgo("rateFormatter"));
+
+  app.totalizerOptions.format = bgoStore.anyValue(totalizer, ns.bgo("format"));
+  app.totalizerOptions.filteredFormat = bgoStore.anyValue(totalizer, ns.bgo("filteredFormat"));
+  app.totalizerOptions.precision = bgoStore.anyValue(totalizer, ns.bgo("precision"));
+
+  app.totalizerOptions.rateFormatter.format = bgoStore.anyValue(rateFormatter, ns.bgo("format"));
+  app.totalizerOptions.rateFormatter.precision = bgoStore.anyValue(rateFormatter, ns.bgo("precision"));
+  app.totalizerOptions.rateFormatter.scaleFactor = bgoStore.anyValue(rateFormatter, ns.bgo("scaleFactor"));
+  app.totalizerOptions.rateFormatter.maxValue = bgoStore.anyValue(rateFormatter, ns.bgo("maxValue"));
+  app.totalizerOptions.rateFormatter.minValue = bgoStore.anyValue(rateFormatter, ns.bgo("minValue"));
+  app.totalizerOptions.rateFormatter.moreThanMaxFormat = bgoStore.anyValue(rateFormatter, ns.bgo("moreThanMaxFormat"));
+  app.totalizerOptions.rateFormatter.lessThanMinFormat = bgoStore.anyValue(rateFormatter, ns.bgo("lessThanMinFormat"));
+  
 }
 </script>
 
@@ -323,8 +337,8 @@ function fetchData(app) {
   display: grid;
   grid-gap: 0.5em;
   grid-template-areas:
-    "part part search"
-    "meta chart tools";
+  "part part search"
+  "meta chart tools";
   grid-template-rows: 80px 1fr;
   grid-template-columns: 1fr 2fr 1fr;
 }
@@ -332,8 +346,8 @@ function fetchData(app) {
 /* Extends chart column to fill the screen */
 .content-grid.partitioned {
   grid-template-areas:
-    "part part search"
-    "chart chart chart";
+  "part part search"
+  "chart chart chart";
 }
 
 /* remove meta and tools columns when partioned */
@@ -359,89 +373,89 @@ function fetchData(app) {
 }
 /* .meta-description {
   overflow: auto;
-} */
+  } */
 
-.meta-abstract {
-}
+  .meta-abstract {
+  }
 
-.chart {
-  position: relative;
-  grid-area: chart;
-}
-.chart .tooltip {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-.tools {
-  grid-area: tools;
-  display: flex;
-  flex-direction: column;
-}
-.legend-bottom {
-  height: 80px;
-  margin-top: auto;
-}
-.tagcloud {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
+  .chart {
+    position: relative;
+    grid-area: chart;
+  }
+  .chart .tooltip {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .tools {
+    grid-area: tools;
+    display: flex;
+    flex-direction: column;
+  }
+  .legend-bottom {
+    height: 80px;
+    margin-top: auto;
+  }
+  .tagcloud {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 
-.tagcloud .tag {
-  text-decoration: none;
-  color: #919191;
-  width: auto;
-  margin: 0 0.2em;
-  text-align: center;
-  vertical-align: middle;
-}
-.tagcloud .tag:hover {
-  color: #6b6b6b;
-}
+  .tagcloud .tag {
+    text-decoration: none;
+    color: #919191;
+    width: auto;
+    margin: 0 0.2em;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .tagcloud .tag:hover {
+    color: #6b6b6b;
+  }
 
-/* Landscape phones to portrait tablets and desktop */
-@media (max-width: 979px) {
-  .content-grid {
-    grid-template-areas:
+  /* Landscape phones to portrait tablets and desktop */
+  @media (max-width: 979px) {
+    .content-grid {
+      grid-template-areas:
       "part part search"
       "meta chart chart";
 
-    grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .tools {
+      display: none;
+    }
   }
 
-  .tools {
-    display: none;
-  }
-}
-
-/* Landscape phones and down */
-@media (max-width: 768px) {
-  .container-fluid {
-    /* min-height: 120vh; */
-  }
-  .content-grid {
-    grid-template-areas:
+  /* Landscape phones and down */
+  @media (max-width: 768px) {
+    .container-fluid {
+      /* min-height: 120vh; */
+    }
+    .content-grid {
+      grid-template-areas:
       "part"
       "search"
       "meta"
       "chart";
 
-    grid-template-rows: auto auto auto 100vw;
-    grid-template-columns: 1fr;
-    grid-gap: 1.5em;
-  }
+      grid-template-rows: auto auto auto 100vw;
+      grid-template-columns: 1fr;
+      grid-gap: 1.5em;
+    }
 
-  .content-grid.partitioned {
-    grid-template-areas:
+    .content-grid.partitioned {
+      grid-template-areas:
       "part"
       "search"
       "chart";
-    grid-template-rows: 1fr 1fr auto;
-  }
+      grid-template-rows: 1fr 1fr auto;
+    }
 
-  .tools {
-    display: none;
+    .tools {
+      display: none;
+    }
   }
-}
 </style>

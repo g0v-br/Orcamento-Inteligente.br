@@ -6,13 +6,13 @@
       <v-icon v-on:click="$router.push('/overview')">mdi-close</v-icon>
     </v-system-bar>
     <div class="content-grid">
-      <div v-if="hasPerspective.metadata" class="metadata">
+      <div class="metadata">
         <Metadata :accountId="accountId" />
       </div>
-      <div v-if="hasPerspective.historical" class="bar">
+      <div v-if="historicRec!=undefined" class="bar">
         <BarChart :historic-rec="historicRec.records" :title="historicRec.title" />
       </div>
-      <div v-if="hasPerspective.breakDown" class="pie">
+      <div v-if="breakDown!=undefined" class="pie">
         <PieChart :breakdown="breakDown.records" :title="breakDown.title" :total="breakDown.total" />
       </div>
     </div>
@@ -39,11 +39,6 @@ export default {
   },
   data() {
     return {
-      hasPerspective: {
-        historical: false,
-        breakDown: false,
-        metadat: false
-      },
       historicRec: {
         title: "",
         records: []
@@ -62,58 +57,53 @@ export default {
 };
 
 let fetchData = app => {
-  let accountId = app.accountId;
-  let account = bgoStore.any(undefined, ns.bgo("accountId"), accountId);
-
+  const domain = bgoStore.any(null, ns.rdf("type"), ns.bgo("Domain"));
+  const accountVue = bgoStore.any(domain, ns.rdf("hasAccountVue"));
+  let account = bgoStore.any(undefined, ns.bgo("accountId"), app.accountId);
   app.title = bgoStore.anyValue(account, ns.bgo("title"));
-
-  //Metadata
-  let metadata_perspective = bgoStore.any(
-    account,
-    ns.bgo("usesMetadataPerspective")
-  );
-  if (!isNullOrUndefined(metadata_perspective))
-    app.hasPerspective.metadata = true;
 
   //Bar chart data
   let historical_perspective = bgoStore.any(
-    account,
-    ns.bgo("usesHistoricalPerspective")
+    accountVue,
+    ns.bgo("hasHistoricalPerspective")
   );
-  if (!isNullOrUndefined(historical_perspective))
-    app.hasPerspective.historical = true;
-
-  app.historicRec.title =
-    bgoStore.anyValue(historical_perspective, ns.bgo("title")) || "";
-  bgoStore.each(account, ns.bgo("hasHistoryRec")).forEach(rec => {
-    const version = bgoStore.anyValue(rec, ns.bgo("versionLabel"));
-    const amount = bgoStore.anyValue(rec, ns.bgo("amount"));
-    app.historicRec.records.push({ x: version, y: amount });
-  });
-  app.historicRec.records.sort((a, b) => {
-    return a.x.localeCompare(b.x);
-  });
+  if (isNullOrUndefined(historical_perspective)) {
+    app.historicRec = null;
+  } else {
+    app.historicRec.title =
+      bgoStore.anyValue(historical_perspective, ns.bgo("title")) || "";
+    bgoStore.each(account, ns.bgo("hasHistoryRec")).forEach(rec => {
+      const version = bgoStore.anyValue(rec, ns.bgo("versionLabel"));
+      const amount = bgoStore.anyValue(rec, ns.bgo("amount"));
+      app.historicRec.records.push({ x: version, y: amount });
+    });
+    app.historicRec.records.sort((a, b) => {
+      return a.x.localeCompare(b.x);
+    });
+  }
 
   //pie chart data
   let breakdown_perspective = bgoStore.any(
-    account,
-    ns.bgo("usesBreakdownPerspective")
+    accountVue,
+    ns.bgo("hasBreakdownPerspective")
   );
-  if (!isNullOrUndefined(breakdown_perspective))
-    app.hasPerspective.breakDown = true;
-  //pie chart title
-  app.breakDown.title =
-    bgoStore.anyValue(breakdown_perspective, ns.bgo("title")) || "";
-  //total amount
-  app.breakDown.total = parseFloat(
-    bgoStore.anyValue(account, ns.bgo("amount"))
-  );
-  //breakdown set
-  bgoStore.each(account, ns.bgo("hasBreakdown")).forEach(br => {
-    const title = bgoStore.anyValue(br, ns.bgo("title"));
-    const amount = bgoStore.anyValue(br, ns.bgo("amount"));
-    app.breakDown.records.push({ title, amount });
-  });
+  if (isNullOrUndefined(breakdown_perspective)) {
+    app.breakDown = null;
+  } else {
+    //pie chart title
+    app.breakDown.title =
+      bgoStore.anyValue(breakdown_perspective, ns.bgo("title")) || "";
+    //total amount
+    app.breakDown.total = parseFloat(
+      bgoStore.anyValue(account, ns.bgo("amount"))
+    );
+    //breakdown set
+    bgoStore.each(account, ns.bgo("hasBreakdown")).forEach(br => {
+      const title = bgoStore.anyValue(br, ns.bgo("title"));
+      const amount = bgoStore.anyValue(br, ns.bgo("amount"));
+      app.breakDown.records.push({ title, amount });
+    });
+  }
 };
 </script>
 

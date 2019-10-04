@@ -64,8 +64,9 @@ LODMAP2D functions are available from any recent browser by some routes managed 
 
 
 
-The optional parameter *s* allows filtering the displayed objects whose title,  description or id contains, even partially, match the parameter value.
+The optional parameter *s* allows filtering the displayed objects whose title, description or id contains, even partially, match the parameter value.
 
+LODMAP2D does not support the bgo:SubDomain concept
 
 ## Development
 
@@ -118,11 +119,11 @@ LODMAP2D is designed to dereference routes (i.e. the process of loading the data
 resource | payload
 ------- | -------------------
 *VUE_APP_LODMAP2D_DATA*/app.ttl | common application layout data.
-*VUE_APP_LODMAP2D_DATA*/account/*account_id*.ttl  | data for *account_id* account
 *VUE_APP_LODMAP2D_DATA*/partition/*partition_id*.ttl  | data for *partition_id* partition
 *VUE_APP_LODMAP2D_DATA*/credits.ttl | contains credits data 
 *VUE_APP_LODMAP2D_DATA*/terms.ttl | contains terms & conditions data 
-*VUE_APP_LODMAP2D_DATA*/accounts.ttl | contains an index of all accounts, including just information used to render account tooltips
+*VUE_APP_LODMAP2D_DATA*/accounts.ttl | contains data for ccount View and related perspective
+*VUE_APP_LODMAP2D_DATA*/account/*account_id*.ttl  | data for *account_id* account
 
 For an example of a endpoint see [LODMAP2D-api project](https://github.com/linkeddatacenter/LODMAP2D-api).
 

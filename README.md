@@ -33,8 +33,8 @@ docker run -d --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
 To build and run LODMAP2D container:
 
 ```bash
-docker build -t lodmap2d -f docker/Dockerfile .
-docker run -d --name lodmap2d -p 8080:80 lodmap2d
+docker build -t linkeddatacenter/lodmap2d -f docker/Dockerfile .
+docker run -d --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
 ```
 
 
@@ -106,33 +106,17 @@ You can override all files in the *public* directory :
 - index.html can be customized adding analytics snippets (e.g. Google Analytics), custom css, changing the title and other SEO related parameters.
 - the *favicon* and *logos* files can be customized as needed. The preview.png file is used as preview image in social network posts
 - IE_alert manages incompatible old browsers.
+- the file *config.js* that contains the rules for the data discovery. 
+- the file *data.ttl* that contains the ontology to be loaded by the default config.js. 
    
+**config.js file format:**
+
+LODMAP2D is designed to dereference routes (i.e. the process of loading the data related to a route)
 
 
-### Data customization
-
-LODMAP2D is designed to dereference routes (i.e. the process of loading the data related to a route) in two different modes, driven by the environment variable VUE_APP_LODMAP2D_DATA: 
-
-- if such variable does not exist or is empty,  loads data contained in the file /data.ttl ,
-- otherwise it assumes  that the variable VUE_APP_LODMAP2D_DATA contains an endpoint that provides the following resources serialized in RDF turtle:
-
-resource | payload
-------- | -------------------
-*VUE_APP_LODMAP2D_DATA*/app.ttl | common application layout data.
-*VUE_APP_LODMAP2D_DATA*/partition/*partition_id*.ttl  | data for *partition_id* partition
-*VUE_APP_LODMAP2D_DATA*/credits.ttl | contains credits data 
-*VUE_APP_LODMAP2D_DATA*/terms.ttl | contains terms & conditions data 
-*VUE_APP_LODMAP2D_DATA*/accounts.ttl | contains data for ccount View and related perspective
-*VUE_APP_LODMAP2D_DATA*/account/*account_id*.ttl  | data for *account_id* account
-
-For an example of a endpoint see [LODMAP2D-api project](https://github.com/linkeddatacenter/LODMAP2D-api).
-
-When the variable *VUE_APP_LODMAP2D_DATA* is undefined, it is also  possible to write custom configurations, for istance to sues as data provider RESTful APIs, LDP, SPARQL endpoints, etc., etc.
-To customize data dereferencing, modify the [config.js](config.js) file.
-
-The config.js file contains the rules  
-the rules that oversee the dereferencing of routes
-inspired by  [Apache mod_rewrite](https://httpd.apache.org/docs/current/rewrite/): the *dereferencingRules* array allows to map routes onto a set of web resources in any way you like.
+The config.js file contains  the rules that oversee the dereferencing of routes and it is 
+inspired by  [Apache mod_rewrite](https://httpd.apache.org/docs/current/rewrite/): the *window.__dereferencingRules* global array allows to map 
+routes onto a set of web resources in any way you like.
 
 A rewrite rule is composed of three attributes:
 
@@ -141,9 +125,8 @@ otherwise it is ignored
 - an array of strings (* targets *) where each element can contain references (with "$ 1", "$ 2" .. "$ n") to any groups present in the regexp.
 - an optional boolean value (*isLast*, default=false) that says if the elaboration of the rules must be considered concluded.
 
-The dref function in bgolib accepts a LODMAP2D route and evaluates the rewriting rules in sequence creating anarray of resource to be retrived by the rdflib fetcher object.
+The directory [docs/config-examples](docs/config-examples) contains some example of config.js files:
 
-In the * doc / config * directory you can find some possible config.js examples .
 
 ### Using docker to customize LOADMAP2D
 

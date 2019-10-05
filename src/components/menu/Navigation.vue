@@ -72,16 +72,18 @@ function fetchData(app) {
   let tabview = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("TableView"));
   //overview for navigation menu
   app.overview.title = bgoStore.any(overview, ns.bgo("label")).value;
-  app.overview.icon = "fas fa-atom";
+  app.overview.icon =  bgoStore.any(overview, ns.bgo("icon")).value;
   app.overview.path = "/";
   //partitions
-  let partitionList = bgoStore.any(overview, ns.bgo("hasPartitionList"));
-  app.partition.title = "Partitions";
+  let partitionNode = bgoStore.any(overview, ns.bgo("hasPartitions"));
+  let partitionList=bgoStore.any(partitionNode, ns.bgo("hasPartitionList"));
+  app.partition.title = bgoStore.any(partitionNode, ns.bgo("label")).value;
+  app.partition.icon = bgoStore.any(partitionNode, ns.bgo("icon")).value;
   app.partition.partitionList = [];
   if (partitionList && partitionList.elements.length != 0) {
     partitionList.elements.forEach(el => {
       app.partition.partitionList.push({
-        title: bgoStore.any(el, ns.bgo("label")).value,
+        title: bgoStore.anyValue(el, ns.bgo("label")),
         path: "/partition/" + bgoStore.any(el, ns.bgo("partitionId")).value
       });
     });

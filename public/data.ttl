@@ -68,11 +68,15 @@ resource:overview a bgo:Overview ;
     bgo:label "Stato" ; 
     bgo:icon "fas fa-atom" ;
     bgo:title "Overview" ;
-    
-    bgo:hasPartitionList (
-        resource:p1
-        resource:p2
-    );
+    bgo:hasPartitions [
+		# a bgo:Partitins ;
+		bgo:icon "fas fa-atom" ;
+		bgo:label "Partitions";
+	    bgo:hasPartitionList (
+	        resource:p1
+	        resource:p2
+	    )
+    ];
 
     bgo:hasTrendColorScheme resource:trend_color_scheme ;
     bgo:hasTotalizer resource:filtered_total_formatter ;

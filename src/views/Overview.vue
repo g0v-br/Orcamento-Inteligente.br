@@ -202,8 +202,8 @@ function fetchData(app) {
     total: 0,
     total_filtered: 0
   });
-  const partitions = bgoStore.any(overview, ns.bgo("hasPartitionList"))
-  .elements;
+  const partitionsNode = bgoStore.any(overview, ns.bgo("hasPartitions"));
+  const partitions = bgoStore.any(partitionsNode, ns.bgo("hasPartitionList")).elements;
   //add other partitions
   //fetch partitions data
   for (const partition of partitions) {

@@ -5,7 +5,7 @@
       <div><p class="description">{{node.description}}</p></div>
     </div>
     <div class="row">
-      <div><p class="amount">{{printf(totalizer.minimalTotalPrintTemplate, formatAmount(node.amount))}}</p></div>
+      <div><p class="amount">{{printf(options.format, formatAmount(node.amount, options.precision))}}</p></div>
       <Rate :rate="node.rate" :show_icon="true" />
     </div>
   </v-sheet>
@@ -18,7 +18,7 @@ export default {
   name: "tooltip",
   props: {
     node: Object,
-    totalizer: Object
+    options: Object
   },
   components: {
     Rate

@@ -1,23 +1,17 @@
-export const formatPercentage = (rate, precisionTreshold = 0.00005) => {
+export const formatPercentage = (rate, precision = 2) => {
     if (isFinite(rate)) {
         if (rate == 0)
             return "0%";
-        if (Math.abs(rate) < precisionTreshold) {
-            return new Intl.NumberFormat(undefined, {
-                style: "percent",
-                maximumSignificantDigits: 2
-            }).format(rate)
-        }
         return new Intl.NumberFormat(undefined, {
             style: "percent",
-            maximumFractionDigits: 2
+            maximumFractionDigits: precision
         }).format(rate)
     }
     return "N/A";
 }
 
-export const formatAmount = (amount) => {
-    return new Intl.NumberFormat({ maximumFractionDigits: 2 }).format(
+export const formatAmount = (amount, precision = 2) => {
+    return new Intl.NumberFormat({ maximumFractionDigits: precision }).format(
         amount
     )
 }

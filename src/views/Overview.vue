@@ -39,13 +39,13 @@
         @nodeover="onNodeOver"
         @nodeout="isNodeHovered = false"
         ></BubbleChart>
-        <!-- <Tooltip
+        <Tooltip
         v-if="isNodeHovered"
-        :totalizer="totalizer"
+        :options="tooltipOptions"
         :node="hoveredNode"
         :style="{top: hoveredNode.top+'px', left:hoveredNode.left+'px'}"
         class="tooltip"
-        /> -->
+        />
       </div>
 
       <div class="tools">
@@ -119,6 +119,21 @@
           precision : 0,
           rateFormatter : {
             format: "",
+            precision: 0,
+            scaleFactor: 0,
+            maxValue: 0,
+            minValue: 0,
+            moreThanMaxFormat: "",
+            lessThanMinFormat: ""
+          }
+        },
+        tooltipOptions: {
+          format : "",
+          filteredFormat : "",
+          precision : 0,
+          rateFormatter : {
+            format: "",
+            nanFormat: "",
             precision: 0,
             scaleFactor: 0,
             maxValue: 0,
@@ -321,6 +336,23 @@ function fetchData(app) {
   app.totalizerOptions.rateFormatter.moreThanMaxFormat = bgoStore.anyValue(rateFormatter, ns.bgo("moreThanMaxFormat"));
   app.totalizerOptions.rateFormatter.lessThanMinFormat = bgoStore.anyValue(rateFormatter, ns.bgo("lessThanMinFormat"));
   
+  //tooltip
+  let tooltip = bgoStore.any(overview, ns.bgo("hasTooltip"));
+  let amountFormatter = bgoStore.any(tooltip, ns.bgo("amountFormatter"));
+  rateFormatter = bgoStore.any(tooltip, ns.bgo("trendFormatter"));
+
+  app.tooltipOptions.format = bgoStore.anyValue(amountFormatter, ns.bgo("format"));
+  app.tooltipOptions.precision = bgoStore.anyValue(amountFormatter, ns.bgo("precision"));
+
+  app.tooltipOptions.rateFormatter.format = bgoStore.anyValue(rateFormatter, ns.bgo("format"));
+  app.tooltipOptions.rateFormatter.nanFormat = bgoStore.anyValue(rateFormatter, ns.bgo("nanFormat"));
+  app.tooltipOptions.rateFormatter.scaleFactor = bgoStore.anyValue(rateFormatter, ns.bgo("scaleFactor"));
+  app.tooltipOptions.rateFormatter.precision = bgoStore.anyValue(rateFormatter, ns.bgo("precision"));
+  app.tooltipOptions.rateFormatter.maxValue = bgoStore.anyValue(rateFormatter, ns.bgo("maxValue"));
+  app.tooltipOptions.rateFormatter.minValue = bgoStore.anyValue(rateFormatter, ns.bgo("minValue"));
+  app.tooltipOptions.rateFormatter.moreThanMaxFormat = bgoStore.anyValue(rateFormatter, ns.bgo("moreThanMaxFormat"));
+  app.tooltipOptions.rateFormatter.lessThanMinFormat = bgoStore.anyValue(rateFormatter, ns.bgo("lessThanMinFormat"));
+
 }
 </script>
 

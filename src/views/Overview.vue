@@ -35,6 +35,7 @@
         :active-partition-id="activePartitionId"
         :partitions="partitions"
         :search="search"
+        :totOption="totalizerOptions"
         @total_changed="onTotalChanged"
         @nodeover="onNodeOver"
         @nodeout="isNodeHovered = false"
@@ -335,7 +336,7 @@ function fetchData(app) {
   app.totalizerOptions.rateFormatter.minValue = bgoStore.anyValue(rateFormatter, ns.bgo("minValue"));
   app.totalizerOptions.rateFormatter.moreThanMaxFormat = bgoStore.anyValue(rateFormatter, ns.bgo("moreThanMaxFormat"));
   app.totalizerOptions.rateFormatter.lessThanMinFormat = bgoStore.anyValue(rateFormatter, ns.bgo("lessThanMinFormat"));
-  
+ 
   //tooltip
   let tooltip = bgoStore.any(overview, ns.bgo("hasTooltip"));
   let amountFormatter = bgoStore.any(tooltip, ns.bgo("amountFormatter"));

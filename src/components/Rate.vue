@@ -20,31 +20,34 @@ export default {
   },
   data() {
     return {
-      color: "",
-      icon: "",
+      noTrendColor:"",
       rangeTresholds: [],
       colorTresholds: []
     };
+  },
+  computed: {
+    icon() {
+      if (this.rate < 0) return "mdi-trending-down";
+      if (this.rate > 0) return "mdi-trending-up";
+      if (this.rate == 0) return "mdi-equal";
+    },
+    color() {
+      let fill = scaleLinear()
+        .domain(this.rangeTresholds)
+        .range(this.colorTresholds)
+        .clamp(true);
+      if (isFinite(this.rate)) {
+        return fill(this.rate);
+      } else {
+        return this.noTrendColor;
+      }
+    }
   },
   methods: {
     formatPercentage
   },
   created() {
     fetchData(this);
-    //set icon
-    if (this.rate == 0) this.icon = "mdi-equal";
-    if (this.rate < 0) this.icon = "mdi-trending-down";
-    if (this.rate > 0) this.icon = "mdi-trending-up";
-    //set color
-    let fill = scaleLinear()
-      .domain(this.rangeTresholds)
-      .range(this.colorTresholds)
-      .clamp(true);
-    if (isFinite(this.rate)) {
-      this.color = fill(this.rate);
-    } else {
-      this.color = this.noTrendColor;
-    }
   }
 };
 
@@ -53,17 +56,16 @@ let fetchData = app => {
   // Colore schema
   const colorScheme = bgoStore.any(overview, ns.bgo("hasTrendColorScheme"));
   app.noTrendColor = bgoStore.anyValue(colorScheme, ns.bgo("noTrendColor"));
-      bgoStore.each(colorScheme, ns.bgo("rateTreshold"))
-            .sort((tresholdA, tresholdB) => {
-                let rateA=bgoStore.anyValue(tresholdA,ns.bgo("rate"));
-                let rateB=bgoStore.anyValue(tresholdB,ns.bgo("rate"));
-                return rateA-rateB;
-            })
-            .forEach(treshold => {
-
-                app.rangeTresholds.push(bgoStore.anyValue(treshold,ns.bgo("rate")));
-                app.colorTresholds.push(bgoStore.anyValue(treshold,ns.bgo("colorId")))
-            })
-
+  bgoStore
+    .each(colorScheme, ns.bgo("rateTreshold"))
+    .sort((tresholdA, tresholdB) => {
+      let rateA = bgoStore.anyValue(tresholdA, ns.bgo("rate"));
+      let rateB = bgoStore.anyValue(tresholdB, ns.bgo("rate"));
+      return rateA - rateB;
+    })
+    .forEach(treshold => {
+      app.rangeTresholds.push(bgoStore.anyValue(treshold, ns.bgo("rate")));
+      app.colorTresholds.push(bgoStore.anyValue(treshold, ns.bgo("colorId")));
+    });
 };
 </script>

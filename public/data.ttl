@@ -69,7 +69,7 @@ resource:overview a bgo:Overview ;
     bgo:icon "fas fa-atom" ;
     bgo:title "Overview" ;
     bgo:hasPartitions [
-		# a bgo:Partitins ;
+		# a bgo:Partitions ;
 		bgo:icon "fas fa-atom" ;
 		bgo:label "Partitions";
 	    bgo:hasPartitionList (

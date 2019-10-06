@@ -1,11 +1,14 @@
 <template>
   <div id="container" class="cds-container">
     <h4>{{title}}</h4>
+    <template v-if="breakdown.length!=0">
     <svg class="chart js-chart pie-chart" />
     <div class="detail">
       <p class="desc">{{ bd_title }}</p>
       <Totalizer :total="bd_amount" :filtered="bd_filtered" :options="totalizerOptions" />
     </div>
+    </template>
+    <p class="dataError" v-else>Breakdown data not aviable</p>
   </div>
 </template>
 <script>
@@ -171,6 +174,7 @@ export default {
     };
   },
   mounted() {
+    if(this.breakdown.length!=0){
     computeBoundaries();
     drowPieChart(this);
     updateDetail(this, -1);
@@ -182,6 +186,7 @@ export default {
       centerPieChart(this);
     }, 200);
     window.addEventListener("resize", debouncedUpdate);
+    }
   },
   beforeDestroy() {
     window.removeEventListener("resize", debouncedUpdate);
@@ -191,6 +196,9 @@ export default {
 
 </script>
 <style>
+p.dataError{
+  color: red;
+}
 .selected {
   stroke-width: 2 !important;
   opacity: 0.5;

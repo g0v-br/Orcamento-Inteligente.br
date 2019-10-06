@@ -1,6 +1,8 @@
 <template>
   <div class="content">
-    <canvas ref="canvas"></canvas>
+    <h4>{{title}}</h4>
+    <canvas v-if="historicRec.length!=0" ref="canvas"></canvas>
+    <p class="dataError" v-else>Historic data not aviable</p>
   </div>
 </template>
 
@@ -17,60 +19,60 @@ export default {
     }
   },
   mounted() {
-    let color = Chart.helpers.color;
-    let ctx = this.$refs.canvas.getContext("2d");
+    if (this.historicRec.length != 0) {
+      let color = Chart.helpers.color;
+      let ctx = this.$refs.canvas.getContext("2d");
 
-    let data = this.historicRec.map(rec => {
-      return Number(rec.y);
-    });
+      let data = this.historicRec.map(rec => {
+        return Number(rec.y);
+      });
 
-    let labels = this.historicRec.map(rec => {
-      return rec.x;
-    });
+      let labels = this.historicRec.map(rec => {
+        return rec.x;
+      });
 
-    let maxAmount = data.reduce((max, curr) => {
-      return max > curr ? max : curr;
-    }, 0);
+      let maxAmount = data.reduce((max, curr) => {
+        return max > curr ? max : curr;
+      }, 0);
 
-    let chartData = {
-      labels,
-      datasets: [
-        {
-          data,
-          backgroundColor: color("#1976D2")
-            .alpha(0.5)
-            .rgbString(),
-          borderColor: "#1976D2",
-          borderWidth: 1
-        }
-      ]
-    };
-
-    let barCahrt = new Chart(ctx, {
-      type: "bar",
-      data: chartData,
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        legend: {
-          display: false
-        },
-        title: {
-          display: true,
-          text: this.title
-        },
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                suggestedMin: 0,
-                suggestedMax: maxAmount + 1
+      let chartData = {
+        labels,
+        datasets: [
+          {
+            data,
+            backgroundColor: color("#1976D2")
+              .alpha(0.5)
+              .rgbString(),
+            borderColor: "#1976D2",
+            borderWidth: 1
+          }
+        ]
+      };
+      let barCahrt = new Chart(ctx, {
+        type: "bar",
+        data: chartData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          legend: {
+            display: false
+          },
+          title: {
+            display: false
+          },
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  suggestedMin: 0,
+                  suggestedMax: maxAmount + 1
+                }
               }
-            }
-          ]
+            ]
+          }
         }
-      }
-    });
+      });
+    }
   }
 };
 </script>
@@ -84,5 +86,8 @@ export default {
 canvas {
   height: 100%;
   width: 100%;
+}
+p.dataError{
+  color: red;
 }
 </style>

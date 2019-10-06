@@ -11,58 +11,44 @@
       <StringFormatter :string="abstract" />
     </div>
     <div class="numbers">
-      {{total}}
+      {{amount}}
       <Rate class="rate" :rate="rate" :show_icon="true"/>
     </div>
   </div>
 </template>
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
-import Totalizer from "@/components/Totalizer";
+import {numberFormatter} from "@/utils/utils.js"
 import StringFormatter from "@/components/StringFormatter";
 import Rate from "@/components/Rate";
 export default {
   components: {
-    Totalizer,
     StringFormatter,
     Rate
   },
   props: {
+    title: Object,
+    description: Object,
+    abstract:Object,
+    total: String,
+    rate:Number,
     accountId: {
       type: String,
       default: ""
     },
-    totalizerOptions:{
+    formatterOptions:{
       type: Object
     }
   },
-  data() {
-    return {
-      title: undefined,
-      description: undefined,
-      abstract: undefined,
-      total: "",
-      rate: ""
-    };
-  },
-  created() {
-    fetchData(this);
+  computed:{
+    amount(){
+      return numberFormatter(this.total,this.formatterOptions)
+    }
   },
 
 };
 
-let fetchData = app => {
-  let accountId = app.accountId;
-  let account = bgoStore.any(undefined, ns.bgo("accountId"), accountId);
-  app.title = bgoStore.any(account, ns.bgo("title")) || { value: accountId };
-  app.description = bgoStore.any(account, ns.bgo("description")) || {
-    value: ""
-  };
-  app.abstract = bgoStore.any(account, ns.bgo("abstract")) || { value: "" };
-  app.total = bgoStore.anyValue(account, ns.bgo("amount"));
-  let reference = bgoStore.anyValue(account, ns.bgo("referenceAmount"));
-  app.rate = (app.total - reference) / reference;
-};
+  
 </script>
 <style scoped>
 .metadata {

@@ -7,13 +7,24 @@
     </v-system-bar>
     <div class="content-grid">
       <div class="metadata">
-        <Metadata :accountId="accountId"  />
+        <Metadata :accountId="accountId"
+        :title="title"
+        :description="description"
+        :abstract="abstract"
+        :total="total"
+        :rate="rate"
+         :formatterOptions="formatterOptions" />
       </div>
-      <div v-if="historicRec!=undefined" class="bar">
+      <div v-if="historicRec!=undefined " class="bar">
         <BarChart :historic-rec="historicRec.records" :title="historicRec.title" />
       </div>
       <div v-if="breakDown!=undefined" class="pie">
-        <PieChart :breakdown="breakDown.records" :title="breakDown.title" :total="breakDown.total" :totalizerOptions="totalizerOptions"/>
+        <PieChart
+          :breakdown="breakDown.records"
+          :title="breakDown.title"
+          :total="breakDown.total"
+          :totalizerOptions="totalizerOptions"
+        />
       </div>
     </div>
   </div>
@@ -48,7 +59,11 @@ export default {
         records: [],
         total: 0
       },
-      title: "",
+      title: {},
+      description:{},
+      abstract:{},
+      total: 0,
+      rate:0,
       totalizerOptions:{
                   format: "",
           filteredFormat: "",
@@ -62,6 +77,10 @@ export default {
             moreThanMaxFormat: "",
             lessThanMinFormat: ""
           }
+      },
+      formatterOptions:{
+        format:"",
+        precision:0
       }
     };
   },
@@ -74,8 +93,22 @@ let fetchData = app => {
   const domain= bgoStore.any(undefined,ns.bgo("hasAccountView"))
   const accountView = bgoStore.any(domain, ns.bgo("hasAccountView"));
   let account = bgoStore.any(undefined, ns.bgo("accountId"), app.accountId);
-  app.title = bgoStore.anyValue(account, ns.bgo("title"));
-
+  //metadata fetch data
+  app.title = bgoStore.any(account, ns.bgo("title")) ||  bgoStore.any(account, ns.bgo("accountId"));
+  app.description = bgoStore.any(account, ns.bgo("description")) || {
+    value: "",
+    datatype: "litteral"
+  };
+  app.abstract = bgoStore.any(account, ns.bgo("abstract")) || {
+    value: "",
+    datatype: "litteral"
+  };;
+  app.total = bgoStore.anyValue(account, ns.bgo("amount"));
+  let reference = bgoStore.anyValue(account, ns.bgo("referenceAmount"));
+  app.rate = (app.total - reference) / reference;
+  let metadataNumberFormatter=bgoStore.any(accountView,ns.bgo("amountFormatter"));
+  app.formatterOptions.format=bgoStore.anyValue(metadataNumberFormatter,ns.bgo("format"))||"";
+  app.formatterOptions.precision=bgoStore.anyValue(metadataNumberFormatter,ns.bgo("precision"))||0;
   //Bar chart data
   let historical_perspective = bgoStore.any(
     accountView,

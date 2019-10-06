@@ -17,7 +17,6 @@ export default {
   },
   computed: {
     display() {
-      console.log(this.options)
       let text, data;
       let rate;
 
@@ -34,10 +33,6 @@ export default {
           precision: this.options.precision,
           format: this.options.filteredFormat
         });
-
-        console.log("TOTAL: ", this.total);
-        console.log("AMOUNT: ", this.filtered);
-        console.log(this.options.rateFormatter.scaleFactor)
         text = text + numberFormatter(rate, this.options.rateFormatter);
       }
 

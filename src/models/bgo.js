@@ -34,9 +34,8 @@ export function getDefaultMenuItems(parent) {
 
 
 export function dref(uri) {
-	const rules = window.__dereferencingRules;
-	const results = [];
-	for (const rule of rules) {
+	let results = [];
+	for (const rule of window.__dereferencingRules) {
 		const re = RegExp(rule.regexp);
 		if (re.test(uri)) {
 			rule.targets.forEach(target => {
@@ -49,5 +48,5 @@ export function dref(uri) {
 		}
 	}
 
-	return results || uri ;
+	return results.length?results:uri;
 }

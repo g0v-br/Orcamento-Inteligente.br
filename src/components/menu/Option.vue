@@ -31,7 +31,7 @@ export default {
   }
 }
 function fetchData(app){
-    let domain = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("Domain"));
+    let domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
     let optionMenu=bgoStore.any(domain, ns.bgo("hasOptionMenu"));
     app.optionItems = getDefaultMenuItems(optionMenu);
 }

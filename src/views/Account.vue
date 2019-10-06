@@ -58,13 +58,13 @@ export default {
 
 let fetchData = app => {
   const domain = bgoStore.any(null, ns.rdf("type"), ns.bgo("Domain"));
-  const accountVue = bgoStore.any(domain, ns.rdf("hasAccountVue"));
+  const accountView = bgoStore.any(domain, ns.bgo("hasAccountView"));
   let account = bgoStore.any(undefined, ns.bgo("accountId"), app.accountId);
   app.title = bgoStore.anyValue(account, ns.bgo("title"));
 
   //Bar chart data
   let historical_perspective = bgoStore.any(
-    accountVue,
+    accountView,
     ns.bgo("hasHistoricalPerspective")
   );
   if (isNullOrUndefined(historical_perspective)) {
@@ -84,7 +84,7 @@ let fetchData = app => {
 
   //pie chart data
   let breakdown_perspective = bgoStore.any(
-    accountVue,
+    accountView,
     ns.bgo("hasBreakdownPerspective")
   );
   if (isNullOrUndefined(breakdown_perspective)) {

@@ -53,7 +53,7 @@ export default {
 };
 
 function fetchData(app) {
-  let domain = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("Domain"));
+  let domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
   //if domain doesn't exist go to error page
   if (!domain) {
     app.$router.push("error");

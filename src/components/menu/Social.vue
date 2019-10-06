@@ -111,7 +111,6 @@ export default {
   },
   mounted() {
     fetchData(this);
-  console.log(this.$el);
   }
 };
 function fetchData(app){

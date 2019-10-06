@@ -1,10 +1,3 @@
 (function (window) {
-	let namespace = "http://localhost:8000";
-	
-	window.__dereferencingRules = [
-		{ "regexp": ".*", "targets": [`${namespace}/app.ttl`] },
-		{ "regexp": ".*/partition/(\\w+)$", "targets": [`${namespace}/partitions.ttl`], "isLast": true  },
-		{ "regexp": ".*/account/(\\w+)$", "targets": [`${namespace}/accounts.ttl`,`${namespace}/account/$1.ttl`], "isLast": true },
-		{ "regexp": ".*/(credits|terms)$", "targets": [`${namespace}/$1.ttl`], "isLast": true },
-	] ;
+    window.__dereferencingRules = [{ "regexp": ".*", "targets": ["http://localhost:8080/data.ttl"], "isLast": true }] ;
 }(this));

@@ -33,15 +33,14 @@ export function getDefaultMenuItems(parent) {
 }
 
 
-export function dref(uri, rules = window.__dereferencingRules) {
+export function dref(uri) {
 	const results = [];
-	// default match
-	rules.push({ "regexp": uri, "targets": [uri] })
-	for (const rule of rules) {
+	for (const rule of window.__dereferencingRules) {
 		const re = RegExp(rule.regexp);
 		if (re.test(uri)) {
 			rule.targets.forEach(target => {
-				results.push(uri.replace(re, target));
+				let replacedTarget = uri.replace(re, target)
+				results.push(replacedTarget);
 			});
 
 			if (rule.isLast) {
@@ -50,5 +49,5 @@ export function dref(uri, rules = window.__dereferencingRules) {
 		}
 	}
 
-	return results;
+	return results.length?results:uri;
 }

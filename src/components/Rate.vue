@@ -52,18 +52,18 @@ export default {
 };
 
 let fetchData = app => {
-  const overview = bgoStore.any(null, ns.rdf("type"), ns.bgo("Overview"));
+  const domain= bgoStore.any(undefined,ns.bgo("hasOverview"))
+  const overview = bgoStore.any(domain, ns.bgo("hasOverview"));
   // Colore schema
   const colorScheme = bgoStore.any(overview, ns.bgo("hasTrendColorScheme"));
   app.noTrendColor = bgoStore.anyValue(colorScheme, ns.bgo("noTrendColor"));
-  bgoStore
-    .each(colorScheme, ns.bgo("rateTreshold"))
-    .sort((tresholdA, tresholdB) => {
+  let legend=bgoStore.each(colorScheme, ns.bgo("rateTreshold"))
+  legend.sort((tresholdA, tresholdB) => {
       let rateA = bgoStore.anyValue(tresholdA, ns.bgo("rate"));
       let rateB = bgoStore.anyValue(tresholdB, ns.bgo("rate"));
       return rateA - rateB;
     })
-    .forEach(treshold => {
+   legend.forEach(treshold => {
       app.rangeTresholds.push(bgoStore.anyValue(treshold, ns.bgo("rate")));
       app.colorTresholds.push(bgoStore.anyValue(treshold, ns.bgo("colorId")));
     });

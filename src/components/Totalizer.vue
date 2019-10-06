@@ -27,14 +27,16 @@ export default {
         if (Math.abs(rate) < this.options.rateFormatter.minValue)
           text = text + this.options.rateFormatter.lessThanMinFormat;
         else {
-          rate = formatPercentage(rate, options.rateFormatter.precision);
+          rate = formatPercentage(rate, this.options.rateFormatter.precision);
           text = text + this.options.rateFormatter.format.replace("%s", rate);
         }
       }
 
       return text;
     }
-  }
+  },
+  
+
 };
 </script>
 

@@ -11,7 +11,7 @@
       <StringFormatter :string="abstract" />
     </div>
     <div class="numbers">
-      <Totalizer :total="total" />
+      {{total}}
       <Rate class="rate" :rate="rate" :show_icon="true"/>
     </div>
   </div>
@@ -31,6 +31,9 @@ export default {
     accountId: {
       type: String,
       default: ""
+    },
+    totalizerOptions:{
+      type: Object
     }
   },
   data() {

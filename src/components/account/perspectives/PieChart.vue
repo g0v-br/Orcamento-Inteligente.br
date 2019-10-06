@@ -4,7 +4,7 @@
     <svg class="chart js-chart pie-chart" />
     <div class="detail">
       <p class="desc">{{ bd_title }}</p>
-      <Totalizer :total="bd_amount" :filtered="bd_filtered"/>
+      <Totalizer :total="bd_amount" :filtered="bd_filtered" :options="totalizerOptions" />
     </div>
   </div>
 </template>
@@ -17,9 +17,9 @@ import _debounce from "lodash/debounce";
 let cdsSpeed = 4000;
 let currentElement = 0;
 let intervalID;
-let width; 
-let height; 
-let outerRadius; 
+let width;
+let height;
+let outerRadius;
 let innerRadius;
 let slices;
 let debouncedUpdate;
@@ -36,53 +36,52 @@ let updateDetail = function(context, overed_index) {
   context.bd_title = slices[currentElement].__data__.data.title;
   currentElement = (currentElement + 1) % slices.length;
 };
-//TO DO MAKE RESPONSIVE
 const computeBoundaries = function() {
   let container = d3.select("#container")._groups[0][0];
   width = container.offsetWidth;
-  height= container.offsetHeight;
+  height = container.offsetHeight;
 
-  outerRadius = (Math.min(width,height) - (Math.min(width,height) * 25) / 100) / 2;
+  outerRadius =
+    (Math.min(width, height) - (Math.min(width, height) * 25) / 100) / 2;
   innerRadius = outerRadius - 70;
   height = 2 * outerRadius;
 };
-const drowPieChart =function(context){
-    let chart_obj = pieChart()
-      .outerRadius(outerRadius)
-      .innerRadius(innerRadius);
-    let svg = d3
-      .select(".js-chart")
-      .attr("width", width)
-      .attr("height", height);
-    let domPieChart = svg
-      .append("g")
-      .attr("class", "pie-chart")
-      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-      .call(chart_obj.data(context.breakdown));
-    domPieChart.call(chart_obj.data(context.breakdown));
-    //UPDATE CDS DETAIL
-    slices = d3.selectAll(".slice")._groups[0];
-    d3.selectAll(".slice")
-      .on("mouseenter", (actual, i) => {
-        window.clearInterval(intervalID);
-        updateDetail(context, i);
-      })
-      .on("mouseleave", () => {
-        intervalID = window.setInterval(() => {
-          updateDetail(context, -1);
-        }, cdsSpeed);
-      });
-}
-const centerPieChart = function(){
-  let chart = d3
-      .select("g")
+const drowPieChart = function(context) {
+  let chart_obj = pieChart()
+    .outerRadius(outerRadius)
+    .innerRadius(innerRadius);
   let svg = d3
-      .select(".js-chart")
-      .attr("width", width)
-      .attr("height", height);
+    .select(".js-chart")
+    .attr("width", width)
+    .attr("height", height);
+  let domPieChart = svg
+    .append("g")
+    .attr("class", "pie-chart")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+    .call(chart_obj.data(context.breakdown));
+  domPieChart.call(chart_obj.data(context.breakdown));
+  //UPDATE CDS DETAIL
+  slices = d3.selectAll(".slice")._groups[0];
+  d3.selectAll(".slice")
+    .on("mouseenter", (actual, i) => {
+      window.clearInterval(intervalID);
+      updateDetail(context, i);
+    })
+    .on("mouseleave", () => {
+      intervalID = window.setInterval(() => {
+        updateDetail(context, -1);
+      }, cdsSpeed);
+    });
+};
+const centerPieChart = function() {
+  let chart = d3.select("g");
+  let svg = d3
+    .select(".js-chart")
+    .attr("width", width)
+    .attr("height", height);
 
-  chart.attr("transform","translate(" + (width / 2) +"," + (height / 2) +")");
-}
+  chart.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+};
 function pieChart(options) {
   var animationDuration = 750,
     color = d3.scaleOrdinal(d3.schemeCategory10),
@@ -143,25 +142,27 @@ function pieChart(options) {
   };
   return pieChart;
 }
-
-//---------------------------------------------------------
 export default {
-  props: { 
+  props: {
     breakdown: {
       type: Array
     },
+
     title: {
       type: String,
       default: "Bar chart"
     },
-    total:{
+    total: {
       type: Number,
-      default:""
+      default: ""
+    },
+    totalizerOptions:{
+      type: Object
     }
-   },
+  },
   components: {
     Totalizer
-  }, 
+  },
   data() {
     return {
       bd_title: undefined,
@@ -169,7 +170,6 @@ export default {
       bd_amount: 0
     };
   },
-
   mounted() {
     computeBoundaries();
     drowPieChart(this);
@@ -181,14 +181,14 @@ export default {
       computeBoundaries();
       centerPieChart(this);
     }, 200);
-     window.addEventListener("resize", debouncedUpdate);
-
+    window.addEventListener("resize", debouncedUpdate);
   },
   beforeDestroy() {
     window.removeEventListener("resize", debouncedUpdate);
     window.clearInterval(intervalID);
   }
 };
+
 </script>
 <style>
 .selected {
@@ -199,7 +199,7 @@ export default {
   stroke-width: 0.3;
   stroke: black;
 }
-.cds-desc{
+.cds-desc {
   overflow: auto;
 }
 .cds-container {

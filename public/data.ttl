@@ -19,7 +19,7 @@
     bgo:abstract "These are **demo data** without a real meaning."^^bgo:MDString ;
 
     # add an item to default navigation menu
-    bgo:hasNavigationMenu [
+    bgo:hasNavigationMenu [ 
     	# a bgo:NavigationMenu ;
     	bgo:withCustomMenuItems (
     		[
@@ -28,7 +28,7 @@
 				bgo:title "reference implementation..." ;
 				bgo:link <https://github.com/linkeddatacenter/LODMAP2D>
 			]
-		)
+		) 	
     ] ;
 
     # Use the Option menu with two external links
@@ -73,7 +73,7 @@
 
     # This should be used if copyright is not present
     bgo:hasCopyrigth "(c) [LinkedData.Center](http://linkeddata.center)"^^bgo:MDString ;
-
+    
     bgo:hasOverview :overview ;
     bgo:hasTableView :table_view ;
     bgo:hasCredits :credits_page ;
@@ -90,7 +90,7 @@
     bgo:amountFormatter :amount_formatter;
     bgo:referenceFormatter :amount_formatter;
     bgo:trendFormatter :trend_formatter;
-
+    
 	bgo:hasHistoricalPerspective [
 		# a bgo:HistoricalPerspective ;
 		bgo:title "Storico dell'azione" ;
@@ -99,7 +99,8 @@
 	bgo:hasBreakdownPerspective [
 		# a bgo:BreakdownPerspective ;
 		bgo:title "Dettaglio capitoli di spesa" ;
-	    bgo:amountFormatter :smart_formatter
+	    bgo:amountFormatter :smart_formatter;
+	    bgo:hasTotalizer :filtered_total_formatter ;
 	]
 .
 
@@ -109,24 +110,24 @@
 	bgo:precision 2 ;
 .
 
-:smart_formatter
+:smart_formatter 
 	# a bgo:NumberFormatter ;
 	bgo:format "€ %s"^^bgo:Template  ;
 	bgo:precision 0 ;
 	bgo:maxValue 999999999.99 ;
-	bgo:minValue 0.005 ;
+	bgo:minValue 0.005 ; 
 	bgo:nanFormat "non definito" ;
 	bgo:moreThanMaxFormat "molto grande"^^bgo:Template ;
 	bgo:lessThanMinFormat "molto piccolo"^^bgo:Template
 .
 
-:trend_formatter
+:trend_formatter 
 	# a bgo:NumberFormatter ;
 	bgo:format "%s%"^^bgo:Template  ;
 	bgo:scaleFactor 100 ;
 	bgo:precision 2 ;
 	bgo:maxValue 100;
-	bgo:minValue -100 ;
+	bgo:minValue -100 ; 
 	bgo:nanFormat "non disponibile" ;
 	bgo:moreThanMaxFormat ">100%"^^bgo:Template ;
 	bgo:lessThanMinFormat "<-100%"^^bgo:Template
@@ -136,7 +137,7 @@
 # Credits
 ############################################
 
-:credits_page
+:credits_page 
 	# a bgo:CreditsView ;
     bgo:icon "fas fa-users";
 	bgo:title "Credits"@en ;
@@ -188,7 +189,7 @@ here palace your **Terms & conditions** about published service.
 # Partitions
 #######################################################
 
-:table_view
+:table_view 
 	# a bgo:TableView ;
 	bgo:title "Table view";
     bgo:hasTotalizer :filtered_total_formatter ;
@@ -202,9 +203,9 @@ here palace your **Terms & conditions** about published service.
     bgo:headerDescription "Description" ;
 .
 
-:overview
+:overview 
 	# a bgo:Overview ;
-	bgo:label "Stato" ;
+	bgo:label "Stato" ;	
 	bgo:icon "fas fa-atom" ;
 	bgo:title "Overview" ;
 	bgo:hasPartitions [
@@ -240,7 +241,7 @@ here palace your **Terms & conditions** about published service.
 		bgo:precision 2 ;
 		bgo:scaleFactor 100 ;
 		bgo:maxValue 100 ;
-		bgo:minValue 1 ;
+		bgo:minValue 1 ; 
 		bgo:moreThanMaxFormat "" ;
 		bgo:lessThanMinFormat " (< 1% del tot.)"
 	]
@@ -248,7 +249,7 @@ here palace your **Terms & conditions** about published service.
 
 
 ##### P1
-:p1
+:p1 
 	# a bgo:Partition ;
 	bgo:partitionId "p1" ;
 	bgo:label "partition1" ;
@@ -261,7 +262,7 @@ here palace your **Terms & conditions** about published service.
         :p1_1 ,
         :p1_2
     ;
-    bgo:hasDefaultAccountSubSet [
+    bgo:hasDefaultAccountSubSet [ 
     	# a bgo:DefaultAccountSet  ;
 	    bgo:label "default" ;
 	    bgo:title "Default subset for p1"
@@ -269,7 +270,7 @@ here palace your **Terms & conditions** about published service.
 .
 
 
-:p1_1
+:p1_1 
 	#a bgo:AccountSet ;
     bgo:title "Subset 1 title" ;
     bgo:description "An account subset" ;
@@ -320,7 +321,7 @@ here palace your **Terms & conditions** about published service.
 
 
 ###### Trend Color Scheme #######
-:trend_color_scheme
+:trend_color_scheme 
 	# a bgo:TrendColorScheme ;
     bgo:title "Variazione percentuale rispetto al valore di acquisto" ;
     bgo:noTrendColor "#cdcdcd"^^bgo:RGB ;
@@ -335,17 +336,17 @@ here palace your **Terms & conditions** about published service.
 		[ bgo:rate  0.10 ;	bgo:colorId "#a6d96a"^^bgo:RGB ] ,
 		[ bgo:rate 0.25 ;	bgo:colorId "#66bd63"^^bgo:RGB ] ,
 		[ bgo:rate 0.50	;	bgo:colorId "#1a9850"^^bgo:RGB ] ,
-		[ bgo:rate 10.00 ;	bgo:colorId "#006837"^^bgo:RGB ]
+		[ bgo:rate 10.00 ;	bgo:colorId "#006837"^^bgo:RGB ] 
 .
 
 
-:search_pane
+:search_pane 
 	# a bgo:SearchPane ;
     bgo:label "Cerca"
 .
 
 
-:tag_cloud
+:tag_cloud 
 	# a bgo:TagCloud ;
 	bgo:hasTag # all are bgo:tags
 		[ bgo:label "rfgt2"; bgo:tagWeight 1.0 ] ,
@@ -417,22 +418,13 @@ here palace your **Terms & conditions** about published service.
 :account_4
 	# a bgo:Account ;
  	bgo:accountId "account_4" ;
-   bgo:amount 100.00 ;
-    bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_2" ;
-    bgo:description "descrizione account_2" ;
-    bgo:depiction <http://bit.ly/2MxbJWQ>
-
+    bgo:amount 100.00 ;
+    bgo:referenceAmount 95.00
 .
 
 
 :account_5
 	# a bgo:Account ;
  	bgo:accountId "account_5" ;
-   bgo:amount 100.00 ;
-    bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_2" ;
-    bgo:description "descrizione account_2" ;
-    bgo:depiction <http://bit.ly/2MxbJWQ>
-
+    bgo:amount 100.00
 .

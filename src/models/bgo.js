@@ -35,11 +35,12 @@ export function getDefaultMenuItems(parent) {
 
 export function dref(uri) {
 	let results = [];
-	for (const rule of window.__dereferencingRules) {
-		const re = RegExp(rule.regexp);
+	for (let rule of window.__dereferencingRules) {
+		let re = RegExp(rule.regexp);
 		if (re.test(uri)) {
 			rule.targets.forEach(target => {
-				results.push(uri.replace(re, target));
+				let replacedTarget = uri.replace(re, target)
+				results.push(replacedTarget);
 			});
 
 			if (rule.isLast) {

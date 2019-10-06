@@ -34,9 +34,9 @@ export function getDefaultMenuItems(parent) {
 
 
 export function dref(uri) {
-	let results = [];
-	for (let rule of window.__dereferencingRules) {
-		let re = RegExp(rule.regexp);
+	const results = [];
+	for (const rule of window.__dereferencingRules) {
+		const re = RegExp(rule.regexp);
 		if (re.test(uri)) {
 			rule.targets.forEach(target => {
 				let replacedTarget = uri.replace(re, target)

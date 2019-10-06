@@ -1,40 +1,50 @@
 #
 # Copyright (c) 2019 LinkedData.Center.
+# Commented properties cna be inferred by a BGO reasoner
 #
 # Please test before publishing with http://rdf-translator.appspot.com/
 #
 @prefix bgo: <http://linkeddata.center/lodmap-bgo/v1#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix resource: <http://example.com/resource/> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:bgo:test:> .
 
 
-<> foaf:primaryTopic resource:domain .
 
-################################################
-# Menues and navigation data
-################################################
-resource:domain a bgo:Domain ;
-	# Here write some thing about your project (ie the data driven document domain metadata)
+############################################
+# Application framework
+############################################
 
-	bgo:title "Live test of LODMAP2D" ;
+:domain # a bgo:Domain ;
+	bgo:title "Live test of Bubble Graph Ontology" ;
     bgo:description "Here a short description of the data domain" ;
     bgo:abstract "These are **demo data** without a real meaning."^^bgo:MDString ;
-    bgo:hasAccountView  :account_view ;
 
-    # Just use the default navigation menu
+    # add an item to default navigation menu
+    bgo:hasNavigationMenu [
+    	# a bgo:NavigationMenu ;
+    	bgo:withCustomMenuItems (
+    		[
+    			# a bgo:MenuItem ;
+				bgo:icon "mdi-atom-variant" ;
+				bgo:title "reference implementation..." ;
+				bgo:link <https://github.com/linkeddatacenter/LODMAP2D>
+			]
+		)
+    ] ;
 
     # Use the Option menu with two external links
     bgo:hasOptionMenu [
+    	# a bgo:OptionMenu ;
     	bgo:withCustomMenuItems (
     		[
-				bgo:icon "far fa-building" ;
-				bgo:title "About this app..." ;
+    			# a bgo:MenuItem ;
+				bgo:icon "mdi-information-outline" ;
+				bgo:title "about LODMAP2D..." ;
 				bgo:link <http://bit.ly/lodmap2d_p>
 			]
     		[
-				bgo:icon "fas fa-shield-alt" ;
-				bgo:title "About WebID-OIDC ..." ;
+    			# a bgo:MenuItem ;
+				bgo:icon "mdi-lock" ;
+				bgo:title "about WebID-OIDC..." ;
 				bgo:link <https://github.com/solid/webid-oidc-spec>
 			]
 		)
@@ -42,51 +52,93 @@ resource:domain a bgo:Domain ;
 
     # Add just a couple of short cuts icons to footer
     bgo:hasFooterMenu [
+    	# a bgo:FooterMenu ;
     	bgo:withCustomMenuItems (
     		[
-		    	bgo:icon "fas fa-table" ;
-				bgo:link "/table"  # this is internal link example
+    			# a bgo:MenuItem ;
+		    	bgo:icon "mdi-table" ;
+				bgo:link "/table"^^bgo:route  # this is internal link example, application dependent
 			]
     		[
-		    	bgo:icon "fab fa-github-square" ;
+    			# a bgo:MenuItem ;
+		    	bgo:icon "mda-github-box" ;
+		    	bgo:title "GitHub" ;
 				bgo:link <https://github.com/linkeddatacenter/LODMAP2D>
 			]
 		)
     ] ;
 
     # This domain likes social
-    bgo:hasSocialSharing  "true"^^xsd:boolean;
+    bgo:hasSocialSharing true ;
 
     # This should be used if copyright is not present
     bgo:hasCopyrigth "(c) [LinkedData.Center](http://linkeddata.center)"^^bgo:MDString ;
+
+    bgo:hasOverview :overview ;
+    bgo:hasTableView :table_view ;
+    bgo:hasCredits :credits_page ;
+    bgo:hasTerms :terms_page ;
+    bgo:hasAccountView  :account_view ;
 .
 
-#######################################################
-# Views
-#######################################################
-resource:overview a bgo:Overview ;
-    bgo:label "Stato" ; 
-    bgo:icon "fas fa-atom" ;
-    bgo:title "Overview" ;
-    
-    bgo:hasPartitionList (
-        resource:p1
-        resource:p2
-    );
 
-    bgo:hasTrendColorScheme resource:trend_color_scheme ;
-    bgo:hasTotalizer resource:filtered_total_formatter ;
-    bgo:hasTagCloud resource:tag_cloud ;
-    bgo:hasSearchPane resource:search_pane ;
-    bgo:hasTooltip [
-        bgo:amountFormatter resource:amount_formatter;
-        bgo:referenceFormatter resource:amount_formatter;
-        bgo:trendFormatter resource:trend_formatter
-    ] ;
+############################################
+# Account view
+############################################
+:account_view
+	# a bgo:AccountView ;
+    bgo:amountFormatter :amount_formatter;
+    bgo:referenceFormatter :amount_formatter;
+    bgo:trendFormatter :trend_formatter;
+
+	bgo:hasHistoricalPerspective [
+		# a bgo:HistoricalPerspective ;
+		bgo:title "Storico dell'azione" ;
+	    bgo:amountFormatter :smart_formatter
+	];
+	bgo:hasBreakdownPerspective [
+		# a bgo:BreakdownPerspective ;
+		bgo:title "Dettaglio capitoli di spesa" ;
+	    bgo:amountFormatter :smart_formatter
+	]
 .
 
-### Credits page ##########
-resource:credits_page a bgo:CreditsView ;
+:amount_formatter
+    # a bgo:NumberFormatter ;
+	bgo:format "€ %s"^^bgo:Template  ;
+	bgo:precision 2 ;
+.
+
+:smart_formatter
+	# a bgo:NumberFormatter ;
+	bgo:format "€ %s"^^bgo:Template  ;
+	bgo:precision 0 ;
+	bgo:maxValue 999999999.99 ;
+	bgo:minValue 0.005 ;
+	bgo:nanFormat "non definito" ;
+	bgo:moreThanMaxFormat "molto grande"^^bgo:Template ;
+	bgo:lessThanMinFormat "molto piccolo"^^bgo:Template
+.
+
+:trend_formatter
+	# a bgo:NumberFormatter ;
+	bgo:format "%s%"^^bgo:Template  ;
+	bgo:scaleFactor 100 ;
+	bgo:precision 2 ;
+	bgo:maxValue 100;
+	bgo:minValue -100 ;
+	bgo:nanFormat "non disponibile" ;
+	bgo:moreThanMaxFormat ">100%"^^bgo:Template ;
+	bgo:lessThanMinFormat "<-100%"^^bgo:Template
+.
+
+############################################
+# Credits
+############################################
+
+:credits_page
+	# a bgo:CreditsView ;
+    bgo:icon "fas fa-users";
 	bgo:title "Credits"@en ;
 	bgo:abstract
 """
@@ -116,73 +168,132 @@ OTHER DEALINGS IN THE SOFTWARE.
 """^^bgo:MDString.
 
 
-### Term and conditions page ##########
-resource:terms_page a bgo:TermsView ;
+############################################
+# Terms
+############################################
+
+
+:terms_page
+	# a bgo:TermsView ;
+    bgo:icon  "fas fa-gavel" ;
 	bgo:title "Terms & conditions" ;
 	bgo:abstract
 """
 here palace your **Terms & conditions** about published service.
 """^^bgo:MDString.
 
-#### Table ###################
-resource:table_view a bgo:TableView ;
-	bgo:title "Table view";
-    bgo:hasTotalizer resource:filtered_total_formatter ;
-    bgo:hasSearchPane resource:search_pane ;
 
+
+#######################################################
+# Partitions
+#######################################################
+
+:table_view
+	# a bgo:TableView ;
+	bgo:title "Table view";
+    bgo:hasTotalizer :filtered_total_formatter ;
+    bgo:amountFormatter :amount_formatter;
+    bgo:referenceFormatter :amount_formatter;
+    bgo:trendFormatter :trend_formatter;
+    bgo:hasSearchPane :search_pane ;
     bgo:headerTitle "Title" ;
     bgo:headerAmount "Amount" ;
     bgo:headerTrend "Trend" ;
     bgo:headerDescription "Description" ;
 .
 
-#######################################################
-# Partitions
-#######################################################
+:overview
+	# a bgo:Overview ;
+	bgo:label "Stato" ;
+	bgo:icon "fas fa-atom" ;
+	bgo:title "Overview" ;
+	bgo:hasPartitions [
+		# a bgo:Partitions ;
+		bgo:icon "fas fa-atom" ;
+		bgo:label "Partitions";
+	    bgo:hasPartitionList (
+	        :p1
+	        :p2
+	    )
+    ];
+	bgo:hasTrendColorScheme :trend_color_scheme ;
+    bgo:hasTotalizer :filtered_total_formatter ;
+    bgo:hasTagCloud :tag_cloud ;
+    bgo:hasSearchPane :search_pane ;
+    bgo:hasTooltip [
+    	# a bgo:Tooltip ;
+	    bgo:amountFormatter :amount_formatter;
+	    bgo:referenceFormatter :amount_formatter;
+	    bgo:trendFormatter :trend_formatter
+	] ;
+.
+
+
+
+:filtered_total_formatter
+    # a bgo:Totalizer ;
+	bgo:format "Totale:  € %s" ;
+	bgo:filteredFormat "In evidenza: € %s"^^bgo:Template  ;
+	bgo:precision 2 ;
+	bgo:ratioFormatter [
+		bgo:format " ( %s% del tot.)"^^bgo:Template  ;
+		bgo:precision 2 ;
+		bgo:scaleFactor 100 ;
+		bgo:maxValue 100 ;
+		bgo:minValue 1 ;
+		bgo:moreThanMaxFormat "" ;
+		bgo:lessThanMinFormat " (< 1% del tot.)"
+	]
+.
+
 
 ##### P1
-resource:p1 a bgo:Partition ;
+:p1
+	# a bgo:Partition ;
 	bgo:partitionId "p1" ;
 	bgo:label "partition1" ;
 	bgo:title "Partition 1 title" ;
-	bgo:sortOrder bgo:ascending_sort ; # or bgo:descending_sort (default)
-	bgo:sortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
-	bgo:groupFunction bgo:trend_average ; # or bgo:amounts_sum(default), bgo:accounts_count
+	bgo:withSortOrder bgo:ascending_sort ; # or bgo:descending_sort (default)
+	bgo:withSortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
+	bgo:withGroupFunction bgo:trend_average ; # or bgo:amounts_sum(default), bgo:accounts_count
 
     bgo:hasAccountSubSet
-        resource:p1_1 ,
-        resource:p1_2
-
+        :p1_1 ,
+        :p1_2
     ;
-    bgo:hasDefaultAccountSubSet [ a bgo:DefaultAccountSet  ;
+    bgo:hasDefaultAccountSubSet [
+    	# a bgo:DefaultAccountSet  ;
 	    bgo:label "default" ;
 	    bgo:title "Default subset for p1"
     ]
 .
 
 
-resource:p1_1 a bgo:AccountSet ;
+:p1_1
+	#a bgo:AccountSet ;
     bgo:title "Subset 1 title" ;
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        resource:account_1
+        :account_1
 .
 
-resource:p1_2 a bgo:AccountSet ;
+:p1_2
+	# a bgo:AccountSet ;
     bgo:label "subset 2" ;
     bgo:title "Subset 2 title"
 .
 
 
 #### P2 ###########
-resource:p2 a bgo:Partition;
+:p2
+	# a bgo:Partition;
 	bgo:partitionId "2" ;
 	bgo:label "partition2" ;
 	bgo:title "P2 title" ;
     bgo:hasAccountSubSet
-        resource:p2_1 ,
-        resource:p2_2
+        :p2_1 ,
+        :p2_2
 
     ;
 
@@ -190,99 +301,53 @@ resource:p2 a bgo:Partition;
     # Note no default partition is present : a default one should be create with title "Unassigned"
 .
 
-resource:p2_1 a bgo:AccountSet ;
+:p2_1
+	# a bgo:AccountSet ;
     bgo:title "Subset 1 title" ;
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        resource:account_1
+        :account_1
 .
 
-resource:p2_2 a bgo:AccountSet ;
+:p2_2
+	# a bgo:AccountSet ;
     bgo:label "subset 2" ;
     bgo:title "Subset 2 title" ;
     bgo:hasAccount
-        resource:account_2
+        :account_2
 .
 
 
-#######################################################
-# Views options
-#######################################################
-
 ###### Trend Color Scheme #######
-resource:trend_color_scheme a bgo:TrendColorScheme ;
+:trend_color_scheme
+	# a bgo:TrendColorScheme ;
     bgo:title "Variazione percentuale rispetto al valore di acquisto" ;
     bgo:noTrendColor "#cdcdcd"^^bgo:RGB ;
-    bgo:rateTreshold
-		[ bgo:rate -1 ; 	bgo:colorId "#a50026"^^bgo:RGB ] ,
-		[ bgo:rate -0.5 ;	bgo:colorId "#d73027"^^bgo:RGB ] ,
+    bgo:rateTreshold # all are bgo:RateTreshold
+		[ bgo:rate -1.00 ; 	bgo:colorId "#a50026"^^bgo:RGB ] ,
+		[ bgo:rate -0.50 ;	bgo:colorId "#d73027"^^bgo:RGB ] ,
 		[ bgo:rate -0.25 ;	bgo:colorId "#f46d43"^^bgo:RGB ] ,
 		[ bgo:rate -0.10 ; bgo:colorId "#fdae61"^^bgo:RGB ] ,
 		[ bgo:rate -0.05 ; bgo:colorId "#fee08b"^^bgo:RGB ] ,
-		[ bgo:rate  0 ;	bgo:colorId "#ffffbf"^^bgo:RGB ] ,
+		[ bgo:rate  0.0 ;	bgo:colorId "#ffffbf"^^bgo:RGB ] ,
 		[ bgo:rate  0.05 ;	bgo:colorId "#d9ef8b"^^bgo:RGB ] ,
 		[ bgo:rate  0.10 ;	bgo:colorId "#a6d96a"^^bgo:RGB ] ,
 		[ bgo:rate 0.25 ;	bgo:colorId "#66bd63"^^bgo:RGB ] ,
-		[ bgo:rate 0.5	;	bgo:colorId "#1a9850"^^bgo:RGB ] ,
-		[ bgo:rate 1 ;	bgo:colorId "#006837"^^bgo:RGB ] 
+		[ bgo:rate 0.50	;	bgo:colorId "#1a9850"^^bgo:RGB ] ,
+		[ bgo:rate 10.00 ;	bgo:colorId "#006837"^^bgo:RGB ]
 .
 
 
-############################################
-# Formatters
-############################################
-resource:filtered_total_formatter a bgo:Totalizer ;
-    bgo:format "Totale:  € %s" ;
-    bgo:filteredFormat "In evidenza: € %s"^^bgo:Template  ;
-    bgo:precision 2 ;
-    bgo:rateFormatter [
-        bgo:format " ( %s% del tot.)"^^bgo:Template  ;
-        bgo:precision 2 ;
-        bgo:scaleFactor 100 ;
-        bgo:maxValue 100 ;
-        bgo:minValue 1 ; 
-        bgo:moreThanMaxFormat "" ;
-        bgo:lessThanMinFormat " (< 1% del tot.)"
-    ]
-.
-
-resource:amount_formatter a bgo:NumberFormatter ;
-    bgo:format "€ %s"^^bgo:Template  ;
-    bgo:precision 2 ;
-.
-
-resource:smart_formatter a bgo:NumberFormatter ;
-    bgo:format "€ %s"^^bgo:Template  ;
-    bgo:precision 0 ;
-    bgo:maxValue 999999999.99 ;
-    bgo:minValue 0.005 ; 
-    bgo:nanFormat "non definito" ;
-    bgo:moreThanMaxFormat "> 1 Mrd"^^bgo:Template ;
-    bgo:lessThanMinFormat "N.A."^^bgo:Template
-.
-
-resource:trend_formatter a bgo:NumberFormatter ;
-    bgo:format "%s%"^^bgo:Template  ;
-    bgo:scaleFactor 100 ;
-    bgo:precision 2 ;
-    bgo:maxValue 100;
-    bgo:minValue -100 ; 
-    bgo:nanFormat "N.A." ;
-    bgo:moreThanMaxFormat ">100%"^^bgo:Template ;
-    bgo:lessThanMinFormat "<-100%"^^bgo:Template
-.
-
-
-
-### Search and tag clouds #######
-resource:search_pane a bgo:SearchWidget ;
+:search_pane
+	# a bgo:SearchPane ;
     bgo:label "Cerca"
 .
 
 
-resource:tag_cloud a bgo:TagCloud ;
-	bgo:hasTag
+:tag_cloud
+	# a bgo:TagCloud ;
+	bgo:hasTag # all are bgo:tags
 		[ bgo:label "rfgt2"; bgo:tagWeight 1.0 ] ,
 		[ bgo:label "Tetrst2"; bgo:tagWeight 0.5 ] ,
 		[ bgo:label "Tewsst3"; bgo:tagWeight 1.0 ] ,
@@ -297,31 +362,6 @@ resource:tag_cloud a bgo:TagCloud ;
 		[ bgo:label "Tesqr3hyt6"; bgo:tagWeight 0.3 ]
 .
 
-#############################################
-# Accounts perspectives
-#############################################
-resource:metadata_perspective a bgo:MetadataPerspective ;
-    bgo:hasTotalizer resource:totalizer ;
-   	bgo:notAvailableTrendAccountLabel "Non disponibile"
-.
-
-:account_view
-	# a bgo:AccountView ;
-    bgo:amountFormatter :amount_formatter;
-    bgo:referenceFormatter :amount_formatter;
-    bgo:trendFormatter :trend_formatter;
-    
-	bgo:hasHistoricalPerspective [
-		# a bgo:HistoricalPerspective ;
-		bgo:title "Storico dell'azione" ;
-	    bgo:amountFormatter :smart_formatter
-	];
-	bgo:hasBreakdownPerspective [
-		# a bgo:BreakdownPerspective ;
-		bgo:title "Dettaglio capitoli di spesa" ;
-	    bgo:amountFormatter :smart_formatter
-	]
-.
 
 
 #############################################
@@ -329,7 +369,8 @@ resource:metadata_perspective a bgo:MetadataPerspective ;
 #############################################
 
 ## Account 1 with all the details
-resource:account_1 a bgo:Account, bgo:ProfiledAccount ;
+:account_1
+	# a bgo:Account;
 	bgo:accountId "account_1" ;
     bgo:amount 1000.00 ;
     bgo:referenceAmount 950.00 ;
@@ -339,11 +380,11 @@ resource:account_1 a bgo:Account, bgo:ProfiledAccount ;
     bgo:depiction <http://bit.ly/2MxbJWQ> ;
     bgo:versionLabel "2019" ;
 
-	bgo:hasHistoryRec
+	bgo:hasHistoryRec # All bgo:HistoryRec
 		[ bgo:versionLabel "2018" ; bgo:amount 980.00 ],
 		[ bgo:versionLabel "2017" ; bgo:amount 1100.00 ]
     ;
-    bgo:hasBreakdown
+    bgo:hasBreakdown # all bgo:PartialAmount
     	[ bgo:title "account_1_part 1" ; bgo:amount 110.00 ] ,
     	[ bgo:title "account_1_part 2" ; bgo:amount 120.00 ] ,
     	[ bgo:title "account_1_part 3" ; bgo:amount 130.00 ]
@@ -354,7 +395,8 @@ resource:account_1 a bgo:Account, bgo:ProfiledAccount ;
 ##################################################
 ## Other accounts without detailed profile
 ###################################################
-resource:account_2 a bgo:Account ;
+:account_2
+	# a bgo:Account ;
 	bgo:accountId "account_2" ;
     bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
@@ -363,37 +405,34 @@ resource:account_2 a bgo:Account ;
     bgo:depiction <http://bit.ly/2MxbJWQ>
 .
 
-resource:account_3 a bgo:Account ;
+:account_3
+	# a bgo:Account ;
 	bgo:accountId "account_3" ;
-     bgo:amount 100.00 ;
+    bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
-    bgo:title "titolo account_2" ;
-    bgo:description "descrizione account_2" ;
-    bgo:depiction <http://bit.ly/2MxbJWQ>
+    bgo:title "titolo account_3" ;
+    bgo:depiction "#fcba03"  # as RGB solid color
 .
 
-resource:account_4 a bgo:Account ;
+:account_4
+	# a bgo:Account ;
  	bgo:accountId "account_4" ;
    bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
     bgo:title "titolo account_2" ;
     bgo:description "descrizione account_2" ;
     bgo:depiction <http://bit.ly/2MxbJWQ>
+
 .
 
 
-resource:account_5 a bgo:Account ;
+:account_5
+	# a bgo:Account ;
  	bgo:accountId "account_5" ;
-     bgo:amount 100.00 ;
+   bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
     bgo:title "titolo account_2" ;
     bgo:description "descrizione account_2" ;
     bgo:depiction <http://bit.ly/2MxbJWQ>
-.
 
-# no amounts default to amount=0
-resource:account_6 a bgo:Account ;
-	bgo:accountId "account_6";
-    
 .
-

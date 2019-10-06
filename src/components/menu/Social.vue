@@ -115,7 +115,7 @@ export default {
   }
 };
 function fetchData(app){
-   let domain = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("Domain"));
+   let domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
     //title
     let title=bgoStore.any(domain,ns.bgo("title"));
     app.title= title? (title.value) : "LODMAP 2D";

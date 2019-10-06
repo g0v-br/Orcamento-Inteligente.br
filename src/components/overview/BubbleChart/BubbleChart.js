@@ -88,7 +88,7 @@ function resetTotal(partitions_table) {
 //called only the first time
 function createNodes(store, ns, width, height, searchText, partitions_table) {
     let nodes = [];
-    store.each(null, ns.rdf('type'), ns.bgo('Account')).forEach(account => {
+    store.each(null, ns.bgo('accountId')).forEach(account => {
         let newNode;
         let id = store.anyValue(account, ns.bgo('accountId'));
 
@@ -146,7 +146,7 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
 
 // if account contains text return true, false otherwise
 function match(account, text) {
-    return account.id==text||account.title.toLowerCase().includes(text) || account.description.toLowerCase().includes(text) || account.abstract.toLowerCase().includes(text);
+    return account.id == text || account.title.toLowerCase().includes(text) || account.description.toLowerCase().includes(text) || account.abstract.toLowerCase().includes(text);
 }
 
 function getCenters(gridBlocks) {
@@ -178,8 +178,9 @@ export default class BubbleChart {
     //called only the first time
     render(searchText) {
         this.nodes = createNodes(this.store, this.ns, this.width, this.height, searchText, this.partitions);
-        // console.log('nodes', this.nodes);
-        const overview = this.store.any(null, this.ns.rdf('type'), this.ns.bgo('Overview'));
+        console.log('nodes', this.nodes);
+        const domain = this.store.any(undefined, this.ns.bgo("hasOverview"));
+        const overview = this.store.any(domain, this.ns.bgo("hasOverview"));
 
         // Colore schema
         const colorScheme = this.store.any(overview, this.ns.bgo('hasTrendColorScheme'));
@@ -188,16 +189,17 @@ export default class BubbleChart {
         const rangeTresholds = [];
         this.store.each(colorScheme, this.ns.bgo("rateTreshold"))
             .sort((tresholdA, tresholdB) => {
-                let rateA=this.store.anyValue(tresholdA,this.ns.bgo("rate"));
-                let rateB=this.store.anyValue(tresholdB,this.ns.bgo("rate"));
-                return rateA-rateB;
+                let rateA = this.store.anyValue(tresholdA, this.ns.bgo("rate"));
+                let rateB = this.store.anyValue(tresholdB, this.ns.bgo("rate"));
+                return rateA - rateB;
             })
             .forEach(treshold => {
 
-                rangeTresholds.push(this.store.anyValue(treshold,this.ns.bgo("rate")));
-                colorTresholds.push(this.store.anyValue(treshold,this.ns.bgo("colorId")))
+                rangeTresholds.push(this.store.anyValue(treshold, this.ns.bgo("rate")));
+                colorTresholds.push(this.store.anyValue(treshold, this.ns.bgo("colorId")))
             })
-
+        console.log('colorTresholds', colorTresholds);
+        console.log('rangeTresholds', rangeTresholds);
 
         const colorScale = (val) => {
             let fill = scaleLinear()

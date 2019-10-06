@@ -35,7 +35,7 @@ export default {
   }
 };
 function fetchData(app) {
-  let domain = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("Domain"));
+  let domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
   let footerMenu = bgoStore.any(domain, ns.bgo("hasFooterMenu"));
   app.footerItems = getDefaultMenuItems(footerMenu);
   app.copyright = bgoStore.any(domain, ns.bgo("hasCopyrigth"));

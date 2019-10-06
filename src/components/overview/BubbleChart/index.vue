@@ -3,7 +3,8 @@
     <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">
         <StringFormatter class="title" :string="subset.title" :popup="subset.abstract" />
-        <Totalizer :total="subset.total" :filtered="subset.total_filtered" />
+        <Totalizer v-if="condition_totalizer_rate" :total="subset.total" :filtered="subset.total_filtered" :options="totalizerOptions" />
+        <Rate v-else :rate="subset.total_filtered" :show_icon="true" />
       </div>
     </div>
     <svg ref="vis" id="vis" />
@@ -15,6 +16,7 @@ import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BubbleChart from "@/components/overview/BubbleChart/BubbleChart.js";
 import _debounce from "lodash/debounce";
 import Totalizer from "@/components/Totalizer.vue";
+import Rate from "@/components/Rate"
 import StringFormatter from "@/components/StringFormatter.vue";
 let debouncedUpdate;
 let debouncedSearch;
@@ -22,9 +24,13 @@ let chart;
 export default {
   components: {
     Totalizer,
-    StringFormatter
+    StringFormatter,
+    Rate
   },
   props: {
+    totOption:{
+      type: Object
+    },
     activePartitionId: {
       type: String
     },
@@ -35,6 +41,11 @@ export default {
       type: String
     }
   },
+  data(){
+    return{
+      totalizerOptions : this.totOption
+    }
+  },
   computed: {
     activePartitionSubSets: function() {
       let partition_active = this.partitions.find(partition => {
@@ -42,6 +53,12 @@ export default {
       });
       sortSubset(partition_active, ns);
       return partition_active.subsets;
+    },
+    //when rate group function is used show the rate for each subset
+    //show total otherwise
+    condition_totalizer_rate: function(){
+      const cur_partition=bgoStore.any(undefined,ns.bgo("partitionId"),this.activePartitionId);
+      return bgoStore.anyValue(cur_partition,ns.bgo("groupFunction"))!=ns.bgo("trend_average").value;
     }
   },
   methods: {

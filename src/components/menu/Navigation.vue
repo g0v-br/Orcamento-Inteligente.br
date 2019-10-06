@@ -65,23 +65,25 @@ export default {
   }
 };
 function fetchData(app) {
-  let domain = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("Domain"));
-  let overview = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("Overview"));
-  let credits = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("CreditsView"));
-  let terms = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("TermsView"));
-  let tabview = bgoStore.any(undefined, ns.rdf("type"), ns.bgo("TableView"));
+  let domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
+  let overview = bgoStore.any(domain, ns.bgo("hasOverview"));
+  let credits = bgoStore.any(domain, ns.bgo("hasCredits"));
+  let terms = bgoStore.any(domain, ns.bgo("hasTerms"));
+  let tabview = bgoStore.any(domain, ns.bgo("hasTableView"));
   //overview for navigation menu
   app.overview.title = bgoStore.any(overview, ns.bgo("label")).value;
-  app.overview.icon = "fas fa-atom";
+  app.overview.icon = bgoStore.any(overview, ns.bgo("icon")).value;
   app.overview.path = "/";
   //partitions
-  let partitionList = bgoStore.any(overview, ns.bgo("hasPartitionList"));
-  app.partition.title = "Partitions";
+  let partitionNode = bgoStore.any(overview, ns.bgo("hasPartitions"));
+  let partitionList = bgoStore.any(partitionNode, ns.bgo("hasPartitionList"));
+  app.partition.title = bgoStore.any(partitionNode, ns.bgo("label")).value;
+  app.partition.icon = bgoStore.any(partitionNode, ns.bgo("icon")).value;
   app.partition.partitionList = [];
   if (partitionList && partitionList.elements.length != 0) {
     partitionList.elements.forEach(el => {
       app.partition.partitionList.push({
-        title: bgoStore.any(el, ns.bgo("label")).value,
+        title: bgoStore.anyValue(el, ns.bgo("label")),
         path: "/partition/" + bgoStore.any(el, ns.bgo("partitionId")).value
       });
     });

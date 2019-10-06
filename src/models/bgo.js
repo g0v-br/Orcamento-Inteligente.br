@@ -49,5 +49,5 @@ export function dref(uri) {
 		}
 	}
 
-	return results.length?results:uri;
+	return results.length ? results : uri;
 }

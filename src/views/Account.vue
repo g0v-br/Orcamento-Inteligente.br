@@ -119,7 +119,7 @@ let fetchData = app => {
     });
      // Totalizer metadata
   let totalizer = bgoStore.any(breakdown_perspective, ns.bgo("hasTotalizer"));
-  let rateFormatter = bgoStore.any(totalizer, ns.bgo("rateFormatter"));
+  let rateFormatter = bgoStore.any(totalizer, ns.bgo("ratioFormatter"));
 
   app.totalizerOptions.format = bgoStore.anyValue(totalizer, ns.bgo("format"));
   app.totalizerOptions.filteredFormat = bgoStore.anyValue(

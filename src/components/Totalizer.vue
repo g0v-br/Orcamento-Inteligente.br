@@ -3,15 +3,21 @@
 </template>
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
-import { formatPercentage, formatAmount, printf, numberFormatter} from "@/utils/utils.js";
+import {
+  formatPercentage,
+  formatAmount,
+  printf,
+  numberFormatter
+} from "@/utils/utils.js";
 export default {
   props: {
-    total:[String, Number],
+    total: [String, Number],
     filtered: [String, Number],
     options: Object
   },
   computed: {
     display() {
+      console.log(this.options)
       let text, data;
       let rate;
 
@@ -21,19 +27,23 @@ export default {
           format: this.options.format
         });
       else {
-        rate = (parseFloat(this.filtered) / parseFloat(this.total)) * this.options.rateFormatter.scaleFactor;
+        rate =
+          (parseFloat(this.filtered) / parseFloat(this.total)) *
+          this.options.rateFormatter.scaleFactor;
         text = numberFormatter(this.filtered, {
           precision: this.options.precision,
           format: this.options.filteredFormat
         });
+
+        console.log("TOTAL: ", this.total);
+        console.log("AMOUNT: ", this.filtered);
+        console.log(this.options.rateFormatter.scaleFactor)
         text = text + numberFormatter(rate, this.options.rateFormatter);
       }
 
       return text;
     }
-  },
-
-
+  }
 };
 </script>
 

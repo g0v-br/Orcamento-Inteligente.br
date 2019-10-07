@@ -3,33 +3,37 @@
 </template>
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
-import { formatPercentage, formatAmount, printf } from "@/utils/utils.js";
+import {
+  formatPercentage,
+  formatAmount,
+  printf,
+  numberFormatter
+} from "@/utils/utils.js";
 export default {
   props: {
-    total:[String, Number],
+    total: [String, Number],
     filtered: [String, Number],
     options: Object
   },
   computed: {
     display() {
       let text, data;
-      let total, filtered, rate; //Numbers
+      let rate;
 
-      total = formatAmount(this.total, this.options.precision);
-      filtered = formatAmount(this.filtered, this.options.precision);
-
-      if (Math.round(this.filtered) == Math.round(this.total)) 
-        text = this.options.format.replace("%s", total);
+      if (Math.round(this.filtered) == Math.round(this.total))
+        text = numberFormatter(this.total, {
+          precision: this.options.precision,
+          format: this.options.format
+        });
       else {
-        rate = parseFloat(this.filtered) / parseFloat(this.total);
-        text = this.options.filteredFormat.replace("%s", filtered);
-
-        if (Math.abs(rate) < this.options.rateFormatter.minValue)
-          text = text + this.options.rateFormatter.lessThanMinFormat;
-        else {
-          rate = formatPercentage(rate, options.rateFormatter.precision);
-          text = text + this.options.rateFormatter.format.replace("%s", rate);
-        }
+        rate =
+          (parseFloat(this.filtered) / parseFloat(this.total)) *
+          this.options.rateFormatter.scaleFactor;
+        text = numberFormatter(this.filtered, {
+          precision: this.options.precision,
+          format: this.options.filteredFormat
+        });
+        text = text + numberFormatter(rate, this.options.rateFormatter);
       }
 
       return text;

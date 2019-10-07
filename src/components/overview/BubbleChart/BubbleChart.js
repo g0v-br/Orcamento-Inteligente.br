@@ -178,7 +178,6 @@ export default class BubbleChart {
     //called only the first time
     render(searchText) {
         this.nodes = createNodes(this.store, this.ns, this.width, this.height, searchText, this.partitions);
-        console.log('nodes', this.nodes);
         const domain = this.store.any(undefined, this.ns.bgo("hasOverview"));
         const overview = this.store.any(domain, this.ns.bgo("hasOverview"));
 
@@ -198,8 +197,6 @@ export default class BubbleChart {
                 rangeTresholds.push(this.store.anyValue(treshold, this.ns.bgo("rate")));
                 colorTresholds.push(this.store.anyValue(treshold, this.ns.bgo("colorId")))
             })
-        console.log('colorTresholds', colorTresholds);
-        console.log('rangeTresholds', rangeTresholds);
 
         const colorScale = (val) => {
             let fill = scaleLinear()

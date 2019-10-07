@@ -215,7 +215,7 @@ function fetchData(app) {
 
   // Totalizer
   let totalizer = bgoStore.any(tableView, ns.bgo("hasTotalizer"));
-  let rateFormatter = bgoStore.any(totalizer, ns.bgo("rateFormatter"));
+  let rateFormatter = bgoStore.any(totalizer, ns.bgo("ratioFormatter"));
 
   app.totalizerOptions.format = bgoStore.anyValue(totalizer, ns.bgo("format"));
   app.totalizerOptions.filteredFormat = bgoStore.anyValue(

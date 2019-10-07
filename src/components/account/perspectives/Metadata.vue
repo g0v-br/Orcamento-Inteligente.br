@@ -11,7 +11,7 @@
       <StringFormatter :string="abstract" />
     </div>
     <div class="numbers">
-      {{amount}}
+      {{numberFormatter(this.total,this.totalFormatterOptions)}}
       <Rate class="rate" :rate="rate" :show_icon="true" :formatterOptions="rateFormatterOptions"/>
     </div>
   </div>
@@ -36,18 +36,16 @@ export default {
       type: String,
       default: ""
     },
-    totalFormatterOption:{
+    totalFormatterOptions:{
       type: Object
     },
     rateFormatterOptions:{
       type: Object
     }
   },
-  computed:{
-    amount(){
-      return numberFormatter(this.total,this.totalFormatterOption)
-    }
-  },
+  methods:{
+    numberFormatter
+  }
 
 };
 

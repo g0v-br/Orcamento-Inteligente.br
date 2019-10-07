@@ -18,10 +18,10 @@
           :rateFormatterOptions="metadata.rateFormatterOptions"
         />
       </div>
-      <div v-if="historicRec!=undefined " class="bar">
+      <div v-if="historicRec!=undefined && historicRec.records.length>0 " class="bar">
         <BarChart :historic-rec="historicRec.records" :title="historicRec.title" />
       </div>
-      <div v-if="breakDown!=undefined" class="pie">
+      <div v-if="breakDown!=undefined && breakDown.records.length>0" class="pie">
         <PieChart
           :breakdown="breakDown.records"
           :title="breakDown.title"

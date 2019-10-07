@@ -8,7 +8,6 @@
       <Totalizer :total="bd_amount" :filtered="bd_filtered" :options="totalizerOptions" />
     </div>
     </template>
-    <p class="dataError" v-else>Breakdown data not aviable</p>
   </div>
 </template>
 <script>

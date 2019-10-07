@@ -2,7 +2,6 @@
   <div class="content">
     <h4>{{title}}</h4>
     <canvas v-if="historicRec.length!=0" ref="canvas"></canvas>
-    <p class="dataError" v-else>Historic data not aviable</p>
   </div>
 </template>
 

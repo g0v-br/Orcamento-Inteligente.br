@@ -19,21 +19,19 @@ export default {
     display() {
       let text, data;
       let rate;
-
       if (Math.round(this.filtered) == Math.round(this.total))
         text = numberFormatter(this.total, {
           precision: this.options.precision,
           format: this.options.format
         });
       else {
-        rate =
-          (parseFloat(this.filtered) / parseFloat(this.total)) *
-          this.options.rateFormatter.scaleFactor;
+        rate = parseFloat(this.filtered) / parseFloat(this.total);
         text = numberFormatter(this.filtered, {
           precision: this.options.precision,
           format: this.options.filteredFormat
         });
         text = text + numberFormatter(rate, this.options.rateFormatter);
+       
       }
 
       return text;

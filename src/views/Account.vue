@@ -7,13 +7,16 @@
     </v-system-bar>
     <div class="content-grid">
       <div class="metadata">
-        <Metadata :accountId="accountId"
-        :title="title"
-        :description="description"
-        :abstract="abstract"
-        :total="total"
-        :rate="rate"
-         :formatterOptions="formatterOptions" />
+        <Metadata
+          :accountId="metadata.accountId"
+          :title="metadata.title"
+          :description="metadata.description"
+          :abstract="metadata.abstract"
+          :total="metadata.total"
+          :rate="metadata.rate"
+          :totalFormatterOptions="metadata.totalFormatterOptions"
+          :rateFormatterOptions="metadata.rateFormatterOptions"
+        />
       </div>
       <div v-if="historicRec!=undefined " class="bar">
         <BarChart :historic-rec="historicRec.records" :title="historicRec.title" />
@@ -23,7 +26,7 @@
           :breakdown="breakDown.records"
           :title="breakDown.title"
           :total="breakDown.total"
-          :totalizerOptions="totalizerOptions"
+          :totalizerOptions="breakDown.totalizerOptions"
         />
       </div>
     </div>
@@ -57,15 +60,9 @@ export default {
       breakDown: {
         title: "",
         records: [],
-        total: 0
-      },
-      title: {},
-      description:{},
-      abstract:{},
-      total: 0,
-      rate:0,
-      totalizerOptions:{
-                  format: "",
+        total: 0,
+        totalizerOptions: {
+          format: "",
           filteredFormat: "",
           precision: 0,
           rateFormatter: {
@@ -77,10 +74,28 @@ export default {
             moreThanMaxFormat: "",
             lessThanMinFormat: ""
           }
+        }
       },
-      formatterOptions:{
-        format:"",
-        precision:0
+      metadata: {
+        title: {},
+        description: {},
+        abstract: {},
+        total: 0,
+        rate: 0,
+        totalFormatterOptions: {
+          format: "",
+          precision: 0
+        },
+        rateFormatterOptions: {
+          format: "",
+          scaleFactor: 0,
+          precision: 0,
+          maxValue: 0,
+          minValue: 0,
+          nanFormat: "",
+          moreThanMaxFormat: "",
+          lessThanMinFormat: ""
+        }
       }
     };
   },
@@ -90,25 +105,70 @@ export default {
 };
 
 let fetchData = app => {
-  const domain= bgoStore.any(undefined,ns.bgo("hasAccountView"))
+  const domain = bgoStore.any(undefined, ns.bgo("hasAccountView"));
   const accountView = bgoStore.any(domain, ns.bgo("hasAccountView"));
-  let account = bgoStore.any(undefined, ns.bgo("accountId"), app.accountId);
   //metadata fetch data
-  app.title = bgoStore.any(account, ns.bgo("title")) ||  bgoStore.any(account, ns.bgo("accountId"));
-  app.description = bgoStore.any(account, ns.bgo("description")) || {
+  //rate metadata formatter: metadata don't have formatter, use accountView metadata
+  let rateFormatter = bgoStore.any(accountView, ns.bgo("trendFormatter"));
+  
+  app.metadata.rateFormatterOptions.format = bgoStore.anyValue(
+    rateFormatter,
+    ns.bgo("format")
+  );
+  app.metadata.rateFormatterOptions.precision = bgoStore.anyValue(
+    rateFormatter,
+    ns.bgo("precision")
+  );
+  app.metadata.rateFormatterOptions.scaleFactor = bgoStore.anyValue(
+    rateFormatter,
+    ns.bgo("scaleFactor")
+  );
+  app.metadata.rateFormatterOptions.maxValue = bgoStore.anyValue(
+    rateFormatter,
+    ns.bgo("maxValue")
+  );
+  app.metadata.rateFormatterOptions.minValue = bgoStore.anyValue(
+    rateFormatter,
+    ns.bgo("minValue")
+  );
+  app.metadata.rateFormatterOptions.moreThanMaxFormat = bgoStore.anyValue(
+    rateFormatter,
+    ns.bgo("moreThanMaxFormat")
+  );
+  app.metadata.rateFormatterOptions.lessThanMinFormat = bgoStore.anyValue(
+    rateFormatter,
+    ns.bgo("lessThanMinFormat")
+  );
+  app.metadata.rateFormatterOptions.nanFormat = bgoStore.anyValue(
+    rateFormatter,
+    ns.bgo("nanFormat")
+  );
+  //------------------------------------------------------------------------//
+  //metadata amount formatter
+  let metadataNumberFormatter = bgoStore.any(
+    accountView,
+    ns.bgo("amountFormatter")
+  );
+  app.metadata.totalFormatterOptions.format = bgoStore.anyValue(metadataNumberFormatter, ns.bgo("format")) || "";
+  app.metadata.totalFormatterOptions.precision = bgoStore.anyValue(metadataNumberFormatter, ns.bgo("precision")) || 0;
+  //--------------------------------------------------------------------------//
+  //metadata data
+  let account = bgoStore.any(undefined, ns.bgo("accountId"), app.accountId);
+  app.metadata.title =
+    bgoStore.any(account, ns.bgo("title")) ||
+    bgoStore.any(account, ns.bgo("accountId"));
+  app.metadata.description = bgoStore.any(account, ns.bgo("description")) || {
     value: "",
     datatype: "litteral"
   };
-  app.abstract = bgoStore.any(account, ns.bgo("abstract")) || {
+  app.metadata.abstract = bgoStore.any(account, ns.bgo("abstract")) || {
     value: "",
     datatype: "litteral"
-  };;
-  app.total = bgoStore.anyValue(account, ns.bgo("amount"));
+  };
+  app.metadata.total = bgoStore.anyValue(account, ns.bgo("amount"));
   let reference = bgoStore.anyValue(account, ns.bgo("referenceAmount"));
-  app.rate = (app.total - reference) / reference;
-  let metadataNumberFormatter=bgoStore.any(accountView,ns.bgo("amountFormatter"));
-  app.formatterOptions.format=bgoStore.anyValue(metadataNumberFormatter,ns.bgo("format"))||"";
-  app.formatterOptions.precision=bgoStore.anyValue(metadataNumberFormatter,ns.bgo("precision"))||0;
+  app.metadata.rate = (app.metadata.total - reference) / reference;
+
   //Bar chart data
   let historical_perspective = bgoStore.any(
     accountView,
@@ -150,48 +210,50 @@ let fetchData = app => {
       const amount = bgoStore.anyValue(br, ns.bgo("amount"));
       app.breakDown.records.push({ title, amount });
     });
-     // Totalizer metadata
-  let totalizer = bgoStore.any(breakdown_perspective, ns.bgo("hasTotalizer"));
-  let rateFormatter = bgoStore.any(totalizer, ns.bgo("ratioFormatter"));
+    // Breakdown Totalizer  metadata
+    let totalizer = bgoStore.any(breakdown_perspective, ns.bgo("hasTotalizer"));
+    let rateFormatter = bgoStore.any(totalizer, ns.bgo("ratioFormatter"));
 
-  app.totalizerOptions.format = bgoStore.anyValue(totalizer, ns.bgo("format"));
-  app.totalizerOptions.filteredFormat = bgoStore.anyValue(
-    totalizer,
-    ns.bgo("filteredFormat")
-  );
-  app.totalizerOptions.precision = bgoStore.anyValue(
-    totalizer,
-    ns.bgo("precision")
-  );
-
-  app.totalizerOptions.rateFormatter.format = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("format")
-  );
-  app.totalizerOptions.rateFormatter.precision = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("precision")
-  );
-  app.totalizerOptions.rateFormatter.scaleFactor = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("scaleFactor")
-  );
-  app.totalizerOptions.rateFormatter.maxValue = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("maxValue")
-  );
-  app.totalizerOptions.rateFormatter.minValue = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("minValue")
-  );
-  app.totalizerOptions.rateFormatter.moreThanMaxFormat = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("moreThanMaxFormat")
-  );
-  app.totalizerOptions.rateFormatter.lessThanMinFormat = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("lessThanMinFormat")
-  );
+    app.breakDown.totalizerOptions.format = bgoStore.anyValue(
+      totalizer,
+      ns.bgo("format")
+    );
+    app.breakDown.totalizerOptions.filteredFormat = bgoStore.anyValue(
+      totalizer,
+      ns.bgo("filteredFormat")
+    );
+    app.breakDown.totalizerOptions.precision = bgoStore.anyValue(
+      totalizer,
+      ns.bgo("precision")
+    );
+    app.breakDown.totalizerOptions.rateFormatter.format = bgoStore.anyValue(
+      rateFormatter,
+      ns.bgo("format")
+    );
+    app.breakDown.totalizerOptions.rateFormatter.precision = bgoStore.anyValue(
+      rateFormatter,
+      ns.bgo("precision")
+    );
+    app.breakDown.totalizerOptions.rateFormatter.scaleFactor = bgoStore.anyValue(
+      rateFormatter,
+      ns.bgo("scaleFactor")
+    );
+    app.breakDown.totalizerOptions.rateFormatter.maxValue = bgoStore.anyValue(
+      rateFormatter,
+      ns.bgo("maxValue")
+    );
+    app.breakDown.totalizerOptions.rateFormatter.minValue = bgoStore.anyValue(
+      rateFormatter,
+      ns.bgo("minValue")
+    );
+    app.breakDown.totalizerOptions.rateFormatter.moreThanMaxFormat = bgoStore.anyValue(
+      rateFormatter,
+      ns.bgo("moreThanMaxFormat")
+    );
+    app.breakDown.totalizerOptions.rateFormatter.lessThanMinFormat = bgoStore.anyValue(
+      rateFormatter,
+      ns.bgo("lessThanMinFormat")
+    );
   }
 };
 </script>

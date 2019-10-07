@@ -27,6 +27,7 @@ function updateTotals(node, partitions_table, total, ns) {
         let target_subset = target_partition.subsets.find((subset) => {
             return subset.id == node.partitions[partition_id];
         });
+
         //groupFunction define the way to calculate totals
         switch (target_partition.groupFunction) {
             //total = (sum of nodes.ammount - sum of nodes.referenceAmount)/ sum of nodes.referenceAmount
@@ -67,6 +68,7 @@ function updateTotals(node, partitions_table, total, ns) {
         }
 
     });
+    
 }
 //reset filtered totals
 function resetTotal(partitions_table) {

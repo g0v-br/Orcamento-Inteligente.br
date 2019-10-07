@@ -1,11 +1,11 @@
 <template>
   <div class="rate">
-    <v-icon v-if="show_icon" :color="color">{{icon}}</v-icon>
-    {{ formatPercentage(rate) }}
+    <v-icon v-if="show_icon && rate!=Infinity" :color="color">{{icon}}</v-icon>
+    {{ numberFormatter(rate, formatterOptions) }}
   </div>
 </template>
 <script>
-import { formatPercentage } from "@/utils/utils.js";
+import { numberFormatter } from "@/utils/utils.js";
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import { scaleLinear } from "d3-scale";
 export default {
@@ -16,7 +16,8 @@ export default {
     show_icon: {
       type: Boolean,
       default: true
-    }
+    },
+    formatterOptions: Object
   },
   data() {
     return {
@@ -24,6 +25,9 @@ export default {
       rangeTresholds: [],
       colorTresholds: []
     };
+  },
+  methods:{
+    numberFormatter
   },
   computed: {
     icon() {
@@ -43,10 +47,9 @@ export default {
       }
     }
   },
-  methods: {
-    formatPercentage
-  },
-  created() {
+ 
+  mounted() {
+    
     fetchData(this);
   }
 };

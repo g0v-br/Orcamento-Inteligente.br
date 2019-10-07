@@ -39,7 +39,7 @@
             v-slot:item.amount="{ item }"
           >{{ printf(totalizerOptions.format, formatAmount(item.amount)) }}</template>
           <template v-slot:item.trend="{ item }">
-            <Rate :rate="item.trend" :show_icon="true" />
+            <Rate :rate="item.trend" :show_icon="true" :formatterOptions="rateFormatterOptions"/>
           </template>
         </v-data-table>
       </v-card>
@@ -82,6 +82,15 @@ export default {
           moreThanMaxFormat: "",
           lessThanMinFormat: ""
         }
+      },
+      rateFormatterOptions:{
+        format: "",
+          precision: 0,
+          scaleFactor: 0,
+          maxValue: 0,
+          minValue: 0,
+          moreThanMaxFormat: "",
+          lessThanMinFormat: ""
       }
     };
   },
@@ -197,13 +206,12 @@ function fetchData(app) {
   let accounts = bgoStore.each(null, ns.bgo("accountId"));
   accounts.forEach(account => {
     let title = bgoStore.anyValue(account, ns.bgo("title")) || "",
-      amount = bgoStore.anyValue(account, ns.bgo("amount")) || 1,
+      amount = bgoStore.anyValue(account, ns.bgo("amount")) || 0,
       description = bgoStore.anyValue(account, ns.bgo("description")) || "",
       previousValue =
-        bgoStore.anyValue(account, ns.bgo("referenceAmount")) || 1,
+        bgoStore.anyValue(account, ns.bgo("referenceAmount")) || 0,
       accountId = bgoStore.anyValue(account, ns.bgo("accountId")) || "",
       trend = (amount - previousValue) / previousValue;
-
     app.accounts.push({
       accountId,
       title,
@@ -212,6 +220,36 @@ function fetchData(app) {
       description
     });
   });
+  //trend formatter
+  let trendFormatter= bgoStore.any(tableView,ns.bgo("trendFormatter"))
+  app.rateFormatterOptions.format = bgoStore.anyValue(
+    trendFormatter,
+    ns.bgo("format")
+  );
+  app.rateFormatterOptions.precision = bgoStore.anyValue(
+    trendFormatter,
+    ns.bgo("precision")
+  );
+  app.rateFormatterOptions.scaleFactor = bgoStore.anyValue(
+    trendFormatter,
+    ns.bgo("scaleFactor")
+  );
+  app.rateFormatterOptions.maxValue = bgoStore.anyValue(
+    trendFormatter,
+    ns.bgo("maxValue")
+  );
+  app.rateFormatterOptions.minValue = bgoStore.anyValue(
+    trendFormatter,
+    ns.bgo("minValue")
+  );
+  app.rateFormatterOptions.moreThanMaxFormat = bgoStore.anyValue(
+    trendFormatter,
+    ns.bgo("moreThanMaxFormat")
+  );
+  app.rateFormatterOptions.lessThanMinFormat = bgoStore.anyValue(
+    trendFormatter,
+    ns.bgo("lessThanMinFormat")
+  );
 
   // Totalizer
   let totalizer = bgoStore.any(tableView, ns.bgo("hasTotalizer"));

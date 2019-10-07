@@ -336,7 +336,7 @@ here palace your **Terms & conditions** about published service.
 		[ bgo:rate  0.10 ;	bgo:colorId "#a6d96a"^^bgo:RGB ] ,
 		[ bgo:rate 0.25 ;	bgo:colorId "#66bd63"^^bgo:RGB ] ,
 		[ bgo:rate 0.50	;	bgo:colorId "#1a9850"^^bgo:RGB ] ,
-		[ bgo:rate 10.00 ;	bgo:colorId "#006837"^^bgo:RGB ] 
+		[ bgo:rate 1.00 ;	bgo:colorId "#006837"^^bgo:RGB ] 
 .
 
 

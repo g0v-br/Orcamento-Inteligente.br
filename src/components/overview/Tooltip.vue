@@ -5,8 +5,8 @@
       <div><p class="description">{{node.description}}</p></div>
     </div>
     <div class="row">
-      <div><p class="amount">{{printf(options.format, formatAmount(node.amount, options.precision))}}</p></div>
-      <Rate :rate="node.rate" :show_icon="true" />
+      <div><p class="amount">{{printf(options.totalFormatter.format, formatAmount(node.amount, options.totalFormatter.precision))}}</p></div>
+      <Rate :rate="node.rate" :show_icon="true" :formatterOptions="options.rateFormatter" />
     </div>
   </v-sheet>
 </template>

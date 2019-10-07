@@ -4,7 +4,7 @@
       <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">
         <StringFormatter class="title" :string="subset.title" :popup="subset.abstract" />
         <Totalizer v-if="condition_totalizer_rate" :total="subset.total" :filtered="subset.total_filtered" :options="totalizerOptions" />
-        <Rate v-else :rate="subset.total_filtered" :show_icon="true" />
+        <Rate v-else :rate="subset.total_filtered" :show_icon="true" :formatterOptions="totalizerOptions.rateFormatter" />
       </div>
     </div>
     <svg ref="vis" id="vis" />
@@ -39,11 +39,12 @@ export default {
     },
     search: {
       type: String
-    }
+    },
   },
   data(){
     return{
-      totalizerOptions : this.totOption
+      totalizerOptions : this.totOption,
+      
     }
   },
   computed: {
@@ -58,7 +59,7 @@ export default {
     //show total otherwise
     condition_totalizer_rate: function(){
       const cur_partition=bgoStore.any(undefined,ns.bgo("partitionId"),this.activePartitionId);
-      return bgoStore.anyValue(cur_partition,ns.bgo("groupFunction"))!=ns.bgo("trend_average").value;
+      return bgoStore.anyValue(cur_partition,ns.bgo("withGroupFunction"))!=ns.bgo("trend_average").value;
     }
   },
   methods: {

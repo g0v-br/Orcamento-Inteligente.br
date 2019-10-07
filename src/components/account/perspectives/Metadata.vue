@@ -12,7 +12,7 @@
     </div>
     <div class="numbers">
       {{amount}}
-      <Rate class="rate" :rate="rate" :show_icon="true"/>
+      <Rate class="rate" :rate="rate" :show_icon="true" :formatterOptions="rateFormatterOptions"/>
     </div>
   </div>
 </template>
@@ -36,13 +36,16 @@ export default {
       type: String,
       default: ""
     },
-    formatterOptions:{
+    totalFormatterOption:{
+      type: Object
+    },
+    rateFormatterOptions:{
       type: Object
     }
   },
   computed:{
     amount(){
-      return numberFormatter(this.total,this.formatterOptions)
+      return numberFormatter(this.total,this.totalFormatterOption)
     }
   },
 

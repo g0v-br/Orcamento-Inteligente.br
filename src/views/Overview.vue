@@ -66,6 +66,7 @@
           :no-trend-color="legendData.noTrendColor"
           :color-tresholds="legendData.colorTresholds"
           :range-tresholds="legendData.rangeTresholds"
+          :rateFormatterOptions="legendData.rateFormatterLegend"
           class="legend-bottom"
         />
       </div>
@@ -112,7 +113,8 @@ export default {
         label: "",
         noTrendColor: "",
         colorTresholds: [],
-        rangeTresholds: []
+        rangeTresholds: [],
+        rateFormatterLegend:{}
       },
       totalizerOptions: {
         format: "",
@@ -129,9 +131,10 @@ export default {
         }
       },
       tooltipOptions: {
+        totalFormatter:{
         format: "",
-        filteredFormat: "",
-        precision: 0,
+        precision: 0
+        },
         rateFormatter: {
           format: "",
           nanFormat: "",
@@ -229,13 +232,13 @@ function fetchData(app) {
     let label = bgoStore.anyValue(partition, ns.bgo("label"));
     let title = bgoStore.anyValue(partition, ns.bgo("title"));
     let sortOrder =
-      bgoStore.anyValue(partition, ns.bgo("sortOrder")) ||
+      bgoStore.anyValue(partition, ns.bgo("withSortOrder")) ||
       ns.bgo("descending_sort").value;
     let sortCriteria =
-      bgoStore.anyValue(partition, ns.bgo("sortCriteria")) ||
+      bgoStore.anyValue(partition, ns.bgo("withSortCriteria")) ||
       ns.bgo("abs_sort").value;
     let groupFunction =
-      bgoStore.anyValue(partition, ns.bgo("groupFunction")) ||
+      bgoStore.anyValue(partition, ns.bgo("withGroupFunction")) ||
       ns.bgo("amounts_sum").value;
 
     //fetch subset data
@@ -373,11 +376,11 @@ function fetchData(app) {
   let amountFormatter = bgoStore.any(tooltip, ns.bgo("amountFormatter"));
   rateFormatter = bgoStore.any(tooltip, ns.bgo("trendFormatter"));
 
-  app.tooltipOptions.format = bgoStore.anyValue(
+  app.tooltipOptions.totalFormatter.format = bgoStore.anyValue(
     amountFormatter,
     ns.bgo("format")
   );
-  app.tooltipOptions.precision = bgoStore.anyValue(
+  app.tooltipOptions.totalFormatter.precision = bgoStore.anyValue(
     amountFormatter,
     ns.bgo("precision")
   );
@@ -414,6 +417,7 @@ function fetchData(app) {
     rateFormatter,
     ns.bgo("lessThanMinFormat")
   );
+  app.legendData.rateFormatterLegend=app.tooltipOptions.rateFormatter;
 }
 </script>
 

@@ -18,25 +18,17 @@ npm run serve
 The application will be ready on port 8080
 
  
-## Build and run with docker
+## Quick start with docker
 
 The platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized  environment up and running. If you do not already have Docker on your computer, 
 [it's the right time to install it](https://docs.docker.com/install/).
 
-To run LODMAP2D container directly from dockerhub:
-
-```bash
-docker run -d --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
-```
-
-
-To build and run LODMAP2D container:
+To run build & run LODMAP2D container:
 
 ```bash
 docker build -t linkeddatacenter/lodmap2d -f docker/Dockerfile .
 docker run -d --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
 ```
-
 
 Try it pointing your browser to http://localhost:8080
 
@@ -46,9 +38,26 @@ Free docker resources with:
 docker rm -f lodmap2d
 ```
 
+### Connecting to a remote data source
+
+You can also run the standard distibution connected to a custom dataset defining the environment variable **LODMAP2D_DATA**:
+
+```bash
+docker run -d -e LODMAP2D_DATA=http://localhost:8080/data.ttl  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
+```
+
+Or run it using a [LODMAP2D-api](https://github.com/linkeddatacenter/LODMAP2D-api) compatible endpoint:
+
+```bash
+docker run -d -e LODMAP2D_DATA="https://budget.g0v.it/ldp/"  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
+```
+
+If the http(s) resource pointed by the LODMAP2D_DATA variable ends with a /, it is supposed to be a LODMAP2D-api endpoint; else it is supposed to be a RDF resource
+(see *Customization* section for more options)
+
+
+
 ## Using LODMAP2D
-
-
 
 LODMAP2D functions are available from any recent browser by some routes managed directly by the application (i.e. without accessing the network), and in particular:
 
@@ -66,34 +75,32 @@ LODMAP2D functions are available from any recent browser by some routes managed 
 
 The optional parameter *s* allows filtering the displayed objects whose title, description or id contains, even partially, match the parameter value.
 
-LODMAP2D does not support the bgo:SubDomain concept
 
-## Development
+## Project Overview
 
-From a conceptual point of view LODMAP2D a [Bubble Graph Ontology(BGO)](http://linkeddata.center/lodmap-bgo/v1) browser.
+From the Semantic Web point of view, LODMAP2D is an implementation of a [Bubble Graph Ontology(BGO)](http://linkeddata.center/lodmap-bgo/v1) reasoner.
 
-It uses following restrictions:
+LODMAP2D uses following additional axioms and implementationon restrictions:
 
-- **bgo:icon**: if its datatype is a string, it is considered as the name of an icon in fab library.
-- **bgo:link**: if it is a string, it is considered an route (e.g. "/table" ).
-
+- **bgo:icon**: if its data type is a string, it is considered as the name of an icon in [materialdesignicons.com](https://materialdesignicons.com/) library;
+- **bgo:link**: if it is a string, it is considered an route (e.g. "/table" );
+- does not support the bgo:SubDomain concept
+- does not supports langiage tags.
+- is tolerant towards cardinality errors: i.e. provides default for missing informations and ignores multiplicity
 
 From a technical point of view, LODMAP2D is a single page web application (SPA) developed with the [Vue framework](https://vuejs.org/) according to the [SOLID specifications](https://github.com/solid/solid-spec) and based on the [Data Driven Document (d3)](https://d3js.org/) library.
-
 
 The data model adopts the [Resource Description Framework (RDF)](https://www.w3.org/RDF/) and the [Semantic Web standards](https://www.w3.org/standards/semanticweb/data). 
 LODMAP2D recognizes the [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
 
-The data can distributed in the network. They are fetched by dereferencing the routes managed internally by the application through the bgolib library, that is based on [rdflib](https://github.com/linkeddata/rdflib.js/) 
+The data can be fully distributed. They are fetched by dereferencing the application routes through the rewriting  rules managed by the the src/modesls/bgolib.js library, that is based on [rdflib.sj](https://github.com/linkeddata/rdflib.js/) by Timm Berners Lee & friends.
 
-In the default configuration, sample data are in the 
-[sample.ttl file](public/sample.ttl)
 
 ## Security
 
 LODMAP2D is very respectful of users' privacy; it does not use tracking codes and does not use any cookies.
 
-LODMAP2D supports self signed certificates and  authenticate users with [WebID protocol](https://www.w3.org/wiki/WebID) according SOLID specs. 
+TODO: LODMAP2D supports self signed certificates and  authenticate users with [WebID protocol](https://www.w3.org/wiki/WebID) according SOLID specs. 
 
 Login is required only to access  private data. Unlogged users can always access public data.
 
@@ -111,12 +118,10 @@ You can override all files in the *public* directory :
    
 **config.js file format:**
 
-LODMAP2D is designed to dereference routes (i.e. the process of loading the data related to a route)
-
-
 The config.js file contains  the rules that oversee the dereferencing of routes and it is 
-inspired by  [Apache mod_rewrite](https://httpd.apache.org/docs/current/rewrite/): the *window.__dereferencingRules* global array allows to map 
-routes onto a set of web resources in any way you like.
+inspired by  [Apache mod_rewrite](https://httpd.apache.org/docs/current/rewrite/): 
+
+the *window.__dereferencingRules* global array allows to map routes onto a set of web resources in any way you like.
 
 A rewrite rule is composed of three attributes:
 

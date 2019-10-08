@@ -49,7 +49,7 @@ docker run -d -e LODMAP2D_DATA=http://localhost:8080/data.ttl  --name lodmap2d -
 Or run it using a [LODMAP2D-api](https://github.com/linkeddatacenter/LODMAP2D-api) compatible endpoint:
 
 ```bash
-docker run -d -e LODMAP2D_DATA="https://budget.g0v.it/ldp/"  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
+docker run -d -e LODMAP2D_DATA="http://pub.linkeddata.center:29340/"  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
 ```
 
 If the http(s) resource pointed by the LODMAP2D_DATA variable ends with a /, it is supposed to be a LODMAP2D-api endpoint; else it is supposed to be a RDF resource

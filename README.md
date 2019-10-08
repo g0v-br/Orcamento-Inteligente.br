@@ -104,6 +104,19 @@ TODO: LODMAP2D supports self signed certificates and  authenticate users with [W
 
 Login is required only to access  private data. Unlogged users can always access public data.
 
+
+**Notes on CORS:**
+
+The data is loaded by rdflib.js that uses a very strict security pattern to access web resource. 
+If you need to read cross-origin data resources, be sure that the remote server is configured to:
+
+- explicit allow your host ( unfortunatelly, just `Access-Control-Allow-Origin: *` is not enough because of credential support request)
+- allow request method GET
+- allow request header 'accept'
+- force allowed headers to pre flight response
+- set request credentials supported
+
+
 ## Customization
 
 ### Web App customization
@@ -125,23 +138,12 @@ the *window.__dereferencingRules* global array allows to map routes onto a set o
 
 A rewrite rule is composed of three attributes:
 
-- a regular expression (* regexp *) that is applied to the LODMAP2D route, in case of match the rule is evaluated,
+- a regular expression (*regexp*) that is applied to the LODMAP2D route, in case of match the rule is evaluated,
 otherwise it is ignored
-- an array of strings (* targets *) where each element can contain references (with "$ 1", "$ 2" .. "$ n") to any groups present in the regexp.
+- an array of strings (*targets*) where each element can contain references (with "$ 1", "$ 2" .. "$ n") to any groups present in the regexp.
 - an optional boolean value (*isLast*, default=false) that says if the elaboration of the rules must be considered concluded.
 
-The directory [docs/config-examples](docs/config-examples) contains some example of config.js files:
-
-**notes on CORS:**
-
-The data loading is done by rdflib.js, that uses  a very strict security pattern to access web resource. 
-If you need to read cross-origin data resources, be sure that the remote server is configured to:
-
-- explicit allow your host ( unfortunatelly, just `Access-Control-Allow-Origin: *` is not enough because of credential support request)
-- allow request method GET
-- allow request header 'accept'
-- force allowed headers to pre flight response
-- set request credentials supported
+The directory [docs/config-examples](docs/config-examples) contains some example of config.js files
 
 
 ### Using docker to customize LOADMAP2D

@@ -1,3 +1,12 @@
+/*
+ * With these rules:
+ *  - the route /account/xxx loads http://localhost:8000/app.ttl, http://localhost:8000/accounts.ttl and http://localhost:8000/account/xxx.ttl
+ *  - the route /partition/overview loads loads http://localhost:8000/app.ttl and http://localhost:8000/partitions.ttl
+ *  - the route /credits loads loads http://localhost:8000/app.ttl and http://localhost:8000/credits.ttl
+ *  - ...
+ *  
+ *  Note that http://localhost:8000/app.ttl is always loaded (because "isLast": true is not present
+ */
 (function (window) {
 	let namespace = "http://localhost:8000";
 	

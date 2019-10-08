@@ -132,6 +132,17 @@ otherwise it is ignored
 
 The directory [docs/config-examples](docs/config-examples) contains some example of config.js files:
 
+**notes on CORS:**
+
+The data loading is done by rdflib.js, that uses  a very strict security pattern to access web resource. 
+If you need to read cross-origin data resources, be sure that the remote server is configured to:
+
+- explicit allow your host ( unfortunatelly, just `Access-Control-Allow-Origin: *` is not enough because of credential support request)
+- allow request method GET
+- allow request header 'accept'
+- force allowed headers to pre flight response
+- set request credentials supported
+
 
 ### Using docker to customize LOADMAP2D
 

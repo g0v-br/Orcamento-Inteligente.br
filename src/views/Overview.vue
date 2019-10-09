@@ -114,7 +114,7 @@ export default {
         noTrendColor: "",
         colorTresholds: [],
         rangeTresholds: [],
-        rateFormatterLegend:{}
+        rateFormatterLegend: {}
       },
       totalizerOptions: {
         format: "",
@@ -131,9 +131,9 @@ export default {
         }
       },
       tooltipOptions: {
-        totalFormatter:{
-        format: "",
-        precision: 0
+        totalFormatter: {
+          format: "",
+          precision: 0
         },
         rateFormatter: {
           format: "",
@@ -417,7 +417,7 @@ function fetchData(app) {
     rateFormatter,
     ns.bgo("lessThanMinFormat")
   );
-  app.legendData.rateFormatterLegend=app.tooltipOptions.rateFormatter;
+  app.legendData.rateFormatterLegend = app.tooltipOptions.rateFormatter;
 }
 </script>
 

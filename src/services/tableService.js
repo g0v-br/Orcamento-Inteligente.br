@@ -71,6 +71,4 @@ export default {
     getTotalizer: () => {
         return getTotalizer(tableView, ns.bgo('hasTotalizer'))
     }
-
-
 }

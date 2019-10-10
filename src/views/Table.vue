@@ -88,7 +88,6 @@ export default {
     filteredAccounts() {
       return this.accounts.filter(node => {
         let search = this.search.toLowerCase(),
-          //let search = "1";
           title = node.title.toLowerCase().includes(search),
           description = node.description.toLowerCase().includes(search);
 

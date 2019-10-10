@@ -38,10 +38,7 @@ export default {
       return this.show_icon && isFinite(this.rate);
     },
     color() {
-      if (isFinite(this.rate)) {
-        if (this.rate < 0) return "red";
-        if (this.rate > 0) return "green";
-      }
+      //TODO creare un collegamento tra le view e il trend_color per prendere i vari colori, oppure usare colori fissi
       return "lightgrey";
       // let fill = scaleLinear()
       //   .domain(this.rangeTresholds)

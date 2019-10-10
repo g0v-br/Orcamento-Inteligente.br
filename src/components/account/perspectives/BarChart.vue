@@ -59,12 +59,24 @@ export default {
           title: {
             display: false
           },
+          tooltips: {
+            displayColors: false,
+            callbacks: {
+              label: function(tooltipItem) {
+                var label = tooltipItem.yLabel + " \n//TODO da formattare";
+                return label;
+              }
+            }
+          },
           scales: {
             yAxes: [
               {
                 ticks: {
                   suggestedMin: 0,
-                  suggestedMax: maxAmount + 1
+                  suggestedMax: maxAmount + 1,
+                  callback: function(value) {
+                    return value + " \n//TODO da formattare";
+                  }
                 }
               }
             ]
@@ -86,7 +98,7 @@ canvas {
   height: 100%;
   width: 100%;
 }
-p.dataError{
+p.dataError {
   color: red;
 }
 </style>

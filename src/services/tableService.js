@@ -11,26 +11,26 @@ export default {
             {
                 text: store.anyValue(tableView, ns.bgo("headerTitle")) || "",
                 value: "title",
-                // width: "45%"
+                width: "45%"
             },
             {
                 //unserachable
                 text: store.anyValue(tableView, ns.bgo("headerAmount")) || "",
                 value: "amount",
-                // width: "15%",
-                // filter: () => true
+                width: "15%",
+                filter: () => true
             },
             {
                 //unserachable
                 text: store.anyValue(tableView, ns.bgo("headerTrend")) || "",
                 value: "trend",
-                // width: "15%",
-                // filter: () => true
+                width: "15%",
+                filter: () => true
             },
             {
                 text: store.anyValue(tableView, ns.bgo("headerDescription")) || "",
                 value: "description",
-                // width: "25%"
+                width: "25%"
             }
         ];
     },
@@ -70,7 +70,6 @@ export default {
 
     getTotalizer: () => {
         return getTotalizer(tableView, ns.bgo('hasTotalizer'))
-
     }
 
 

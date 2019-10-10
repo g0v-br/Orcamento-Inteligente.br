@@ -3,12 +3,13 @@
     <div class="g0v-table-container">
       <v-card>
         <v-card-title>
-          <Totalizer :total="total" :filtered="total" :options="totalizerOptions" />
+          <div>{{totalizer(total, total)}}</div>
+          <!-- <Totalizer :total="total" :filtered="total" :options="totalizerOptions" /> -->
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
-            :placeholder="label"
+            :placeholder="searchPane.label"
             single-line
             hide-details
             @input="onSearchInput"
@@ -35,11 +36,9 @@
               color="blue"
             >mdi-link</v-icon>
           </template>
-          <template
-            v-slot:item.amount="{ item }"
-          >{{ printf(totalizerOptions.format, formatAmount(item.amount)) }}</template>
+          <template v-slot:item.amount="{ item }">{{ formatters.formatAmount(item.amount) }}</template>
           <template v-slot:item.trend="{ item }">
-            <Rate :rate="item.trend" :show_icon="true" :formatterOptions="rateFormatterOptions" />
+            <Rate :rate="item.trend" :formatter="formatters.formatPercentage" />
           </template>
         </v-data-table>
       </v-card>
@@ -49,17 +48,11 @@
 
 
 <script>
-import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import Totalizer from "@/components/Totalizer";
 import StringFormatter from "@/components/StringFormatter.vue";
 import Rate from "@/components/Rate";
-import { formatAmount, printf } from "@/utils/utils.js";
 import { ServiceFactory } from "@/services/ServiceFactory.js";
 const TableFactory = ServiceFactory.get("table");
-console.log("TableFactory", TableFactory.getAccounts());
-console.log("TableFactory", TableFactory.getHeaders());
-console.log("TableFactory", TableFactory.getSearchPane());
-console.log("TableFactory", TableFactory.getTotalizer()(130,100));
 
 export default {
   name: "Table",
@@ -70,39 +63,20 @@ export default {
   },
   data() {
     return {
-      test: null,
-      title: "",
-      headers: [],
-      accounts: [],
       search: "",
-      label: "",
-      totalizerOptions: {
-        format: "",
-        filteredFormat: "",
-        precision: 0,
-        rateFormatter: {
-          format: "",
-          precision: 0,
-          scaleFactor: 0,
-          maxValue: 0,
-          minValue: 0,
-          moreThanMaxFormat: "",
-          lessThanMinFormat: ""
-        }
-      },
-      rateFormatterOptions: {
-        format: "",
-        precision: 0,
-        scaleFactor: 0,
-        maxValue: 0,
-        minValue: 0,
-        moreThanMaxFormat: "",
-        lessThanMinFormat: ""
-      }
+      headers: null,
+      accounts: null,
+      searchPane: null,
+      formatters: null,
+      totalizer: null
     };
   },
   created() {
-    fetchData(this);
+    this.headers = TableFactory.getHeaders();
+    this.accounts = TableFactory.getAccounts();
+    this.searchPane = TableFactory.getSearchPane();
+    this.formatters = TableFactory.getFormatters();
+    this.totalizer = TableFactory.getTotalizer();
     this.search = this.$route.query.s || "";
   },
   computed: {
@@ -166,141 +140,9 @@ export default {
         top += header.text + ",";
       });
       return top.substring(0, top.length - 1);
-    },
-    formatAmount,
-    printf
+    }
   }
 };
-
-function fetchData(app) {
-  //Fetch tableView and searchPane  const domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
-  const domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
-  const tableView = bgoStore.any(domain, ns.bgo("hasTableView"));
-
-  let searchPane = bgoStore.any(tableView, ns.bgo("hasSearchPane"));
-
-  //fetch Title
-  app.title = bgoStore.anyValue(tableView, ns.bgo("title"));
-
-  //Fetch Headers
-  app.headers.push({
-    text: bgoStore.anyValue(tableView, ns.bgo("headerTitle")),
-    value: "title",
-    width: "45%"
-  });
-  app.headers.push({
-    text: bgoStore.anyValue(tableView, ns.bgo("headerAmount")),
-    value: "amount",
-    width: "15%",
-    filter: () => true
-  }); //unserachable
-  app.headers.push({
-    text: bgoStore.anyValue(tableView, ns.bgo("headerTrend")),
-    value: "trend",
-    width: "15%",
-    filter: () => true
-  }); //unsearchable
-  app.headers.push({
-    text: bgoStore.anyValue(tableView, ns.bgo("headerDescription")),
-    value: "description",
-    width: "25%"
-  });
-
-  //Set the search
-  app.label = bgoStore.anyValue(searchPane, ns.bgo("label"));
-
-  //Fetch Accounts
-  let accounts = bgoStore.each(null, ns.bgo("accountId"));
-  accounts.forEach(account => {
-    let title = bgoStore.anyValue(account, ns.bgo("title")) || "",
-      amount = bgoStore.anyValue(account, ns.bgo("amount")) || 0,
-      description = bgoStore.anyValue(account, ns.bgo("description")) || "",
-      previousValue =
-        bgoStore.anyValue(account, ns.bgo("referenceAmount")) || 0,
-      accountId = bgoStore.anyValue(account, ns.bgo("accountId")) || "",
-      trend = (amount - previousValue) / previousValue;
-    app.accounts.push({
-      accountId,
-      title,
-      amount,
-      trend,
-      description
-    });
-  });
-  //trend formatter
-  let trendFormatter = bgoStore.any(tableView, ns.bgo("trendFormatter"));
-  app.rateFormatterOptions.format = bgoStore.anyValue(
-    trendFormatter,
-    ns.bgo("format")
-  );
-  app.rateFormatterOptions.precision = bgoStore.anyValue(
-    trendFormatter,
-    ns.bgo("precision")
-  );
-  app.rateFormatterOptions.scaleFactor = bgoStore.anyValue(
-    trendFormatter,
-    ns.bgo("scaleFactor")
-  );
-  app.rateFormatterOptions.maxValue = bgoStore.anyValue(
-    trendFormatter,
-    ns.bgo("maxValue")
-  );
-  app.rateFormatterOptions.minValue = bgoStore.anyValue(
-    trendFormatter,
-    ns.bgo("minValue")
-  );
-  app.rateFormatterOptions.moreThanMaxFormat = bgoStore.anyValue(
-    trendFormatter,
-    ns.bgo("moreThanMaxFormat")
-  );
-  app.rateFormatterOptions.lessThanMinFormat = bgoStore.anyValue(
-    trendFormatter,
-    ns.bgo("lessThanMinFormat")
-  );
-
-  // Totalizer
-  let totalizer = bgoStore.any(tableView, ns.bgo("hasTotalizer"));
-  let rateFormatter = bgoStore.any(totalizer, ns.bgo("ratioFormatter"));
-
-  app.totalizerOptions.format = bgoStore.anyValue(totalizer, ns.bgo("format"));
-  app.totalizerOptions.filteredFormat = bgoStore.anyValue(
-    totalizer,
-    ns.bgo("filteredFormat")
-  );
-  app.totalizerOptions.precision = bgoStore.anyValue(
-    totalizer,
-    ns.bgo("precision")
-  );
-
-  app.totalizerOptions.rateFormatter.format = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("format")
-  );
-  app.totalizerOptions.rateFormatter.precision = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("precision")
-  );
-  app.totalizerOptions.rateFormatter.scaleFactor = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("scaleFactor")
-  );
-  app.totalizerOptions.rateFormatter.maxValue = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("maxValue")
-  );
-  app.totalizerOptions.rateFormatter.minValue = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("minValue")
-  );
-  app.totalizerOptions.rateFormatter.moreThanMaxFormat = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("moreThanMaxFormat")
-  );
-  app.totalizerOptions.rateFormatter.lessThanMinFormat = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("lessThanMinFormat")
-  );
-}
 </script>
 
 

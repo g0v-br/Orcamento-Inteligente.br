@@ -39,7 +39,7 @@
             v-slot:item.amount="{ item }"
           >{{ printf(totalizerOptions.format, formatAmount(item.amount)) }}</template>
           <template v-slot:item.trend="{ item }">
-            <Rate :rate="item.trend" :show_icon="true" :formatterOptions="rateFormatterOptions"/>
+            <Rate :rate="item.trend" :show_icon="true" :formatterOptions="rateFormatterOptions" />
           </template>
         </v-data-table>
       </v-card>
@@ -54,6 +54,12 @@ import Totalizer from "@/components/Totalizer";
 import StringFormatter from "@/components/StringFormatter.vue";
 import Rate from "@/components/Rate";
 import { formatAmount, printf } from "@/utils/utils.js";
+import { ServiceFactory } from "@/services/ServiceFactory.js";
+const TableFactory = ServiceFactory.get("table");
+console.log("TableFactory", TableFactory.getAccounts());
+console.log("TableFactory", TableFactory.getHeaders());
+console.log("TableFactory", TableFactory.getSearchPane());
+console.log("TableFactory", TableFactory.getTotalizer()(130,100));
 
 export default {
   name: "Table",
@@ -64,6 +70,7 @@ export default {
   },
   data() {
     return {
+      test: null,
       title: "",
       headers: [],
       accounts: [],
@@ -83,14 +90,14 @@ export default {
           lessThanMinFormat: ""
         }
       },
-      rateFormatterOptions:{
+      rateFormatterOptions: {
         format: "",
-          precision: 0,
-          scaleFactor: 0,
-          maxValue: 0,
-          minValue: 0,
-          moreThanMaxFormat: "",
-          lessThanMinFormat: ""
+        precision: 0,
+        scaleFactor: 0,
+        maxValue: 0,
+        minValue: 0,
+        moreThanMaxFormat: "",
+        lessThanMinFormat: ""
       }
     };
   },
@@ -221,7 +228,7 @@ function fetchData(app) {
     });
   });
   //trend formatter
-  let trendFormatter= bgoStore.any(tableView,ns.bgo("trendFormatter"))
+  let trendFormatter = bgoStore.any(tableView, ns.bgo("trendFormatter"));
   app.rateFormatterOptions.format = bgoStore.anyValue(
     trendFormatter,
     ns.bgo("format")

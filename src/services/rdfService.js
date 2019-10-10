@@ -1,28 +1,25 @@
 import $rdf from "rdflib";
-import config from '@/defaults.js';
+import { filter } from "minimatch";
 
-export const bgoStore = $rdf.graph();
-export const fetcher = new $rdf.Fetcher(bgoStore);
+export const store = $rdf.graph();
+export const fetcher = new $rdf.Fetcher(store);
 export const ns = {
 	rdf: $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
-	rdfs: $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#'),
 	bgo: $rdf.Namespace('http://linkeddata.center/lodmap-bgo/v1#')
 };
-/**
-return an array og DefaultMenuItem
-@param a menu object
-*/
+
+
 export function getDefaultMenuItems(parent) {
 	let items = [];
 	if (parent) {
-		bgoStore
+		store
 			.any(parent, ns.bgo("withCustomMenuItems"))
 			.elements.forEach(element => {
-				let path = bgoStore.any(element, ns.bgo("link"));
+				let path = store.any(element, ns.bgo("link"));
 
 				items.push({
-					title: bgoStore.any(element, ns.bgo("title")) || "",
-					icon: bgoStore.any(element, ns.bgo("icon")) || "fas fa-bullseye",
+					title: store.any(element, ns.bgo("title")) || "",
+					icon: store.any(element, ns.bgo("icon")) || "fas fa-bullseye",
 					path: path.value,
 					external: path.termType == "NamedNode"
 				});
@@ -30,6 +27,82 @@ export function getDefaultMenuItems(parent) {
 		return items;
 	} else {
 		return undefined;
+	}
+}
+
+
+const formatNumber = (number, options) => {
+	// console.log('number', number);
+	let formattedAmount, res;
+	if (isFinite(number)) {
+		number = number * options.scaleFactor;
+		if (number < options.minValue) {
+			res = options.lessThanMinFormat;
+		} else if (number > options.maxValue) {
+			res = options.moreThanMaxFormat;
+		} else {
+			formattedAmount = new Intl.NumberFormat(undefined,
+				{ maximumFractionDigits: options.precision })
+				.format(number);
+			res = options.format.replace("%s", formattedAmount);
+		}
+	} else {
+		res = options.nanFormat;
+	}
+	return res;
+}
+
+
+export const getNumberFormatter = (formatter) => {
+	// const formatter = store.any(subject, predicate),
+	const options = {
+		format : store.anyValue(formatter, ns.bgo("format")) || "%s",
+		precision: store.anyValue(formatter, ns.bgo("precision")) || 2,
+		nanFormat: store.anyValue(formatter, ns.bgo("nanFormat")) || "N/A",
+		scaleFactor: store.anyValue(formatter, ns.bgo("scaleFactor")) || 1,
+		maxValue: store.anyValue(formatter, ns.bgo("maxValue")) || Number.MAX_SAFE_INTEGER,
+		minValue: store.anyValue(formatter, ns.bgo("minValue")) || Number.MIN_SAFE_INTEGER,
+		moreThanMaxFormat: store.anyValue(formatter, ns.bgo("moreThanMaxFormat")) || "%s",
+		lessThanMinFormat: store.anyValue(formatter, ns.bgo("lessThanMinFormat")) || "%s"
+	}
+
+	return (number) => {
+		return formatNumber(number, options)
+	}
+}
+
+
+export const getTotalizer = (subject, predicate) => {
+	const totalizer = store.any(subject, predicate),
+		rateFormatter = getNumberFormatter(store.any(totalizer, ns.bgo("ratioFormatter"))),
+		filteredFormat = store.anyValue(totalizer, ns.bgo("filteredFormat")) || "%s",
+		format = store.anyValue(totalizer, ns.bgo("format")) || "%s";
+	let options = {
+		precision: store.anyValue(totalizer, ns.bgo("precision")) || 2,
+		nanFormat: store.anyValue(totalizer, ns.bgo("nanFormat")) || "N/A",
+		scaleFactor: store.anyValue(totalizer, ns.bgo("scaleFactor")) || 1,
+		maxValue: store.anyValue(totalizer, ns.bgo("maxValue")) || Number.MAX_SAFE_INTEGER,
+		minValue: store.anyValue(totalizer, ns.bgo("minValue")) || Number.MIN_SAFE_INTEGER,
+		moreThanMaxFormat: store.anyValue(totalizer, ns.bgo("moreThanMaxFormat")) || "%s",
+		lessThanMinFormat: store.anyValue(totalizer, ns.bgo("lessThanMinFormat")) || "%s"
+	}
+
+	return (total, filteredTotal) => {
+		let formattedTotal;
+		if (total == filteredTotal) {
+			formattedTotal = formatNumber(total, {
+				...options,
+				format: format
+			});
+			return formattedTotal
+		} else {
+			let formattedRatio = rateFormatter(filteredTotal / total);
+			formattedTotal = formatNumber(filteredTotal, {
+				...options,
+				format: filteredFormat
+			});
+			return formattedTotal + formattedRatio;
+		}
 	}
 }
 
@@ -54,72 +127,4 @@ export function dref(uri, rules = config.dereferencingRules) {
 	return results;
 }
 
-/*
-// pseudocodice: per maggiori informazioni si veda anche /README.md al capitolo "Personalizzazione dei dati"
 
-Si presume che la variabile $dereferencingRules contenga qualcosa tipo:
-
-{
-	"dereferencingRules": [
-		{ "regexp":".*" , "targets": [ "http://example.com/app.ttl"] } ,
-		{ "regexp":"/account/(.+)" , "targets": [ "http://example.com/account/$1.ttl" ] , "isLast": true } ,
-		{ "regexp":"/partition/(.+)" , "targets": [ "http://example.com/accounts.ttl", "http://example.com/partition/$1.ttl" ] , "isLast": true } ,
-	]
-}
-
-
-la chiamata di dref( "http:/qualsiasicosa/partition/pippo") deve ritornare:
-	[
-		"http://example.com/app.ttl",
-		"http://example.com/accounts.ttl",
-		"http://example.com/partition/pippo.ttl"
-	]
-
-
-la chiamata di dref( "/partition/overview") deve ritornare:
-	[
-		"http://example.com/app.ttl",
-		"http://example.com/accounts.ttl",
-		"http://example.com/partition/overview.ttl"
-	]
-
-
-la chiamata di dref( "/nonesiste") deve ritornare:
-	[
-		"/nonesiste"
-		"http://example.com/app.ttl"
-	]
-
-function dref( String $uri): array
-{
-	$results = [];
-	$config = include "/config.js";
-
-	//aggiungo l'ultima regola standard che matcha sempre
-	$dereferencingRules = $config->dereferencingRules + { "regexp": $uri , "targets": [ $uri ] } ;
-
-
-	foreach( $config->dereferencingRules a $rule ) {
-		$pattern = '%'.$rule->regexp.'%';
-		if( preg_matches ($pattern, $uri, $matches ) {
-			// se il pattern matcha l'uri, per ogni target nella regola vengono
-			// sostituiti gli id di gruppo della reghex ($1,$2 etc)
-			// in javascript abbiamo visto che esiste una funzione che fa prorpio questo
-			foreach( $rule->regexp as $target) {
-				$newtarget = preg_replace( "/\$1/",$matches[1], $newtarget);
-				$newtarget = preg_replace( "/\$2/",$matches[2], $newtarget);
-				$newtarget = preg_replace( "/\$3/",$matches[3], $newtarget);
-				$newtarget = preg_replace( "/\$4/",$matches[4], $newtarget);
-				$newtarget = preg_replace( "/\$5/",$matches[5], $newtarget);
-				...
-
-				// aggiunge $newtarget ai risultati (push)
-				$results[]=$newtarget
-			}
-			if ($rule->isLast) break; // exit foreach loop, ignora le regole successive
-		}
-	}
-
-	return $results
-}
-*/

@@ -2,13 +2,13 @@
   <v-app>
     <!-- TOOLBAR -->
     <v-app-bar app light>
-      <Navigation />
+      <!-- <Navigation /> -->
       <v-toolbar-title class="headline text-uppercase title">
         <span>{{title}}</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <Social class="sharing" v-if="hasSocialSharing" />
-      <Option class="option" v-if="hasOptionMenu" />
+      <!-- <Social class="sharing" v-if="hasSocialSharing" />
+      <Option class="option" v-if="hasOptionMenu" /> -->
     </v-app-bar>
 
     <!-- CONTENT -->
@@ -17,7 +17,7 @@
     </v-content>
 
     <!-- FOOTER -->
-    <Footer v-if="hasFooterMenu" />
+    <!-- <Footer v-if="hasFooterMenu" /> -->
   </v-app>
 </template>
 

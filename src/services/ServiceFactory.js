@@ -19,3 +19,6 @@ const services = {
 export const ServiceFactory = {
     get: name => services[name]
 }
+// export default {
+//     get: name => services[name]
+// }

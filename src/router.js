@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import { bgoStore, fetcher, dref } from './models/bgo.js';
+import { bgoStore, fetcher, dref } from './models/bgo';
+import { store, fetcher as fetcher2 } from './services/rdfService';
 
-// console.table(dref("http://localhost:8080/app"));
+console.table(dref("/partition/overview"));
 
 Vue.use(Router)
 
@@ -35,6 +36,7 @@ export default new Router({
             component: () => import('./views/Table.vue'),
             beforeEnter: async (to, from, next) => {
                 await fetcher.load(dref(to.path))
+                await fetcher2.load(dref(to.path))
                 next();
             }
         },

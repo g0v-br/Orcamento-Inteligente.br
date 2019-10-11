@@ -19,16 +19,16 @@ export const formatAmount = (amount, precision = 2) => {
 export const numberFormatter = (number, options = {precision: 2}) => {
     let formattedAmount, text;
     // console.log(number,options)
-    if (!isFinite(number) || !number) {
+    if (!isFinite(number) || number === undefined) {
         text = options.nanFormat || "N/A";
     } else {
         if(options.scaleFactor) {
             number = number * options.scaleFactor;
 
         }
-        if (options.minValue && (number < options.minValue)) {
+        if (options.minValue !== undefined && (number < options.minValue)) {
             text = options.lessThanMinFormat;
-        } else if (options.maxValue && number > options.maxValue) {
+        } else if (options.maxValue !== undefined && (number > options.maxValue)) {
             text = options.moreThanMaxFormat;
         } else {
             formattedAmount = new Intl.NumberFormat(undefined,

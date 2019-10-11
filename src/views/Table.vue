@@ -52,7 +52,7 @@ import Totalizer from "@/components/Totalizer";
 import StringFormatter from "@/components/StringFormatter.vue";
 import Rate from "@/components/Rate";
 import { ServiceFactory } from "@/services/ServiceFactory.js";
-const TableFactory = ServiceFactory.get("table");
+const TableService = ServiceFactory.get("table");
 
 export default {
   name: "Table",
@@ -72,11 +72,11 @@ export default {
     };
   },
   created() {
-    this.headers = TableFactory.getHeaders();
-    this.accounts = TableFactory.getAccounts();
-    this.searchPane = TableFactory.getSearchPane();
-    this.formatters = TableFactory.getFormatters();
-    this.totalizer = TableFactory.getTotalizer();
+    this.headers = TableService.getHeaders();
+    this.accounts = TableService.getAccounts();
+    this.searchPane = TableService.getSearchPane();
+    this.formatters = TableService.getFormatters();
+    this.totalizer = TableService.getTotalizer();
     this.search = this.$route.query.s || "";
   },
   computed: {

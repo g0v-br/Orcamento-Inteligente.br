@@ -3,9 +3,7 @@ import { store, ns, getNumberFormatter, getTotalizer } from "./rdfService";
 const domain = store.any(null, ns.bgo("hasTableView"));
 const tableView = store.any(domain, ns.bgo("hasTableView"));
 
-
 export default {
-
     getHeaders: () => {
         return [
             {
@@ -39,7 +37,7 @@ export default {
         const searchPane = store.any(tableView, ns.bgo("hasSearchPane"));
         return {
             label: store.anyValue(searchPane, ns.bgo("label")) || ""
-        }
+        };
     },
 
     getAccounts: () => {
@@ -57,7 +55,7 @@ export default {
                 amount,
                 trend,
                 description
-            }
+            };
         });
     },
 
@@ -65,10 +63,10 @@ export default {
         return {
             formatPercentage: getNumberFormatter(store.any(tableView, ns.bgo("trendFormatter"))),
             formatAmount: getNumberFormatter(store.any(tableView, ns.bgo("amountFormatter")))
-        }
+        };
     },
 
     getTotalizer: () => {
-        return getTotalizer(tableView, ns.bgo('hasTotalizer'))
+        return getTotalizer(tableView, ns.bgo("hasTotalizer"));
     }
-}
+};

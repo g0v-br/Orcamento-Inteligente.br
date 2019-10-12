@@ -48,8 +48,6 @@
 
 
 <script>
-import Totalizer from "@/components/Totalizer";
-import StringFormatter from "@/components/StringFormatter.vue";
 import Rate from "@/components/Rate";
 import { ServiceFactory } from "@/services/ServiceFactory.js";
 const TableService = ServiceFactory.get("table");
@@ -57,8 +55,6 @@ const TableService = ServiceFactory.get("table");
 export default {
   name: "Table",
   components: {
-    Totalizer,
-    StringFormatter,
     Rate
   },
   data() {

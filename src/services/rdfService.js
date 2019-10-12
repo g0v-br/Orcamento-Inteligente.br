@@ -59,8 +59,8 @@ export const getNumberFormatter = (formatter) => {
 		precision: store.anyValue(formatter, ns.bgo("precision")) || 2,
 		nanFormat: store.anyValue(formatter, ns.bgo("nanFormat")) || "N/A",
 		scaleFactor: store.anyValue(formatter, ns.bgo("scaleFactor")) || 1,
-		maxValue: store.anyValue(formatter, ns.bgo("maxValue")) || Number.MAX_SAFE_INTEGER,
-		minValue: store.anyValue(formatter, ns.bgo("minValue")) || Number.MIN_SAFE_INTEGER,
+		maxValue: store.anyValue(formatter, ns.bgo("maxValue")) || Infinity,
+		minValue: store.anyValue(formatter, ns.bgo("minValue")) || -Infinity,
 		moreThanMaxFormat: store.anyValue(formatter, ns.bgo("moreThanMaxFormat")) || "%s",
 		lessThanMinFormat: store.anyValue(formatter, ns.bgo("lessThanMinFormat")) || "%s"
 	}
@@ -80,8 +80,8 @@ export const getTotalizer = (subject, predicate) => {
 		precision: store.anyValue(totalizer, ns.bgo("precision")) || 2,
 		nanFormat: store.anyValue(totalizer, ns.bgo("nanFormat")) || "N/A",
 		scaleFactor: store.anyValue(totalizer, ns.bgo("scaleFactor")) || 1,
-		maxValue: store.anyValue(totalizer, ns.bgo("maxValue")) || Number.MAX_SAFE_INTEGER,
-		minValue: store.anyValue(totalizer, ns.bgo("minValue")) || Number.MIN_SAFE_INTEGER,
+		maxValue: store.anyValue(totalizer, ns.bgo("maxValue")) || Infinity,
+		minValue: store.anyValue(totalizer, ns.bgo("minValue")) || -Infinity,
 		moreThanMaxFormat: store.anyValue(totalizer, ns.bgo("moreThanMaxFormat")) || "%s",
 		lessThanMinFormat: store.anyValue(totalizer, ns.bgo("lessThanMinFormat")) || "%s"
 	}

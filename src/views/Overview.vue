@@ -77,22 +77,19 @@
 
 <script>
 import { ServiceFactory } from "@/services/ServiceFactory.js";
-import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import BubbleChart from "@/components/overview/BubbleChart";
 import Legend from "@/components/overview/Legend";
-import Totalizer from "@/components/Totalizer";
 import Tooltip from "@/components/overview/Tooltip";
 import StringFormatter from "@/components/StringFormatter.vue";
 import { debounce } from "lodash";
 
-const OverviewService = ServiceFactory.get('overview');
+const OverviewService = ServiceFactory.get("overview");
 
 export default {
   name: "overview",
   components: {
     BubbleChart,
     Legend,
-    Totalizer,
     Tooltip,
     StringFormatter
   },
@@ -117,7 +114,7 @@ export default {
       total: 0,
       totalFiltered: 0,
       isNodeHovered: false,
-      hoveredNode: {},
+      hoveredNode: {}
     };
   },
 
@@ -182,7 +179,6 @@ export default {
     }
   }
 };
-
 </script>
 
 <style scoped>
@@ -294,7 +290,8 @@ export default {
 @media (max-width: 768px) {
   .container-fluid {
     /* min-height: 120vh; */
-  }  .content-grid {
+  }
+  .content-grid {
     grid-template-areas:
       "part"
       "search"

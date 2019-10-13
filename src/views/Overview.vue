@@ -232,9 +232,6 @@ export default {
   overflow: auto;
   } */
 
-.meta-abstract {
-}
-
 .chart {
   position: relative;
   grid-area: chart;
@@ -288,9 +285,6 @@ export default {
 
 /* Landscape phones and down */
 @media (max-width: 768px) {
-  .container-fluid {
-    /* min-height: 120vh; */
-  }
   .content-grid {
     grid-template-areas:
       "part"

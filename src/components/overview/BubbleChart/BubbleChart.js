@@ -18,7 +18,7 @@ function updateTotals(node, partitions_table, total, ns) {
         overviewPartition.total += node.amount;
     }
     if ((total == "filtered" || total == undefined) && node.active) {
-        overviewPartition.total_filtered += node.amount;
+        overviewPartition.totalFiltered += node.amount;
     }
     Object.keys(node.partitions).forEach((partition_id) => {
         let target_partition = partitions_table.find((partition) => {
@@ -48,7 +48,7 @@ function updateTotals(node, partitions_table, total, ns) {
                 if ((total == "filtered" || total == undefined) && node.active) {
                     target_subset.totalSupport.amountFiltered += node.amount;
                     target_subset.totalSupport.referenceAmountFiltered += node.referenceAmount;
-                    target_subset.total_filtered = (target_subset.totalSupport.amountFiltered - target_subset.totalSupport.referenceAmountFiltered) / target_subset.totalSupport.referenceAmountFiltered;
+                    target_subset.totalFiltered = (target_subset.totalSupport.amountFiltered - target_subset.totalSupport.referenceAmountFiltered) / target_subset.totalSupport.referenceAmountFiltered;
                 }
                 break;
             //total = sum of node.account (absolute o natural)
@@ -56,14 +56,14 @@ function updateTotals(node, partitions_table, total, ns) {
                 if (total == "total" || total == undefined)
                     target_subset.total += target_partition.sortCriteria == ns.bgo("abs_sort") ? Math.abs(node.amount) : node.amount;
                 if ((total == "filtered" || total == undefined) && node.active)
-                    target_subset.total_filtered += target_partition.sortCriteria == ns.bgo("abs_sort") ? Math.abs(node.amount) : node.amount;
+                    target_subset.totalFiltered += target_partition.sortCriteria == ns.bgo("abs_sort") ? Math.abs(node.amount) : node.amount;
                 break;
             //total = number of nodes in the subset
             case ns.bgo("accounts_count").value:
                 if (total == "total" || total == undefined)
                     target_subset.total += 1;
                 if ((total == "filtered" || total == undefined) && node.active)
-                    target_subset.total_filtered += 1;
+                    target_subset.totalFiltered += 1;
                 break;
         }
 
@@ -75,13 +75,13 @@ function resetTotal(partitions_table) {
     partitions_table.forEach((partition) => {
         if (partition.id != "overview") {
             partition.subsets.forEach((subset) => {
-                subset.total_filtered = 0;
+                subset.totalFiltered = 0;
 
                 if (subset.totalSupport != undefined)
                     subset.totalSupport = null;
             })
         } else {
-            partition.total_filtered = 0;
+            partition.totalFiltered = 0;
         }
 
     });

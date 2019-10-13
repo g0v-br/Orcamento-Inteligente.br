@@ -5,8 +5,8 @@
       <div><p class="description">{{node.description}}</p></div>
     </div>
     <div class="row">
-      <div><p class="amount">{{printf(options.totalFormatter.format, formatAmount(node.amount, options.totalFormatter.precision))}}</p></div>
-      <Rate :rate="node.rate" :show_icon="true" :formatterOptions="options.rateFormatter" />
+      <div><p class="amount">{{amountFormatter(node.amount)}}</p></div>
+      <Rate :rate="node.rate" :show_icon="true" :formatter="rateFormatter"/>
     </div>
   </v-sheet>
 </template>
@@ -18,7 +18,9 @@ export default {
   name: "tooltip",
   props: {
     node: Object,
-    options: Object
+    options: Object,
+    amountFormatter: Function,
+    rateFormatter: Function
   },
   components: {
     Rate

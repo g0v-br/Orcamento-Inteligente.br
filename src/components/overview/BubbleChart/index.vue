@@ -3,8 +3,8 @@
     <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">
         <StringFormatter class="title" :string="subset.title" :popup="subset.abstract" />
-        <Totalizer v-if="condition_totalizer_rate" :total="subset.total" :filtered="subset.total_filtered" :options="totalizerOptions" />
-        <Rate v-else :rate="subset.total_filtered" :show_icon="true" :formatterOptions="totalizerOptions.rateFormatter" />
+        <div v-if="condition_totalizer_rate">{{totalizer(subset.total, subset.totalFiltered)}}</div>
+        <Rate v-else :rate="subset.totalFiltered" :show_icon="true" :formatterOptions="totalizerOptions.rateFormatter" />
       </div>
     </div>
     <svg ref="vis" id="vis" />
@@ -28,8 +28,8 @@ export default {
     Rate
   },
   props: {
-    totOption:{
-      type: Object
+    totalizer:{
+      type: Function
     },
     activePartitionId: {
       type: String
@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     total_subset(subset) {
-      return "" + subset.total + ";" + subset.total_filtered;
+      return "" + subset.total + ";" + subset.totalFiltered;
     }
   },
   watch: {
@@ -112,7 +112,7 @@ export default {
       emitTotalEvent(
         app,
         overviewPartition.total,
-        overviewPartition.total_filtered
+        overviewPartition.totalFiltered
       );
     }, 200);
 
@@ -123,7 +123,7 @@ export default {
       emitTotalEvent(
         this,
         overviewPartition.total,
-        overviewPartition.total_filtered
+        overviewPartition.totalFiltered
       );
     }
     window.addEventListener("resize", debouncedUpdate);
@@ -141,17 +141,17 @@ export default {
     );
   }
 };
-function emitTotalEvent(app, total, total_filtered) {
+function emitTotalEvent(app, total, totalFiltered) {
   let data = {
     total,
-    total_filtered
+    totalFiltered
   };
   app.$emit("total_changed", data);
 }
 function sortSubset(partition_active, ns) {
   // sort array asc or desc
   partition_active.subsets.sort((a, b) => {
-    return a.total_filtered - b.total_filtered;
+    return a.totalFiltered - b.totalFiltered;
   });
   if (partition_active.sortOrder == ns.bgo("descending_sort").value) {
     partition_active.subsets.reverse();

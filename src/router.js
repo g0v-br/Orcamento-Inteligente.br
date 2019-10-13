@@ -57,6 +57,7 @@ export default new Router({
             props: true,
             beforeEnter: async (to, from, next) => {
                 await fetcher.load(dref(to.path))
+                await fetcher2.load(dref(to.path))
                 next();
             }
         },

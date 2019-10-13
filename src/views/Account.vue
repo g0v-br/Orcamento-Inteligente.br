@@ -8,25 +8,29 @@
     <div class="content-grid">
       <div class="metadata">
         <Metadata
-          :accountId="metadata.accountId"
-          :title="metadata.title"
-          :description="metadata.description"
-          :abstract="metadata.abstract"
-          :total="metadata.total"
-          :rate="metadata.rate"
-          :totalFormatterOptions="metadata.totalFormatterOptions"
-          :rateFormatterOptions="metadata.rateFormatterOptions"
+          :accountId="accountId"
+          :title="account.title"
+          :description="account.description"
+          :abstract="account.abstract"
+          :total="account.amount"
+          :rate="account.rate"
+          :formatAmount="metadataPerspective.formatters.formatAmount"
+          :formatPercentage="metadataPerspective.formatters.formatPercentage"
         />
       </div>
-      <div v-if="historicRec!=undefined && historicRec.records.length>0 " class="bar">
-        <BarChart :historic-rec="historicRec.records" :title="historicRec.title" />
+      <div v-if="historicalPerspective && account.historicRecords.length > 0" class="bar">
+        <BarChart
+          :historic-rec="historicRecords"
+          :formatAmount="historicalPerspective.formatters.formatAmount"
+          :title="historicalPerspective.title"
+        />
       </div>
-      <div v-if="breakDown!=undefined && breakDown.records.length>0" class="pie">
+      <div v-if="breakdownPerspective && account.breakDownRecords.length >0" class="pie">
         <PieChart
-          :breakdown="breakDown.records"
-          :title="breakDown.title"
-          :total="breakDown.total"
-          :totalizerOptions="breakDown.totalizerOptions"
+          :breakdown="breakdownRecords"
+          :title="breakdownPerspective.title"
+          :total="account.amount"
+          :totalizer="breakdownPerspective.totalizer"
         />
       </div>
     </div>
@@ -39,6 +43,9 @@ import BarChart from "@/components/account/perspectives/BarChart";
 import Metadata from "@/components/account/perspectives/Metadata";
 import PieChart from "@/components/account/perspectives/PieChart";
 import { isNullOrUndefined } from "util";
+import { ServiceFactory } from "@/services/ServiceFactory.js";
+const AccountService = ServiceFactory.get("account");
+
 export default {
   components: {
     BarChart,
@@ -53,54 +60,35 @@ export default {
   },
   data() {
     return {
-      historicRec: {
-        title: "",
-        records: []
-      },
-      breakDown: {
-        title: "",
-        records: [],
-        total: 0,
-        totalizerOptions: {
-          format: "",
-          filteredFormat: "",
-          precision: 0,
-          rateFormatter: {
-            format: "",
-            precision: 0,
-            scaleFactor: 0,
-            maxValue: 0,
-            minValue: 0,
-            moreThanMaxFormat: "",
-            lessThanMinFormat: ""
-          }
-        }
-      },
-      metadata: {
-        title: {},
-        description: {},
-        abstract: {},
-        total: 0,
-        rate: 0,
-        totalFormatterOptions: {
-          format: "",
-          precision: 0
-        },
-        rateFormatterOptions: {
-          format: "",
-          scaleFactor: 0,
-          precision: 0,
-          maxValue: 0,
-          minValue: 0,
-          nanFormat: "",
-          moreThanMaxFormat: "",
-          lessThanMinFormat: ""
-        }
-      }
+      account: null,
+      metadataPerspective: null,
+      historicalPerspective: null,
+      breakdownPerspective: null
     };
   },
   created() {
-    fetchData(this);
+    this.account = AccountService.getAccountById(this.accountId);
+    this.metadataPerspective = {
+      formatters: AccountService.getMetadataFormatter()
+    };
+    this.historicalPerspective = AccountService.getHistoricPerspective();
+    this.breakdownPerspective = AccountService.getBreakdownPerspective();
+    // fetchData(this);
+  },
+  computed: {
+    historicRecords() {
+      return this.account.historicRecords
+        .map(rec => ({
+          x: rec.version,
+          y: rec.amount
+        }))
+        .sort((a, b) => {
+          return a.x.localeCompare(b.x);
+        });
+    },
+    breakdownRecords() {
+      return this.account.breakDownRecords;
+    }
   }
 };
 
@@ -110,7 +98,7 @@ let fetchData = app => {
   //metadata fetch data
   //rate metadata formatter: metadata don't have formatter, use accountView metadata
   let rateFormatter = bgoStore.any(accountView, ns.bgo("trendFormatter"));
-  
+
   app.metadata.rateFormatterOptions.format = bgoStore.anyValue(
     rateFormatter,
     ns.bgo("format")
@@ -149,11 +137,13 @@ let fetchData = app => {
     accountView,
     ns.bgo("amountFormatter")
   );
-  app.metadata.totalFormatterOptions.format = bgoStore.anyValue(metadataNumberFormatter, ns.bgo("format")) || "";
-  app.metadata.totalFormatterOptions.precision = bgoStore.anyValue(metadataNumberFormatter, ns.bgo("precision")) || 0;
+  app.metadata.totalFormatterOptions.format =
+    bgoStore.anyValue(metadataNumberFormatter, ns.bgo("format")) || "";
+  app.metadata.totalFormatterOptions.precision =
+    bgoStore.anyValue(metadataNumberFormatter, ns.bgo("precision")) || 0;
   //--------------------------------------------------------------------------//
   //metadata data
-  let account = bgoStore.any(undefined, ns.bgo("accountId"), app.accountId);
+  let account = bgoStore.any(null, ns.bgo("accountId"), app.accountId);
   app.metadata.title =
     bgoStore.any(account, ns.bgo("title")) ||
     bgoStore.any(account, ns.bgo("accountId"));

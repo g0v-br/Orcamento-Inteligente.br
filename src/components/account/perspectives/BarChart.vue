@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <h4>{{title}}</h4>
+    <!-- <h4>{{title}}</h4> -->
     <canvas v-if="historicRec.length!=0" ref="canvas"></canvas>
   </div>
 </template>
@@ -9,9 +9,8 @@
 import Chart from "chart.js";
 export default {
   props: {
-    historicRec: {
-      type: Array
-    },
+    historicRec: Array,
+    formatAmount: Function,
     title: {
       type: String,
       default: "Bar chart"
@@ -57,14 +56,14 @@ export default {
             display: false
           },
           title: {
-            display: false
+            display: true,
+            text: this.title
           },
           tooltips: {
             displayColors: false,
             callbacks: {
-              label: function(tooltipItem) {
-                var label = tooltipItem.yLabel + " \n//TODO da formattare";
-                return label;
+              label: tooltipItem => {
+                return this.formatAmount(tooltipItem.yLabel);
               }
             }
           },
@@ -74,8 +73,8 @@ export default {
                 ticks: {
                   suggestedMin: 0,
                   suggestedMax: maxAmount + 1,
-                  callback: function(value) {
-                    return value + " \n//TODO da formattare";
+                  callback: value => {
+                    return this.formatAmount(value);
                   }
                 }
               }

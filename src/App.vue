@@ -2,28 +2,27 @@
   <v-app>
     <!-- TOOLBAR -->
     <v-app-bar app light>
-      <!-- <Navigation /> -->
+      <Navigation :overview="navigationMenu.overview" :partitions="navigationMenu.partitions" :otherNavigationItem="navigationMenu.otherNavigationItems" />
       <v-toolbar-title class="headline text-uppercase title">
         <span>{{title}}</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <!-- <Social class="sharing" v-if="socialSheringMenu.hasIt" :title="socialSheringMenu.title" :description="socialSheringMenu.description" :hashtag="hashtsg"/> -->
-      <!-- <Option class="option" v-if="optionMenu.hasIt" :optionItems="optionMenu.optionItems" /> -->
+      <Social class="sharing" v-if="socialSheringMenu.hasIt" :title="socialSheringMenu.title" :description="socialSheringMenu.description" :hashtag="socialSheringMenu.hashtag"/>
+      <Option class="option" v-if="optionMenu.hasIt" :optionItems="optionMenu.optionItems" />
     </v-app-bar>
 
-    <!-- CONTENT 
+    <!-- CONTENT -->
     <v-content>
       <router-view />
-    </v-content>-->
+    </v-content>
 
     <!-- FOOTER -->
-    <!-- <Footer v-if="footerMenu.hasIt" :footerItems="footerMenu.footerItems"/> -->
+    <Footer v-if="footerMenu.hasIt" :footerItems="footerMenu.footerItems" :copyright="footerMenu.copyright"/>
   </v-app>
 </template>
 
 <script>
-import { ServiceFactory } from "@/services/ServiceFactory.js";
-const AppService = ServiceFactory.get("app");
+import AppService from "@/services/appService";
 import Navigation from "@/components/menu/Navigation.vue";
 import Social from "@/components/menu/Social.vue";
 import Option from "@/components/menu/Option.vue";
@@ -51,16 +50,12 @@ export default {
     };
   },
   created() {
-    this.title= AppService.getTitle();
-    // this.navigationMenu= AppService.getNavigationMenu();
-    // this.optionMenu= AppService.getOptionMenu();
-    // this.socialSheringMenu= AppService.getSocialSharingMenu();
-    // this.footerMenu= AppService.getFooterMenu();
-    // console.log(this.title)
-    // console.log(this.optionMenu)
-    // console.log(this.navigationMenu)
-    // console.log(this.socialSheringMenu)
-    // console.log(this.footerMenu)
+    const appService= new AppService();
+    this.title= appService.getTitle();
+    this.navigationMenu= appService.getNavigationMenu();
+    this.optionMenu= appService.getOptionMenu();
+    this.socialSheringMenu= appService.getSocialSharingMenu();    
+    this.footerMenu= appService.getFooterMenu();
   }
 };
 </script>

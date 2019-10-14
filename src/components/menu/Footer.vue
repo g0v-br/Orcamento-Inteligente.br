@@ -24,9 +24,9 @@ export default {
     StringFormatter
   },
   props: {
-      footerItems: [],
-      copyright: undefined
-  }
+      footerItems: Array,
+      copyright: Object
+  },
 };
 
 </script>

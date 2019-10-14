@@ -14,14 +14,17 @@
         </v-list-item-content>
       </v-list-item>
       <!--partitions-->
-      <v-list-group v-if="partition" no-action>
+      <v-list-group v-if="partitions" no-action>
         <template v-slot:activator>
+          <v-list-item-icon>
+          <v-icon v-text="partitions.icon"></v-icon>
+        </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title v-text="partition.title"></v-list-item-title>
+            <v-list-item-title v-text="partitions.title"></v-list-item-title>
           </v-list-item-content>
         </template>
         <v-list-item
-          v-for="el in partition.partitionList"
+          v-for="el in partitions.partitionsList"
           :key="el.title"
           v-on:click="menuShow=false"
           :to="el.path + '?s='+($route.query.s||'')"
@@ -44,6 +47,7 @@
         <v-list-item-content>
           <v-list-item-title v-text="el.title"></v-list-item-title>
         </v-list-item-content>
+        <v-icon class="external" v-if="el.external" size="10px">fas fa-share</v-icon>
       </v-list-item>
     </v-list>
   </v-menu>
@@ -53,12 +57,22 @@ import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 export default {
   name: "Navigation",
   props: {
-      menuShow: Boolean,
       overview: Object,
-      partition: Object,
+      partitions: Object,
       otherNavigationItem: Array
-  }
+  },
+  data(){
+    return {
+      menuShow:false
+    }
+  },
 };
 
 </script>
+
+<style scoped>
+ .external{
+     padding: 0.5em;
+ }
+</style>
 

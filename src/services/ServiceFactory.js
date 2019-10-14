@@ -1,6 +1,5 @@
 import AboutService from './aboutService'
 import AccountService from './accountService'
-import AppService from './appService'
 import CreditsService from './creditsService'
 import OverviewService from './overviewService'
 import TableService from './tableService'
@@ -9,7 +8,6 @@ import TermsService from './termsService'
 const services = {
     about: AboutService,
     account: AccountService,
-    app: AppService,
     credits: CreditsService,
     overview: OverviewService,
     table: TableService,

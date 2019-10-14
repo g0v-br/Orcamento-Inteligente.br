@@ -11,17 +11,17 @@ export const ns = {
 export function getDefaultMenuItems(parent) {
 	let items = [];
 	if (parent) {
-		store
-			.any(parent, ns.bgo("withCustomMenuItems"))
-			.elements.forEach(element => {
+		let array = store
+			.each(parent, ns.bgo("withCustomMenuItem")).forEach(element => {
 				let path = store.any(element, ns.bgo("link"));
-
-				items.push({
-					title: store.any(element, ns.bgo("title")) || "",
-					icon: store.any(element, ns.bgo("icon")) || "fas fa-bullseye",
-					path: path.value,
-					external: path.termType == "NamedNode"
-				});
+				if (path != undefined) {
+					items.push({
+						title: store.anyValue(element, ns.bgo("title")) || "",
+						icon: store.anyValue(element, ns.bgo("icon")) || "fas fa-bullseye",
+						path: path.value,
+						external: path.termType == "NamedNode"
+					});
+				}
 			});
 		return items;
 	} else {
@@ -55,7 +55,7 @@ const formatNumber = (number, options) => {
 export const getNumberFormatter = (formatter) => {
 	// const formatter = store.any(subject, predicate),
 	const options = {
-		format : store.anyValue(formatter, ns.bgo("format")) || "%s",
+		format: store.anyValue(formatter, ns.bgo("format")) || "%s",
 		precision: store.anyValue(formatter, ns.bgo("precision")) || 2,
 		nanFormat: store.anyValue(formatter, ns.bgo("nanFormat")) || "N/A",
 		scaleFactor: store.anyValue(formatter, ns.bgo("scaleFactor")) || 1,

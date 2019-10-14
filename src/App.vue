@@ -7,22 +7,23 @@
         <span>{{title}}</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <!-- <Social class="sharing" v-if="hasSocialSharing" />
-      <Option class="option" v-if="hasOptionMenu" /> -->
+      <!-- <Social class="sharing" v-if="socialSheringMenu.hasIt" :title="socialSheringMenu.title" :description="socialSheringMenu.description" :hashtag="hashtsg"/> -->
+      <!-- <Option class="option" v-if="optionMenu.hasIt" :optionItems="optionMenu.optionItems" /> -->
     </v-app-bar>
 
-    <!-- CONTENT -->
+    <!-- CONTENT 
     <v-content>
       <router-view />
-    </v-content>
+    </v-content>-->
 
     <!-- FOOTER -->
-    <!-- <Footer v-if="hasFooterMenu" /> -->
+    <!-- <Footer v-if="footerMenu.hasIt" :footerItems="footerMenu.footerItems"/> -->
   </v-app>
 </template>
 
 <script>
-import { bgoStore, fetcher, ns } from "./models/bgo.js";
+import { ServiceFactory } from "@/services/ServiceFactory.js";
+const AppService = ServiceFactory.get("app");
 import Navigation from "@/components/menu/Navigation.vue";
 import Social from "@/components/menu/Social.vue";
 import Option from "@/components/menu/Option.vue";
@@ -39,37 +40,29 @@ export default {
   data() {
     return {
       title: "",
-      //render social menu
-      hasSocialSharing: false,
-      //render option menu
-      hasOptionMenu: false,
-      //render footer menu
-      hasFooterMenu: false
+      //navigation
+      navigationMenu:{},
+      //option
+      optionMenu:{},
+      //
+      socialSheringMenu:{},
+      //footer
+      footerMenu:{}
     };
   },
-  mounted() {
-    fetchData(this);
+  created() {
+    this.title= AppService.getTitle();
+    // this.navigationMenu= AppService.getNavigationMenu();
+    // this.optionMenu= AppService.getOptionMenu();
+    // this.socialSheringMenu= AppService.getSocialSharingMenu();
+    // this.footerMenu= AppService.getFooterMenu();
+    // console.log(this.title)
+    // console.log(this.optionMenu)
+    // console.log(this.navigationMenu)
+    // console.log(this.socialSheringMenu)
+    // console.log(this.footerMenu)
   }
 };
-
-function fetchData(app) {
-  let domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
-  //if domain doesn't exist go to error page
-  if (!domain) {
-    app.$router.push("error");
-  }
-  //if title doesn't exist use default
-  let title = bgoStore.any(domain, ns.bgo("title"));
-  app.title = title ? title.value : "LODMAP 2D";
-  //
-  let socialShering = bgoStore.any(domain, ns.bgo("hasSocialSharing"));
-  app.hasSocialSharing = socialShering
-    ? Boolean(Number(socialShering.value))
-    : false;
-  //
-  app.hasOptionMenu = bgoStore.any(domain, ns.bgo("hasOptionMenu"));
-  app.hasFooterMenu = bgoStore.any(domain, ns.bgo("hasFooterMenu"));
-}
 </script>
 
 <style scoped>

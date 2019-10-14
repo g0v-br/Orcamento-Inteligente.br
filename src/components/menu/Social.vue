@@ -84,18 +84,15 @@
 </template>
 <script>
 import SocialSharing from "vue-social-sharing";
-import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 export default {
   name: "Social",
   components: {
     SocialSharing
   },
-  data() {
-    return {
-      title:"",
-      description: "",
-      hashtag: "",
-    };
+  props:{
+    title:String,
+    description:String,
+    hashtag:String
   },
   computed: {
     getUrl() {
@@ -108,23 +105,9 @@ export default {
       copyText.select();
       document.execCommand("copy");
     }
-  },
-  mounted() {
-    fetchData(this);
   }
 };
-function fetchData(app){
-   let domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
-    //title
-    let title=bgoStore.any(domain,ns.bgo("title"));
-    app.title= title? (title.value) : "LODMAP 2D";
-    //description
-    let description=bgoStore.any(domain,ns.bgo("description"));
-    app.description= description? (description.value) : "";
-    //hashtag
-    let hashtag=bgoStore.any(domain,ns.bgo("hashtag"));
-    app.hashtag= hashtag? (hashtag.value) : "#LODMAP2D";
-}
+
 </script>
 <style>
 .copy-url{

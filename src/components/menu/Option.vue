@@ -19,21 +19,10 @@
       </v-menu>
 </template>
 <script>
-import { bgoStore, fetcher, ns, getDefaultMenuItems } from "@/models/bgo.js";
 export default {
-   data() {
-    return {
-      optionItems: [],
-    };
+  props:{
+    optionItems:Array
   },
-  mounted(){
-      fetchData(this)
-  }
-}
-function fetchData(app){
-    let domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
-    let optionMenu=bgoStore.any(domain, ns.bgo("hasOptionMenu"));
-    app.optionItems = getDefaultMenuItems(optionMenu);
 }
 </script>
 

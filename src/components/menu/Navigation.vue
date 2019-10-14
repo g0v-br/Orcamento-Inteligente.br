@@ -52,66 +52,13 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 export default {
   name: "Navigation",
-  data() {
-    return {
-      menuShow: false,
-      overview: {},
-      partition: {},
-      otherNavigationItem: []
-    };
-  },
-  mounted() {
-    fetchData(this);
+  props: {
+      menuShow: Boolean,
+      overview: Object,
+      partition: Object,
+      otherNavigationItem: Array
   }
 };
-function fetchData(app) {
-  let domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
-  let overview = bgoStore.any(domain, ns.bgo("hasOverview"));
-  let credits = bgoStore.any(domain, ns.bgo("hasCredits"));
-  let terms = bgoStore.any(domain, ns.bgo("hasTerms"));
-  let tabview = bgoStore.any(domain, ns.bgo("hasTableView"));
-  //overview for navigation menu
-  app.overview.title = bgoStore.any(overview, ns.bgo("label")).value;
-  app.overview.icon = bgoStore.any(overview, ns.bgo("icon")).value;
-  app.overview.path = "/";
-  //partitions
-  let partitionNode = bgoStore.any(overview, ns.bgo("hasPartitions"));
-  let partitionList = bgoStore.any(partitionNode, ns.bgo("hasPartitionList"));
-  app.partition.title = bgoStore.any(partitionNode, ns.bgo("label")).value;
-  app.partition.icon = bgoStore.any(partitionNode, ns.bgo("icon")).value;
-  app.partition.partitionList = [];
-  if (partitionList && partitionList.elements.length != 0) {
-    partitionList.elements.forEach(el => {
-      app.partition.partitionList.push({
-        title: bgoStore.anyValue(el, ns.bgo("label")),
-        path: "/partition/" + bgoStore.any(el, ns.bgo("partitionId")).value
-      });
-    });
-  } else {
-    app.partition = undefined;
-  }
-  //otherlinks
-  if (tabview) {
-    app.otherNavigationItem.push({
-      icon: "fas fa-table",
-      title: bgoStore.any(tabview, ns.bgo("title")).value,
-      path: "/table"
-    });
-  }
-  if (credits) {
-    app.otherNavigationItem.push({
-      icon: "fas fa-users",
-      title: bgoStore.any(credits, ns.bgo("title")).value,
-      path: "/credits"
-    });
-  }
-  if (terms) {
-    app.otherNavigationItem.push({
-      icon: "fas fa-gavel",
-      title: bgoStore.any(terms, ns.bgo("title")).value,
-      path: "/terms"
-    });
-  }
-}
+
 </script>
 

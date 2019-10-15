@@ -3,11 +3,11 @@ import App from './App.vue'
 import Error from './views/errors/500.vue'
 import router from './router'
 import vuetify from './plugins/vuetify';
-import { store, dref, fetcher as fetcher2 } from './services/rdfService';
+import { store, dref, fetcher } from './services/rdfService';
 
-console.table(dref("/app"));
+// console.table(dref("/app"));
 
-fetcher2.load(dref("/app")).then(
+fetcher.load(dref("/app")).then(
   response => {
     console.log ('store popolato')
     new Vue({

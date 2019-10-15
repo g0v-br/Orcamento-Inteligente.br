@@ -5,7 +5,7 @@
     <v-icon class="info-icon" v-if="hasPopup" @click="dialog=true">mdi-information-outline</v-icon>
     <v-dialog v-model="dialog" max-width="290" clearable>
       <v-card>
-        <v-card-text v-html="popup.value"></v-card-text>
+        <v-card-text v-html="getFormattedString(popup)"></v-card-text>
       </v-card>
     </v-dialog>
   </div>
@@ -40,18 +40,18 @@ export default {
       dialog: false
     };
   },
-  mounted() {
-    let element;
-    // if (this.isDefined(this.string)) {
-    //   element = document.getElementById(this.hash(this.string.value));
-    //   element.innerHTML = this.getFormattedString(this.string);
-    // }
+  // created() {
+  //   let element;
+  //   // if (this.isDefined(this.string)) {
+  //   //   element = document.getElementById(this.hash(this.string.value));
+  //   //   element.innerHTML = this.getFormattedString(this.string);
+  //   // }
 
-    if (this.isDefined(this.popup)) {
-      /*element = document.getElementById("ekkle");*/
-      this.popup.value = this.getFormattedString(this.popup);
-    }
-  },
+  //   // if (this.isDefined(this.popup)) {
+  //   //   /*element = document.getElementById("ekkle");*/
+  //   //   this.popup.value = this.getFormattedString(this.popup);
+  //   // }
+  // },
 
   methods: {
     hash(string) {

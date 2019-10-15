@@ -4,7 +4,12 @@
       <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">
         <StringFormatter class="title" :string="subset.title" :popup="subset.abstract" />
         <div v-if="condition_totalizer_rate">{{totalizer(subset.total, subset.totalFiltered)}}</div>
-        <Rate v-else :rate="subset.totalFiltered" :show_icon="true" :formatterOptions="totalizerOptions.rateFormatter" />
+        <Rate
+          v-else
+          :rate="subset.totalFiltered"
+          :show_icon="true"
+          :formatterOptions="totalizerOptions.rateFormatter"
+        />
       </div>
     </div>
     <svg ref="vis" id="vis" />
@@ -12,11 +17,11 @@
 </template>
 
 <script>
-import { bgoStore, fetcher, ns } from "@/models/bgo.js";
+import { store, fetcher, ns } from "@/services/rdfService.js";
 import BubbleChart from "@/components/overview/BubbleChart/BubbleChart.js";
 import _debounce from "lodash/debounce";
 import Totalizer from "@/components/Totalizer.vue";
-import Rate from "@/components/Rate"
+import Rate from "@/components/Rate";
 import StringFormatter from "@/components/StringFormatter.vue";
 let debouncedUpdate;
 let debouncedSearch;
@@ -28,7 +33,7 @@ export default {
     Rate
   },
   props: {
-    totalizer:{
+    totalizer: {
       type: Function
     },
     activePartitionId: {
@@ -39,13 +44,12 @@ export default {
     },
     search: {
       type: String
-    },
-  },
-  data(){
-    return{
-      totalizerOptions : this.totOption,
-      
     }
+  },
+  data() {
+    return {
+      totalizerOptions: this.totOption
+    };
   },
   computed: {
     activePartitionSubSets: function() {
@@ -57,9 +61,16 @@ export default {
     },
     //when rate group function is used show the rate for each subset
     //show total otherwise
-    condition_totalizer_rate: function(){
-      const cur_partition=bgoStore.any(undefined,ns.bgo("partitionId"),this.activePartitionId);
-      return bgoStore.anyValue(cur_partition,ns.bgo("withGroupFunction"))!=ns.bgo("trend_average").value;
+    condition_totalizer_rate: function() {
+      const cur_partition = store.any(
+        undefined,
+        ns.bgo("partitionId"),
+        this.activePartitionId
+      );
+      return (
+        store.anyValue(cur_partition, ns.bgo("withGroupFunction")) !=
+        ns.bgo("trend_average").value
+      );
     }
   },
   methods: {
@@ -80,7 +91,7 @@ export default {
     chart = new BubbleChart(
       "#vis",
       this,
-      { bgoStore, ns },
+      { store, ns },
       this.partitions,
       this.$refs.bound.offsetWidth,
       this.$refs.bound.offsetHeight

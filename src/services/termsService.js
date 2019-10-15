@@ -1,5 +1,8 @@
 import { bgoStore, ns } from "./rdfService";
 
-export default {
+export default function () {
 
+    return {
+
+    }
 }

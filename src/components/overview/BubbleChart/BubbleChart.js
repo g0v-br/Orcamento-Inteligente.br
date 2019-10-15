@@ -102,10 +102,10 @@ function createNodes(store, ns, width, height, searchText, partitions_table) {
         // description = description ? description : "";
 
         let amount = store.anyValue(account, ns.bgo('amount'));
-        amount = amount ? parseFloat(amount) : 0;
+        amount = amount ? (amount) : 0;
 
         let refAmount = store.anyValue(account, ns.bgo('referenceAmount'));
-        refAmount = refAmount ? parseFloat(refAmount) : 0;
+        refAmount = refAmount ? (refAmount) : 0;
 
         let rate = (amount - refAmount) / refAmount;
         rate = isFinite(rate) ? rate : NaN;
@@ -168,7 +168,7 @@ export default class BubbleChart {
         this.app = app;
         this.height = height;
         this.width = width;
-        this.store = bgolib.bgoStore;
+        this.store = bgolib.store;
         this.ns = bgolib.ns;
         this.partitions = partitions
         this.velocityDecay = 0.2;

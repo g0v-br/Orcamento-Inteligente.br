@@ -1,7 +1,7 @@
 <template>
   <div ref="bound" class="bc-container">
-    <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
-      <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">
+    <div ref="grid" v-if="activePartition.id != 'overview'" class="partitions-grid">
+      <div v-for="subset in activePartition.subsets" :key="subset.id" class="grid-block">
         <StringFormatter class="title" :string="subset.title" :popup="subset.abstract" />
         <div v-if="condition_totalizer_rate">{{totalizer(subset.total, subset.totalFiltered)}}</div>
         <Rate
@@ -38,11 +38,8 @@ export default {
     totalizer: {
       type: Function
     },
-    activePartitionId: {
-      type: String
-    },
-    partitions: {
-      type: Array
+    activePartition: {
+      type: Object
     },
     search: {
       type: String
@@ -75,25 +72,11 @@ export default {
       );
     }
   },
-  methods: {
-    total_subset(subset) {
-      return "" + subset.total + ";" + subset.totalFiltered;
-    }
-  },
-  watch: {
-    search: {
-      handler: function(newVal) {
-        let app = this;
-        debouncedSearch(newVal, app);
-      },
-      deep: true
-    }
-  },
+  
   mounted() {
     chart = new BubbleChart(
       "#vis",
       this,
-      this.partitions,
       this.$refs.bound.offsetWidth,
       this.$refs.bound.offsetHeight,
       this.accounts,
@@ -105,7 +88,8 @@ export default {
       this.$refs.bound.offsetWidth,
       this.$refs.bound.offsetHeight,
       gridBloks,
-      this.activePartitionId
+      this.activePartition.subsets,
+      this.activePartition.id
     );
     //new update can't be called twice in 200ms
     debouncedUpdate = _debounce(() => {
@@ -114,32 +98,13 @@ export default {
         this.$refs.bound.offsetWidth,
         this.$refs.bound.offsetHeight,
         gridBloks,
-        this.activePartitionId
+        this.activePartition.subsets,
+        this.activePartition.id
       );
     }, 200);
-    //wait that user finisc to write search string
-    debouncedSearch = _debounce((newVal, app) => {
-      chart.filterBubbles(newVal);
-      let overviewPartition = app.partitions.find(p => {
-        return p.id == "overview";
-      });
-      emitTotalEvent(
-        app,
-        overviewPartition.total,
-        overviewPartition.totalFiltered
-      );
-    }, 200);
-
-    if (this.activePartitionId == "overview") {
-      let overviewPartition = this.partitions.find(p => {
-        return p.id == "overview";
-      });
-      emitTotalEvent(
-        this,
-        overviewPartition.total,
-        overviewPartition.totalFiltered
-      );
-    }
+   
+      
+    
     window.addEventListener("resize", debouncedUpdate);
   },
   beforeDestroy() {
@@ -151,26 +116,10 @@ export default {
       this.$refs.bound.offsetWidth,
       this.$refs.bound.offsetHeight,
       gridBloks,
-      this.activePartitionId
+      this.activePartition
     );
   }
 };
-function emitTotalEvent(app, total, totalFiltered) {
-  let data = {
-    total,
-    totalFiltered
-  };
-  app.$emit("total_changed", data);
-}
-function sortSubset(partition_active, ns) {
-  // sort array asc or desc
-  partition_active.subsets.sort((a, b) => {
-    return a.totalFiltered - b.totalFiltered;
-  });
-  if (partition_active.sortOrder == ns.bgo("descending_sort").value) {
-    partition_active.subsets.reverse();
-  }
-}
 </script>
 
 

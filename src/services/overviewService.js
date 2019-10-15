@@ -187,13 +187,13 @@ export default function () {
 
                 const title = store.anyValue(account, ns.bgo("title")) || "",
                     id = store.anyValue(account, ns.bgo("accountId")) || "",
-                    amount = (store.anyValue(account, ns.bgo("amount"))) || 0,
-                    refAmount = (store.anyValue(account, ns.bgo("referenceAmount"))) || 0,
+                    amount = parseFloat(store.anyValue(account, ns.bgo("amount"))) || 0,
+                    refAmount = parseFloat(store.anyValue(account, ns.bgo("referenceAmount"))) || 0,
                     rate = isFinite((amount - refAmount) / refAmount)?(amount - refAmount) / refAmount:NaN,
                     description = store.anyValue(account, ns.bgo("description")) || "",
                     abstract = store.anyValue(account, ns.bgo("abstract")) || "",
                     bg = store.anyValue(account, ns.bgo('depiction')) || null;
-
+              
                 return {
                     id,
                     title,
@@ -207,6 +207,18 @@ export default function () {
                 };
             });
         },
+
+        getCriteria(){
+            let criteria={}
+            criteria["TrendAverage"]=ns.bgo("TrendAverage").value;
+            criteria["AmountsSum"]=ns.bgo("AmountsSum").value;
+            criteria["AccountsCount"]=ns.bgo("AccountsCount").value;
+            criteria["abs_sort"]=ns.bgo("abs_sort").value;
+            criteria["natural_sort"]=ns.bgo("natural_sort").value;
+            criteria["ascending_sort"]=ns.bgo("ascending_sort").value;
+            criteria["descending_sort"]=ns.bgo("descending_sort").value;
+            return criteria;
+        }
 
     };
 }

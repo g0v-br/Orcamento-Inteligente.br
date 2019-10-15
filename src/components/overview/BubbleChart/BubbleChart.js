@@ -7,92 +7,6 @@ import { scaleLinear, scaleThreshold, scalePow } from "d3-scale";
 import { forceSimulation, forceManyBody, forceX, forceY } from "d3-force";
 
 
-
-
-function updateTotals(node, partitions_table, total, ns) {
-    //update overview total
-    let overviewPartition = partitions_table.find(p => {
-        return p.id == "overview"
-    });
-    if (total == "total" || total == undefined) {
-        overviewPartition.total += node.amount;
-    }
-    if ((total == "filtered" || total == undefined) && node.active) {
-        overviewPartition.totalFiltered += node.amount;
-    }
-    Object.keys(node.partitions).forEach((partition_id) => {
-        let target_partition = partitions_table.find((partition) => {
-            return partition_id == partition.id;
-        });
-        let target_subset = target_partition.subsets.find((subset) => {
-            return subset.id == node.partitions[partition_id];
-        });
-
-        //groupFunction define the way to calculate totals
-        switch (target_partition.groupFunction) {
-            //total = (sum of nodes.ammount - sum of nodes.referenceAmount)/ sum of nodes.referenceAmount
-            case ns.bgo("trend_average").value:
-                if (target_subset.totalSupport == undefined) {
-                    target_subset.totalSupport = {
-                        amount: 0,
-                        amountFiltered: 0,
-                        referenceAmount: 0,
-                        referenceAmountFiltered: 0
-                    };
-                }
-                if (total == "total" || total == undefined) {
-                    target_subset.totalSupport.amount += node.amount;
-                    target_subset.totalSupport.referenceAmount += node.referenceAmount;
-                    target_subset.total = (target_subset.totalSupport.amount - target_subset.totalSupport.referenceAmount) / target_subset.totalSupport.referenceAmount;
-                }
-                if ((total == "filtered" || total == undefined) && node.active) {
-                    target_subset.totalSupport.amountFiltered += node.amount;
-                    target_subset.totalSupport.referenceAmountFiltered += node.referenceAmount;
-                    target_subset.totalFiltered = (target_subset.totalSupport.amountFiltered - target_subset.totalSupport.referenceAmountFiltered) / target_subset.totalSupport.referenceAmountFiltered;
-                }
-                break;
-            //total = sum of node.account (absolute o natural)
-            case ns.bgo("amounts_sum").value:
-                if (total == "total" || total == undefined)
-                    target_subset.total += target_partition.sortCriteria == ns.bgo("abs_sort") ? Math.abs(node.amount) : node.amount;
-                if ((total == "filtered" || total == undefined) && node.active)
-                    target_subset.totalFiltered += target_partition.sortCriteria == ns.bgo("abs_sort") ? Math.abs(node.amount) : node.amount;
-                break;
-            //total = number of nodes in the subset
-            case ns.bgo("accounts_count").value:
-                if (total == "total" || total == undefined)
-                    target_subset.total += 1;
-                if ((total == "filtered" || total == undefined) && node.active)
-                    target_subset.totalFiltered += 1;
-                break;
-        }
-
-    });
-
-}
-//reset filtered totals
-function resetTotal(partitions_table) {
-    partitions_table.forEach((partition) => {
-        if (partition.id != "overview") {
-            partition.subsets.forEach((subset) => {
-                subset.totalFiltered = 0;
-
-                if (subset.totalSupport != undefined)
-                    subset.totalSupport = null;
-            })
-        } else {
-            partition.totalFiltered = 0;
-        }
-
-    });
-
-}
-
-// if account contains text return true, false otherwise
-function match(account, text) {
-    return account.id == text || account.title.toLowerCase().includes(text) || account.description.toLowerCase().includes(text) || account.abstract.toLowerCase().includes(text);
-}
-
 function getCenters(gridBlocks) {
     const centers = [];
     gridBlocks.forEach(block => {
@@ -105,12 +19,11 @@ function getCenters(gridBlocks) {
 
 export default class BubbleChart {
 
-    constructor(el, app, partitions, width, height, accounts, legend) {
+    constructor(el, app, width, height, accounts, legend) {
         this.el = el;
         this.app = app;
         this.height = height;
         this.width = width;
-        this.partitions = partitions
         this.velocityDecay = 0.2;
         this.forceStrength = 0.03;
         this.simulation;
@@ -124,8 +37,7 @@ export default class BubbleChart {
             return {
                 ...node,
                 x: Math.random() * this.width,
-                y: Math.random() * this.height,
-                active:true
+                y: Math.random() * this.height
             }
         }).sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
 
@@ -221,10 +133,6 @@ export default class BubbleChart {
             .nodes(this.nodes)
             .on("tick", ticked)
             .stop()
-
-        // this.updateSimulation();
-        // groupBubble(this);
-
     }
 
     // Update bubbles radius and update the simulation obj with the new charge force according to the new radius
@@ -277,37 +185,29 @@ export default class BubbleChart {
     }
 
     // called when partition change, group or split bubbles
-    update(width, height, gridBlocks, activePartitionId) {
+    update(width, height, gridBlocks, subsets, activePartitionId) {
 
         // update with new boundaries
         this.height = height;
         this.width = width;
 
-        if (activePartitionId == 'overview') {
+        if (!subsets) {
             this.updateSimulation()
             this.groupBubble();
         } else {
-
             const centers = getCenters(gridBlocks);
             let subsetToCenterMap = {};
-
-            let active_subsets = this.partitions.find(partition => {
-                return partition.id == activePartitionId;
-            }).subsets;
-            active_subsets.forEach((subset, i) => {
+            subsets.forEach((subset, i) => {
                 subsetToCenterMap[subset.id] = centers[i];
             });
 
-
-
-            // TODO aggiungere ai gridblock un blocco per i default, i nodi senza partizioni sono a posto
             this.simulation.force(
                 "x",
                 forceX()
                     .strength(this.forceStrength)
                     .x(function (d) {
-                        let nodePartition = d.partitions[activePartitionId];
-                        if (nodePartition) {
+                        let targetSubset = d.partitions[activePartitionId];
+                        if (targetSubset) {
                             return subsetToCenterMap[nodePartition].x;
                         } else {
                             return centers[centers.length - 1].x;
@@ -319,8 +219,8 @@ export default class BubbleChart {
                 forceY()
                     .strength(this.forceStrength)
                     .y(function (d) {
-                        let nodePartition = d.partitions[activePartitionId];
-                        if (nodePartition) {
+                        let targetSubset = d.partitions[activePartitionId];
+                        if (targetSubset) {
                             return subsetToCenterMap[nodePartition].y;
                         } else {
                             return centers[centers.length - 1].y;
@@ -347,8 +247,6 @@ export default class BubbleChart {
         select("svg#vis")
             .selectAll("circle")
             .classed("disabled", d => {
-                d.active = match(d, searchText.toLowerCase());
-                updateTotals(d, this.partitions, "filtered", this.ns);
                 return !d.active // if is active disabled must be false
             });
 

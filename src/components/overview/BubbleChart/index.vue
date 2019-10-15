@@ -33,6 +33,8 @@ export default {
     Rate
   },
   props: {
+    accounts: Array,
+    legend : Object,
     totalizer: {
       type: Function
     },
@@ -91,10 +93,11 @@ export default {
     chart = new BubbleChart(
       "#vis",
       this,
-      { store, ns },
       this.partitions,
       this.$refs.bound.offsetWidth,
-      this.$refs.bound.offsetHeight
+      this.$refs.bound.offsetHeight,
+      this.accounts,
+      this.legend
     );
     const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
     chart.render(this.search);

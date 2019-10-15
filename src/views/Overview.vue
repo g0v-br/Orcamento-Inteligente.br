@@ -36,6 +36,8 @@
           :partitions="partitions"
           :search="search"
           :totalizer="totalizer"
+          :accounts="accounts"
+          :legend="legendData"
           @total_changed="onTotalChanged"
           @nodeover="onNodeOver"
           @nodeout="isNodeHovered = false"
@@ -101,6 +103,7 @@ export default {
   },
   data() {
     return {
+      accounts: null,
       activePartitionId: this.partitionId,
       totalizer: null,
       searchPane: null,
@@ -129,11 +132,13 @@ export default {
     this.totalizer = OverviewService.getTotalizer();
     this.tags = OverviewService.getTagCloud();
     this.partitions = OverviewService.getPartitions();
-
     this.legendData = OverviewService.getLegendData();
     this.metadata = OverviewService.getMetadata();
     this.formatters = OverviewService.getFormatters();
+    this.accounts = OverviewService.getAccounts();
     this.search = this.$route.query.s || "";
+
+    
   },
   methods: {
     onPartitionChange(partitionId) {

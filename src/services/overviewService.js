@@ -165,7 +165,48 @@ export default function () {
                 formatTooltipAmount: getNumberFormatter(store.any(tooltip, ns.bgo("amountFormatter"))),
                 formatLegendPercentage: getNumberFormatter(store.any(tooltip, ns.bgo("trendFormatter"))),
             };
-        }
+        },
+
+        getAccounts: function () {
+            const accounts = store.each(null, ns.bgo("accountId"));
+            return accounts.map(account => {
+
+                let partitions = {};
+                const partTable = this.getPartitions();
+                partTable.slice(1).forEach(p => {
+                    partitions[p.id] = "default";
+                })
+                let subSetUris = store.each(undefined, ns.bgo("hasAccount"), account);
+                subSetUris.forEach(subSetUri => {
+                    let partition = store.any(undefined, ns.bgo("hasAccountSubSet"), subSetUri);
+                    let partitionId = store.anyValue(partition, ns.bgo("partitionId"))
+                    const isPartitionPresent = partTable.some(p => p.id == partitionId);
+                    if (isPartitionPresent)
+                        partitions[partitionId] = subSetUri.value;
+                });
+
+                const title = store.anyValue(account, ns.bgo("title")) || "",
+                    id = store.anyValue(account, ns.bgo("accountId")) || "",
+                    amount = (store.anyValue(account, ns.bgo("amount"))) || 0,
+                    refAmount = (store.anyValue(account, ns.bgo("referenceAmount"))) || 0,
+                    rate = isFinite((amount - refAmount) / refAmount)?(amount - refAmount) / refAmount:NaN,
+                    description = store.anyValue(account, ns.bgo("description")) || "",
+                    abstract = store.anyValue(account, ns.bgo("abstract")) || "",
+                    bg = store.anyValue(account, ns.bgo('depiction')) || null;
+
+                return {
+                    id,
+                    title,
+                    amount,
+                    refAmount,
+                    rate,
+                    description,
+                    abstract,
+                    bg,
+                    partitions
+                };
+            });
+        },
 
     };
 }

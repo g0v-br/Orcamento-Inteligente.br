@@ -277,7 +277,7 @@ here palace your **Terms & conditions** about published service.
 
 :p1_1
 	#a bgo:AccountSet ;
-    bgo:title "Subset 1 title" ;
+    bgo:title "Subset 1_1 title" ;
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
@@ -286,7 +286,7 @@ here palace your **Terms & conditions** about published service.
 
 :p1_2
 	# a bgo:AccountSet ;
-    bgo:label "subset 2" ;
+    bgo:label "subset 1_2" ;
     bgo:title "Subset 2 title"
 .
 
@@ -307,7 +307,7 @@ here palace your **Terms & conditions** about published service.
 
 :p2_1
 	# a bgo:AccountSet ;
-    bgo:title "Subset 1 title" ;
+    bgo:title "Subset 2_1 title" ;
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
@@ -316,7 +316,7 @@ here palace your **Terms & conditions** about published service.
 
 :p2_2
 	# a bgo:AccountSet ;
-    bgo:label "subset 2" ;
+    bgo:label "subset 2_2" ;
     bgo:title "Subset 2 title" ;
     bgo:hasAccount
         :account_2

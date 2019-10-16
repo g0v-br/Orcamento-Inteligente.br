@@ -2,13 +2,13 @@
   <div ref="bound" class="bc-container">
     <div ref="grid" v-if="activePartition.id != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartition.subsets" :key="subset.id" class="grid-block">
-        <StringFormatter class="title" :string="subset.title" :popup="subset.abstract" />
+        <!--<StringFormatter class="title" :string="subset.title" :popup="subset.abstract" /-->
         <div v-if="condition_totalizer_rate">{{totalizer(subset.total, subset.totalFiltered)}}</div>
         <Rate
           v-else
           :rate="subset.totalFiltered"
           :show_icon="true"
-          :formatterOptions="totalizerOptions.rateFormatter"
+          :formatterOptions="activePartition.formatter"
         />
       </div>
     </div>
@@ -43,7 +43,8 @@ export default {
     },
     search: {
       type: String
-    }
+    },
+    criteria: Object
   },
   data() {
     return {
@@ -51,29 +52,15 @@ export default {
     };
   },
   computed: {
-    activePartitionSubSets: function() {
-      let partition_active = this.partitions.find(partition => {
-        return partition.id == this.activePartitionId;
-      });
-      sortSubset(partition_active, ns);
-      return partition_active.subsets;
-    },
     //when rate group function is used show the rate for each subset
     //show total otherwise
     condition_totalizer_rate: function() {
-      const cur_partition = store.any(
-        undefined,
-        ns.bgo("partitionId"),
-        this.activePartitionId
-      );
-      return (
-        store.anyValue(cur_partition, ns.bgo("withGroupFunction")) !=
-        ns.bgo("trend_average").value
-      );
+      return this.activePartition.GroupFunction!=this.criteria.TrendAdverage;
     }
   },
   
   mounted() {
+    console.log(this.$refs)
     chart = new BubbleChart(
       "#vis",
       this,
@@ -116,7 +103,8 @@ export default {
       this.$refs.bound.offsetWidth,
       this.$refs.bound.offsetHeight,
       gridBloks,
-      this.activePartition
+      this.activePartition.subsets,
+      this.activePartition.id
     );
   }
 };

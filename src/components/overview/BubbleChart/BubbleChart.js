@@ -190,7 +190,6 @@ export default class BubbleChart {
         // update with new boundaries
         this.height = height;
         this.width = width;
-
         if (!subsets) {
             this.updateSimulation()
             this.groupBubble();
@@ -208,7 +207,7 @@ export default class BubbleChart {
                     .x(function (d) {
                         let targetSubset = d.partitions[activePartitionId];
                         if (targetSubset) {
-                            return subsetToCenterMap[nodePartition].x;
+                            return subsetToCenterMap[targetSubset].x;
                         } else {
                             return centers[centers.length - 1].x;
                         }
@@ -221,7 +220,7 @@ export default class BubbleChart {
                     .y(function (d) {
                         let targetSubset = d.partitions[activePartitionId];
                         if (targetSubset) {
-                            return subsetToCenterMap[nodePartition].y;
+                            return subsetToCenterMap[targetSubset].y;
                         } else {
                             return centers[centers.length - 1].y;
                         }

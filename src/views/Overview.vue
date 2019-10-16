@@ -37,6 +37,7 @@
           :totalizer="totalizer"
           :accounts="accounts"
           :legend="legendData"
+          :criteria="criteria"
           @nodeover="onNodeOver"
           @nodeout="isNodeHovered = false"
         ></BubbleChart>
@@ -327,8 +328,8 @@ export default {
       this.activePartition.subsets.sort((a, b) => {
         return a.totalFiltered - b.totalFiltered;
       });
-      if (partition_active.sortOrder == this.criteria.descending_sort) {
-        partition_active.subsets.reverse();
+      if (this.activePartition.sortOrder == this.criteria.descending_sort) {
+        this.activePartition.subsets.reverse();
       }
     }
   }

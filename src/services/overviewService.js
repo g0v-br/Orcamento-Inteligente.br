@@ -88,8 +88,8 @@ export default function () {
                         sortCriteria = store.anyValue(partition, ns.bgo("withSortCriteria")) ||
                             ns.bgo("abs_sort").value,
                         groupFunction = store.anyValue(partition, ns.bgo("withGroupFunction")) ||
-                            ns.bgo("amounts_sum").value;
-
+                            ns.bgo("amounts_sum").value,
+                        formatter = getNumberFormatter(store.any(groupFunction,))
                     const subsets = this.getSubsets(partition);
 
                     return {
@@ -120,7 +120,7 @@ export default function () {
                     const title = store.any(subset, ns.bgo("title")) || "",
                         label = store.anyValue(subset, ns.bgo("label")) || "",
                         description = store.anyValue(subset, ns.bgo("description")) || "",
-                        abstract = store.any(subset, ns.bgo("abstract")) || "";
+                        abstract = store.any(subset, ns.bgo("abstract")) || {value:""};
 
                     return {
                         id: subset.value,

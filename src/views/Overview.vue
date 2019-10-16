@@ -148,7 +148,7 @@ export default {
     this.formatters = OverviewService.getFormatters();
     this.accounts = OverviewService.getAccounts().map(account => ({
       ...account,
-      isActive: true
+      active: true
     }));
     this.criteria = OverviewService.getCriteria();
     this.search = this.$route.query.s || "";
@@ -233,7 +233,7 @@ export default {
       // Aggiornare sempre
       this.total += account.amount;
 
-      if (account.isActive) {
+      if (account.active) {
         // Aggiorno i totali di overview
         this.totalFiltered += account.amount;
 

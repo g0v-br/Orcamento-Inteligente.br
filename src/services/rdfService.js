@@ -65,9 +65,8 @@ export const getNumberFormatter = (formatter) => {
 			lessThanMinFormat: store.anyValue(formatter, ns.bgo("lessThanMinFormat")) || "%s"
 		}
 
-		return (number) => {
-			return formatNumber(number, options)
-		}
+		return (number) => formatNumber(number, options)
+
 	}
 	return (number) => number;
 }

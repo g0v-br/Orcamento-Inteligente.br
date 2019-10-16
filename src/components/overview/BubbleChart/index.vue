@@ -2,14 +2,9 @@
   <div ref="bound" class="bc-container">
     <div ref="grid" v-if="activePartition.id != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartition.subsets" :key="subset.id" class="grid-block">
-        <!--<StringFormatter class="title" :string="subset.title" :popup="subset.abstract" /-->
-        <div v-if="condition_totalizer_rate">{{totalizer(subset.total, subset.totalFiltered)}}</div>
-        <Rate
-          v-else
-          :rate="subset.totalFiltered"
-          :show_icon="true"
-          :formatterOptions="activePartition.formatter"
-        />
+        <StringFormatter class="title" :string="subset.title||subset.label||subset.id" :popup="subset.abstract" />
+        <div> {{activePartition.formatter(subset.total, subset.totalFiltered)}}</div>
+        
       </div>
     </div>
     <svg ref="vis" id="vis" />
@@ -24,7 +19,6 @@ import Totalizer from "@/components/Totalizer.vue";
 import Rate from "@/components/Rate";
 import StringFormatter from "@/components/StringFormatter.vue";
 let debouncedUpdate;
-let debouncedSearch;
 let chart;
 export default {
   components: {
@@ -60,7 +54,7 @@ export default {
   },
   
   mounted() {
-    console.log(this.$refs)
+    console.log(this.activePartition.subsets)
     chart = new BubbleChart(
       "#vis",
       this,
@@ -80,6 +74,7 @@ export default {
     );
     //new update can't be called twice in 200ms
     debouncedUpdate = _debounce(() => {
+      console.log("DEBOUNCED")
       const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
       chart.update(
         this.$refs.bound.offsetWidth,

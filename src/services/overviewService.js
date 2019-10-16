@@ -87,10 +87,11 @@ export default function () {
                             ns.bgo("descending_sort").value,
                         sortCriteria = store.anyValue(partition, ns.bgo("withSortCriteria")) ||
                             ns.bgo("abs_sort").value,
-                        groupFunction = store.anyValue(partition, ns.bgo("withGroupFunction")) ||
+                        groupFunction = store.any(store.any(partition, ns.bgo("withGroupFunction"),ns.rdf("type"))) ||
                             ns.bgo("amounts_sum").value,
-                        formatter = getNumberFormatter(store.any(groupFunction,))
+                        formatter = getTotalizer(store.any(groupFunction, ns.bgo("hasTotalizer")));
                     const subsets = this.getSubsets(partition);
+                    console.log(groupFunction)
 
                     return {
                         id,
@@ -99,7 +100,8 @@ export default function () {
                         sortOrder,
                         sortCriteria,
                         groupFunction,
-                        subsets
+                        subsets,
+                        formatter
                     }
 
                 });
@@ -120,7 +122,7 @@ export default function () {
                     const title = store.any(subset, ns.bgo("title")) || "",
                         label = store.anyValue(subset, ns.bgo("label")) || "",
                         description = store.anyValue(subset, ns.bgo("description")) || "",
-                        abstract = store.any(subset, ns.bgo("abstract")) || {value:""};
+                        abstract = store.any(subset, ns.bgo("abstract")) || { value: "" };
 
                     return {
                         id: subset.value,
@@ -129,6 +131,8 @@ export default function () {
                         abstract,
                         label,
                         total: 0,
+                        referenceTotal: 0,
+                        count: 0,
                         totalFiltered: 0
                     };
                 });
@@ -143,7 +147,7 @@ export default function () {
                 title,
                 defaultSubset = store.any(partition, ns.bgo("hasDefaultAccountSubSet"));
             if (defaultSubset !== undefined) {
-                label = store.anyValue(defaultSubset, ns.bgo("label")) || "";
+                label = store.anyValue(defaultSubset, ns.bgo("label")) || {value:"", term};
                 title = store.any(defaultSubset, ns.bgo("title")) || undefined;
             }
             return {
@@ -189,11 +193,11 @@ export default function () {
                     id = store.anyValue(account, ns.bgo("accountId")) || "",
                     amount = parseFloat(store.anyValue(account, ns.bgo("amount"))) || 0,
                     refAmount = parseFloat(store.anyValue(account, ns.bgo("referenceAmount"))) || 0,
-                    rate = isFinite((amount - refAmount) / refAmount)?(amount - refAmount) / refAmount:NaN,
+                    rate = isFinite((amount - refAmount) / refAmount) ? (amount - refAmount) / refAmount : NaN,
                     description = store.anyValue(account, ns.bgo("description")) || "",
                     abstract = store.anyValue(account, ns.bgo("abstract")) || "",
                     bg = store.anyValue(account, ns.bgo('depiction')) || null;
-              
+
                 return {
                     id,
                     title,
@@ -208,15 +212,15 @@ export default function () {
             });
         },
 
-        getCriteria(){
-            let criteria={}
-            criteria["TrendAverage"]=ns.bgo("TrendAverage").value;
-            criteria["AmountsSum"]=ns.bgo("AmountsSum").value;
-            criteria["AccountsCount"]=ns.bgo("AccountsCount").value;
-            criteria["abs_sort"]=ns.bgo("abs_sort").value;
-            criteria["natural_sort"]=ns.bgo("natural_sort").value;
-            criteria["ascending_sort"]=ns.bgo("ascending_sort").value;
-            criteria["descending_sort"]=ns.bgo("descending_sort").value;
+        getCriteria() {
+            let criteria = {}
+            criteria["TrendAverage"] = ns.bgo("TrendAverage").value;
+            criteria["AmountsSum"] = ns.bgo("AmountsSum").value;
+            criteria["AccountsCount"] = ns.bgo("AccountsCount").value;
+            criteria["abs_sort"] = ns.bgo("abs_sort").value;
+            criteria["natural_sort"] = ns.bgo("natural_sort").value;
+            criteria["ascending_sort"] = ns.bgo("ascending_sort").value;
+            criteria["descending_sort"] = ns.bgo("descending_sort").value;
             return criteria;
         }
 

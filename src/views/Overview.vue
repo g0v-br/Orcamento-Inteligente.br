@@ -83,6 +83,7 @@ import Legend from "@/components/overview/Legend";
 import Tooltip from "@/components/overview/Tooltip";
 import StringFormatter from "@/components/StringFormatter.vue";
 import { debounce } from "lodash";
+import { log } from "util";
 
 const OverviewService = ServiceFactory.get("overview");
 let debouncedSearch;
@@ -148,14 +149,14 @@ export default {
 
     //wait that user finish to write search string
     debouncedSearch = debounce((newVal, app) => {
-      this.updateAccounts();
+      this.updateAccounts("filtered");
     }, 200);
     //initialize accounts
     this.updateAccounts();
   },
   watch: {
     search: {
-      handler: function(newVal) {
+      handler: function(newVal, oldVal) {
         let app = this;
         debouncedSearch(newVal, app);
       },
@@ -165,19 +166,35 @@ export default {
 
   methods: {
     //reset totals, active accounts, compute new totals
-    updateAccounts() {
+    //each time search string change
+    updateAccounts(total_to_compute) {
+      //reset totl filtered, only when search change
       this.resetTotal();
+
       this.accounts.forEach(account => {
+        //filter
         account["active"] = this.match(account, this.search);
-        this.updateTotals(account);
+        //compute totals
+        this.partitions.forEach(p => {
+          this.updateTotals(account, total_to_compute, p);
+        });
       });
-      let overviewPartition = this.partitions.find(partition => {
-        return partition.id == "overview";
+     
+      this.partitions.forEach(p => {
+        if (p.id != "overview") {
+           //subset sort
+          p.subsets.sort((a, b) => {
+            return a.totalFiltered - b.totalFiltered;
+          });
+          if (this.activePartition.sortOrder == this.criteria.descending_sort) {
+            this.activePartition.subsets.reverse();
+          }
+        } else {
+          //update app total
+          this.total = p.total;
+          this.totalFiltered = p.totalFiltered;
+        }
       });
-      if(overviewPartition.id!=this.activePartition.id)
-        this.sortSubset();
-      this.total = overviewPartition.total;
-      this.totalFiltered = overviewPartition.totalFiltered;
     },
     onPartitionChange(partitionId) {
       this.$router.push({
@@ -218,24 +235,23 @@ export default {
       this.isNodeHovered = true;
     },
     //compute totals for each subset and partition. called on search text change
-    updateTotals(node, total_to_compute) {
+    updateTotals(node, total_to_compute, partitionToCompute) {
       //update overview total
-      let overviewPartition = this.partitions.find(p => {
-        return p.id == "overview";
-      });
-      if (total_to_compute == "total" || total_to_compute == undefined) {
-        overviewPartition.total += node.amount;
-      }
-      if (
-        (total_to_compute == "filtered" || total_to_compute == undefined) &&
-        node.active
-      ) {
-        overviewPartition.totalFiltered += node.amount;
-      }
-      if (this.activePartition.id != "overview") {
-        let target_subset = node.partitions[this.activePartition.id];
+      if (partitionToCompute.id == "overview") {
+        if (total_to_compute == "total" || total_to_compute == undefined) {
+          partitionToCompute.total += node.amount;
+        }
+        if (
+          (total_to_compute == "filtered" || total_to_compute == undefined) &&
+          node.active
+        ) {
+          partitionToCompute.totalFiltered += node.amount;
+        }
+      } else {
+        let target_subset = node.partitions[partitionToCompute.id];
         //groupFunction define the way to calculate totals
-        switch (this.activePartition.groupFunction) {
+          console.log(partitionToCompute.groupFunction)
+        switch (partitionToCompute.groupFunction) {
           //total = (sum of nodes.ammount - sum of nodes.referenceAmount)/ sum of nodes.referenceAmount
           case this.criteria["TrendAverage"]:
             if (target_subset.totalSupport == undefined) {
@@ -306,7 +322,6 @@ export default {
         if (partition.id != "overview") {
           partition.subsets.forEach(subset => {
             subset.totalFiltered = 0;
-
             if (subset.totalSupport != undefined) subset.totalSupport = null;
           });
         } else {
@@ -322,15 +337,6 @@ export default {
         account.description.toLowerCase().includes(text) ||
         account.abstract.toLowerCase().includes(text)
       );
-    },
-    sortSubset() {
-      // sort array asc or desc
-      this.activePartition.subsets.sort((a, b) => {
-        return a.totalFiltered - b.totalFiltered;
-      });
-      if (this.activePartition.sortOrder == this.criteria.descending_sort) {
-        this.activePartition.subsets.reverse();
-      }
     }
   }
 };

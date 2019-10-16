@@ -29,7 +29,7 @@ export default class BubbleChart {
         this.simulation;
         this.nodes = accounts;
         this.totalDefaultArea = 0;
-        this.legend=legend; 
+        this.legend = legend;
     }
     //called only the first time
     render(searchText) {
@@ -242,11 +242,17 @@ export default class BubbleChart {
 
     //called when filter changhe filter bubble and compute new filtered totals
     filterBubbles(searchText) {
+        console.log('filterbubble', );
         resetTotal(this.partitions);
         select("svg#vis")
             .selectAll("circle")
             .classed("disabled", d => {
-                return !d.active // if is active disabled must be false
+                return (
+                    d.id == searchText ||
+                    d.title.toLowerCase().includes(searchText) ||
+                    d.description.toLowerCase().includes(searchText) ||
+                    d.abstract.toLowerCase().includes(searchText)
+                );
             });
 
     }

@@ -53,21 +53,23 @@ const formatNumber = (number, options) => {
 
 
 export const getNumberFormatter = (formatter) => {
-	// const formatter = store.any(subject, predicate),
-	const options = {
-		format: store.anyValue(formatter, ns.bgo("format")) || "%s",
-		precision: store.anyValue(formatter, ns.bgo("precision")) || 2,
-		nanFormat: store.anyValue(formatter, ns.bgo("nanFormat")) || "N/A",
-		scaleFactor: store.anyValue(formatter, ns.bgo("scaleFactor")) || 1,
-		maxValue: store.anyValue(formatter, ns.bgo("maxValue")) || Infinity,
-		minValue: store.anyValue(formatter, ns.bgo("minValue")) || -Infinity,
-		moreThanMaxFormat: store.anyValue(formatter, ns.bgo("moreThanMaxFormat")) || "%s",
-		lessThanMinFormat: store.anyValue(formatter, ns.bgo("lessThanMinFormat")) || "%s"
-	}
+	if (formatter) {
+		const options = {
+			format: store.anyValue(formatter, ns.bgo("format")) || "%s",
+			precision: store.anyValue(formatter, ns.bgo("precision")) || 2,
+			nanFormat: store.anyValue(formatter, ns.bgo("nanFormat")) || "N/A",
+			scaleFactor: store.anyValue(formatter, ns.bgo("scaleFactor")) || 1,
+			maxValue: store.anyValue(formatter, ns.bgo("maxValue")) || Infinity,
+			minValue: store.anyValue(formatter, ns.bgo("minValue")) || -Infinity,
+			moreThanMaxFormat: store.anyValue(formatter, ns.bgo("moreThanMaxFormat")) || "%s",
+			lessThanMinFormat: store.anyValue(formatter, ns.bgo("lessThanMinFormat")) || "%s"
+		}
 
-	return (number) => {
-		return formatNumber(number, options)
+		return (number) => {
+			return formatNumber(number, options)
+		}
 	}
+	return (number) => number;
 }
 
 

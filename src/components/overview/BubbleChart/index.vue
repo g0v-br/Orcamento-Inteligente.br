@@ -2,9 +2,9 @@
   <div ref="bound" class="bc-container">
     <div ref="grid" v-if="activePartition.id != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartition.subsets" :key="subset.id" class="grid-block">
-        <StringFormatter class="title" :string="subset.title||subset.label||subset.id" :popup="subset.abstract" />
-        <div> {{activePartition.formatter(subset.total, subset.totalFiltered)}}</div>
-        
+        <!-- <StringFormatter class="title" :string="subset.title||subset.label||subset.id" :popup="subset.abstract" /> -->
+        <!-- <div> {{activePartition.formatter(subset.total, subset.totalFiltered)}}</div> -->
+
       </div>
     </div>
     <svg ref="vis" id="vis" />
@@ -52,9 +52,9 @@ export default {
       return this.activePartition.GroupFunction!=this.criteria.TrendAdverage;
     }
   },
-  
+
   mounted() {
-    console.log(this.activePartition.subsets)
+    // console.log(this.activePartition.subsets)
     chart = new BubbleChart(
       "#vis",
       this,
@@ -84,9 +84,9 @@ export default {
         this.activePartition.id
       );
     }, 200);
-   
-      
-    
+
+
+
     window.addEventListener("resize", debouncedUpdate);
   },
   beforeDestroy() {

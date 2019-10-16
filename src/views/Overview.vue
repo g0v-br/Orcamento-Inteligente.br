@@ -85,6 +85,10 @@ import StringFormatter from "@/components/StringFormatter.vue";
 import { debounce } from "lodash";
 import { log } from "util";
 
+function print(text) {
+  console.log(JSON.parse(JSON.stringify(text)));
+}
+
 const OverviewService = ServiceFactory.get("overview");
 let debouncedSearch;
 
@@ -116,8 +120,10 @@ export default {
       legendData: {},
       formatters: {},
 
+      // Totali per il totalizer nei meta
       total: 0,
       totalFiltered: 0,
+      //
       isNodeHovered: false,
       hoveredNode: {}
     };
@@ -140,61 +146,49 @@ export default {
     this.legendData = OverviewService.getLegendData();
     this.metadata = OverviewService.getMetadata();
     this.formatters = OverviewService.getFormatters();
-    this.accounts = OverviewService.getAccounts();
+    this.accounts = OverviewService.getAccounts().map(account => ({
+      ...account,
+      isActive: true
+    }));
     this.criteria = OverviewService.getCriteria();
     this.search = this.$route.query.s || "";
     this.activePartition = this.partitions.find(partition => {
       return partition.id == this.partitionId;
     });
 
+    // print(this.partitions);
+    // this.partitions[1].subsets[0].resetTotals();
+
     //wait that user finish to write search string
-    debouncedSearch = debounce((newVal, app) => {
-      this.updateAccounts("filtered");
-    }, 200);
+    debouncedSearch = debounce(this.updateAccounts, 200);
     //initialize accounts
-    this.updateAccounts();
+    debouncedSearch();
+    // this.updateAccounts();
   },
   watch: {
-    search: {
-      handler: function(newVal, oldVal) {
-        let app = this;
-        debouncedSearch(newVal, app);
-      },
-      deep: true
+    search: function(newVal, oldVal) {
+      debouncedSearch();
     }
+    // deep: true
+  },
+
+  computed: {
+    // accountsTotal(){
+    //   // return this.accounts.reduce
+    // }
   },
 
   methods: {
     //reset totals, active accounts, compute new totals
     //each time search string change
-    updateAccounts(total_to_compute) {
-      //reset totl filtered, only when search change
-      this.resetTotal();
 
+    updateAccounts(total_to_compute) {
+      this.resetTotal();
       this.accounts.forEach(account => {
-        //filter
-        account["active"] = this.match(account, this.search);
-        //compute totals
-        this.partitions.forEach(p => {
-          this.updateTotals(account, total_to_compute, p);
-        });
+        this.updateTotals(account);
       });
-     
-      this.partitions.forEach(p => {
-        if (p.id != "overview") {
-           //subset sort
-          p.subsets.sort((a, b) => {
-            return a.totalFiltered - b.totalFiltered;
-          });
-          if (this.activePartition.sortOrder == this.criteria.descending_sort) {
-            this.activePartition.subsets.reverse();
-          }
-        } else {
-          //update app total
-          this.total = p.total;
-          this.totalFiltered = p.totalFiltered;
-        }
-      });
+      this.sortSubsets();
+      print(this.partitions);
     },
     onPartitionChange(partitionId) {
       this.$router.push({
@@ -234,98 +228,113 @@ export default {
       });
       this.isNodeHovered = true;
     },
-    //compute totals for each subset and partition. called on search text change
-    updateTotals(node, total_to_compute, partitionToCompute) {
-      //update overview total
-      if (partitionToCompute.id == "overview") {
-        if (total_to_compute == "total" || total_to_compute == undefined) {
-          partitionToCompute.total += node.amount;
-        }
-        if (
-          (total_to_compute == "filtered" || total_to_compute == undefined) &&
-          node.active
-        ) {
-          partitionToCompute.totalFiltered += node.amount;
-        }
-      } else {
-        let target_subset = node.partitions[partitionToCompute.id];
-        //groupFunction define the way to calculate totals
-          console.log(partitionToCompute.groupFunction)
-        switch (partitionToCompute.groupFunction) {
-          //total = (sum of nodes.ammount - sum of nodes.referenceAmount)/ sum of nodes.referenceAmount
-          case this.criteria["TrendAverage"]:
-            if (target_subset.totalSupport == undefined) {
-              target_subset.totalSupport = {
-                amount: 0,
-                amountFiltered: 0,
-                referenceAmount: 0,
-                referenceAmountFiltered: 0
-              };
+    //compute totals for each subset and partition. called on search text change after resetting previus values
+    updateTotals(account) {
+      // Aggiornare sempre
+      this.total += account.amount;
+
+      if (account.isActive) {
+        // Aggiorno i totali di overview
+        this.totalFiltered += account.amount;
+
+        // Aggiorno i totali di tutte le partizioni e subset diversi dal primo ( overview )
+        this.partitions.slice(1).forEach(partition => {
+          partition.subsets.forEach(subset => {
+            if (account.partitions[partition.id] == subset.id) {
+              subset.count += 1;
+              subset.amountTotal += account.amount;
+              subset.referenceAmountTotal += account.refAmount;
             }
-            if (total_to_compute == "total" || total_to_compute == undefined) {
-              target_subset.totalSupport.amount += node.amount;
-              target_subset.totalSupport.referenceAmount +=
-                node.referenceAmount;
-              target_subset.total =
-                (target_subset.totalSupport.amount -
-                  target_subset.totalSupport.referenceAmount) /
-                target_subset.totalSupport.referenceAmount;
-            }
-            if (
-              (total_to_compute == "filtered" ||
-                total_to_compute == undefined) &&
-              node.active
-            ) {
-              target_subset.totalSupport.amountFiltered += node.amount;
-              target_subset.totalSupport.referenceAmountFiltered +=
-                node.referenceAmount;
-              target_subset.totalFiltered =
-                (target_subset.totalSupport.amountFiltered -
-                  target_subset.totalSupport.referenceAmountFiltered) /
-                target_subset.totalSupport.referenceAmountFiltered;
-            }
-            break;
-          //total = sum of node.account (absolute o natural)
-          case this.criteria["AmountsSum"]:
-            if (total_to_compute == "total" || total_to_compute == undefined)
-              target_subset.total +=
-                target_partition.sortCriteria == this.criteria["abs_sort"]
-                  ? Math.abs(node.amount)
-                  : node.amount;
-            if (
-              (total_to_compute == "filtered" ||
-                total_to_compute == undefined) &&
-              node.active
-            )
-              target_subset.totalFiltered +=
-                target_partition.sortCriteria == this.criteria["abs_sort"]
-                  ? Math.abs(node.amount)
-                  : node.amount;
-            break;
-          //total = number of nodes in the subset
-          case this.criteria["AmountsCount"]:
-            if (total_to_compute == "total" || total_to_compute == undefined)
-              target_subset.total += 1;
-            if (
-              (total_to_compute == "filtered" ||
-                total_to_compute == undefined) &&
-              node.active
-            )
-              target_subset.totalFiltered += 1;
-            break;
-        }
+          });
+        });
       }
     },
     //reset filtered totals
     resetTotal() {
+      this.total = 0;
+      this.totalFiltered = 0;
+
+      this.partitions.slice(1).forEach(partition => {
+        partition.subsets.forEach(subset => {
+          subset.count = 0;
+          subset.amountTotal = 0;
+          subset.referenceAmountTotal = 0;
+        });
+      });
+    },
+
+    sortSubsets() {
       this.partitions.forEach(partition => {
         if (partition.id != "overview") {
-          partition.subsets.forEach(subset => {
-            subset.totalFiltered = 0;
-            if (subset.totalSupport != undefined) subset.totalSupport = null;
+          const sortOrder =
+            partition.sortOrder == this.criteria["ascending_sort"] ? 1 : -1;
+
+          partition.subsets.sort((subsetA, subsetB) => {
+            if (partition.sortCriteria == this.criteria["natural_sort"]) {
+              switch (partition.groupFunction) {
+                case this.criteria["AccountsCount"]:
+                  return sortOrder * (subsetA.count - subsetB.count);
+                  break;
+
+                case this.criteria["AccountsSum"]:
+                  return (
+                    sortOrder * (subsetA.amountTotal - subsetB.amountTotal)
+                  );
+                  break;
+
+                case this.criteria["TrendAverage"]:
+                  let trendA =
+                    (subsetA.amountTotal - subsetA.referenceAmountTotal) /
+                    subsetA.referenceAmountTotal;
+                  let trendB =
+                    (subsetB.amountTotal - subsetB.referenceAmountTotal) /
+                    subsetB.referenceAmountTotal;
+                  // Non posso lascare NaN, altrimenti non ordina
+                  trendA = isFinite(trendA) ? trendA : 0;
+                  trendB = isFinite(trendB) ? trendB : 0;
+                  return sortOrder * (trendA - trendB);
+                  break;
+
+                default:
+                  return (
+                    sortOrder * (subsetA.amountTotal - subsetB.amountTotal)
+                  );
+                  break;
+              }
+            } else if (partition.sortCriteria == this.criteria["abs_sort"]) {
+              switch (partition.groupFunction) {
+                case this.criteria["AccountsCount"]:
+                  return sortOrder * (subsetA.count - subsetB.count);
+                  break;
+
+                case this.criteria["AccountsSum"]:
+                  return (
+                    sortOrder *
+                    (Math.abs(subsetA.amountTotal) -
+                      Math.abs(subsetB.amountTotal))
+                  );
+                  break;
+
+                case this.criteria["TrendAverage"]:
+                  let trendA =
+                    (subsetA.amountTotal - subsetA.referenceAmountTotal) /
+                    subsetA.referenceAmountTotal;
+                  let trendB =
+                    (subsetB.amountTotal - subsetB.referenceAmountTotal) /
+                    subsetB.referenceAmountTotal;
+                  return sortOrder * (Math.abs(trendA) - Math.abs(trendB));
+                  break;
+
+                default:
+                  return (
+                    sortOrder *
+                    (Math.abs(subsetA.amountTotal) -
+                      Math.abs(subsetB.amountTotal))
+                  );
+                  break;
+              }
+            }
           });
-        } else {
-          partition.totalFiltered = 0;
         }
       });
     },

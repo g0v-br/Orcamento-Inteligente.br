@@ -51,13 +51,6 @@ export default function () {
                     previousValue = (store.anyValue(account, ns.bgo("referenceAmount"))) || 0,
                     trend = (amount - previousValue) / previousValue,
                     description = store.anyValue(account, ns.bgo("description")) || "";
-                console.log({
-                    accountId,
-                    title,
-                    amount,
-                    trend,
-                    description
-                })
                 return {
                     accountId,
                     title,

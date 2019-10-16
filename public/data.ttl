@@ -381,7 +381,7 @@ here palace your **Terms & conditions** about published service.
     bgo:title "titolo account_1" ;
     bgo:description "descrizione account_1" ;
     bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: \n- pagamento delle quote capitale sui titoli del debito statale\n- rimborso del capitale relativo a buoni postali fruttiferi\n- rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione\n- rimborso passività a carico dello Stato"^^bgo:MDString ;
-    bgo:depiction <http://bit.ly/2MxbJWQ> ;
+  #  bgo:depiction <http://bit.ly/2MxbJWQ> ;
     bgo:versionLabel "2019" ;
 
 	bgo:hasHistoryRec # All bgo:HistoryRec
@@ -405,8 +405,8 @@ here palace your **Terms & conditions** about published service.
     bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
     bgo:title "titolo account_2" ;
-    bgo:description "descrizione account_2" ;
-    bgo:depiction <http://bit.ly/2MxbJWQ>
+    #bgo:depiction <http://bit.ly/2MxbJWQ> ;
+    bgo:description "descrizione account_2"
 .
 
 :account_3

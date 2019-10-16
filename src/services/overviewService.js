@@ -80,18 +80,14 @@ export default function () {
                     return partitionA.value.localeCompare(partitionB.value);
                 })
                 .map(partition => {
+                    const subsets = this.getSubsets(partition);
                     const id = store.anyValue(partition, ns.bgo("partitionId")),
                         label = store.anyValue(partition, ns.bgo("label")),
                         title = store.anyValue(partition, ns.bgo("title")),
-                        sortOrder = store.anyValue(partition, ns.bgo("withSortOrder")) ||
-                            ns.bgo("descending_sort").value,
-                        sortCriteria = store.anyValue(partition, ns.bgo("withSortCriteria")) ||
-                            ns.bgo("abs_sort").value,
-                        groupFunction = store.any(store.any(partition, ns.bgo("withGroupFunction"),ns.rdf("type"))) ||
-                            ns.bgo("amounts_sum").value,
-                        formatter = getTotalizer(store.any(groupFunction, ns.bgo("hasTotalizer")));
-                    const subsets = this.getSubsets(partition);
-                    console.log(groupFunction)
+                        sortOrder = store.anyValue(partition, ns.bgo("withSortOrder")) || ns.bgo("descending_sort").value,
+                        sortCriteria = store.anyValue(partition, ns.bgo("withSortCriteria")) || ns.bgo("abs_sort").value;
+                    let groupFunction = store.any(partition, ns.bgo("withGroupFunction"))
+                    groupFunction = groupFunction ? store.any(groupFunction, ns.rdf("type")).value : ns.bgo("AmountsSum").value;
 
                     return {
                         id,
@@ -100,17 +96,14 @@ export default function () {
                         sortOrder,
                         sortCriteria,
                         groupFunction,
-                        subsets,
-                        formatter
+                        subsets
                     }
 
                 });
 
             partitions.unshift({
                 id: "overview",
-                label: store.anyValue(overview, ns.bgo("label")),
-                total: 0,
-                totalFiltered: 0
+                label: store.anyValue(overview, ns.bgo("label"))
             });
 
             return partitions;
@@ -130,10 +123,10 @@ export default function () {
                         description,
                         abstract,
                         label,
-                        total: 0,
-                        referenceTotal: 0,
-                        count: 0,
-                        totalFiltered: 0
+                        amountTotal: 0, /* Somma degli amount filtrati */
+                        referenceAmountTotal: 0,  /* Somma degli referenceAmount filtrati */
+                        count: 0 /* Numero di bolle */
+
                     };
                 });
             subsets.push(this.getDefautSubset(partition));
@@ -147,17 +140,19 @@ export default function () {
                 title,
                 defaultSubset = store.any(partition, ns.bgo("hasDefaultAccountSubSet"));
             if (defaultSubset !== undefined) {
-                label = store.anyValue(defaultSubset, ns.bgo("label")) || {value:"", term};
+                label = store.anyValue(defaultSubset, ns.bgo("label")) || { value: "", term };
                 title = store.any(defaultSubset, ns.bgo("title")) || undefined;
             }
             return {
                 id: "default",
                 title, //TODO "Unassigned", sistemare lo string formatter in modo che gestica le stringhe non gli oggetti
-                label,
-                total: 0,
-                totalFiltered: 0,
                 description: "",
-                abstract: undefined
+                abstract: undefined,
+                label,
+                amountTotal: 0, /* Somma degli amount filtrati */
+                referenceAmountTotal: 0,  /* Somma degli referenceAmount filtrati */
+                count: 0 /* Numero di bolle */
+
             };
         },
 

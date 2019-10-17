@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="inline">
     <span class="stringDisplayed" v-html="getFormattedString(string)"></span>
     <v-icon class="info-icon" v-if="popup" @click="dialog=true">mdi-information-outline</v-icon>
     <v-dialog v-model="dialog" max-width="290" clearable>
@@ -48,4 +48,8 @@ export default {
 .stringDisplayed {
   margin-right: 0.3em;
 }
+.stringDisplayed{
+  display: inline-block;
+}
+
 </style>

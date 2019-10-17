@@ -2,7 +2,6 @@
   <v-footer class="font-weight-medium">
     <v-btn
       text
-      icon
       small
       v-for="(el,k) in footerItems"
       :key="k"
@@ -10,7 +9,7 @@
       :href="el.path"
       target="_blank"
     >
-      <v-icon size="24px">{{ el.icon }}</v-icon>
+      <v-icon  size="24px">{{ el.icon }}</v-icon>{{el.title}}
     </v-btn>
     <span class="copyright">
       <StringFormatter :string="copyright"/>
@@ -27,6 +26,12 @@ export default {
       footerItems: Array,
       copyright: String
   },
+  methods:{
+    hasIcon(el){
+      console.log(el)
+      return true;
+    }
+  }
 };
 
 </script>

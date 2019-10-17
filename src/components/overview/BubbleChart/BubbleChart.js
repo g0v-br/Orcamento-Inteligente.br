@@ -245,7 +245,6 @@ export default class BubbleChart {
         select("svg#vis")
             .selectAll("circle")
             .classed("disabled", d => {
-                console.log(d.active, d.isActive)
                 return !(
                     d.id == searchText ||
                     d.title.toLowerCase().includes(searchText) ||

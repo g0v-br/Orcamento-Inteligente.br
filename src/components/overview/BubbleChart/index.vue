@@ -73,7 +73,6 @@ export default {
     );
     //new update can't be called twice in 200ms
     debouncedUpdate = _debounce(() => {
-      console.log("DEBOUNCED");
       const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
       chart.update(
         this.$refs.bound.offsetWidth,

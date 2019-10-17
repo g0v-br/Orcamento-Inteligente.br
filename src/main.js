@@ -9,7 +9,6 @@ import { store, dref, fetcher } from './services/rdfService';
 
 fetcher.load(dref("/app")).then(
   response => {
-    console.log ('store popolato')
     new Vue({
       router,
       store,

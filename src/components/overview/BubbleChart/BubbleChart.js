@@ -93,11 +93,11 @@ export default class BubbleChart {
                 return colorScale(d.rate);
             })
             .attr("stroke", function (d) {
-                if (d.bg) {
-                    const colorRegex = RegExp('#[0-9a-fA-F]{6}')
-                    if (colorRegex.test(d.bg))
-                        return rgb(d.bg).darker();
-                }
+                // if (d.bg) {
+                //     const colorRegex = RegExp('#[0-9a-fA-F]{6}')
+                //     if (colorRegex.test(d.bg))
+                //         return rgb(d.bg).darker();
+                // }
                 return rgb(colorScale(d.rate)).darker();
             })
             .on("mouseover", function (d) {

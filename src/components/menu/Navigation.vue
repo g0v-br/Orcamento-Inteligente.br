@@ -14,14 +14,17 @@
         </v-list-item-content>
       </v-list-item>
       <!--partitions-->
-      <v-list-group v-if="partition" no-action>
+      <v-list-group v-if="partitions" no-action>
         <template v-slot:activator>
+          <v-list-item-icon>
+          <v-icon v-text="partitions.icon"></v-icon>
+        </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title v-text="partition.title"></v-list-item-title>
+            <v-list-item-title v-text="partitions.title"></v-list-item-title>
           </v-list-item-content>
         </template>
         <v-list-item
-          v-for="el in partition.partitionList"
+          v-for="el in partitions.partitionsList"
           :key="el.title"
           v-on:click="menuShow=false"
           :to="el.path + '?s='+($route.query.s||'')"
@@ -44,6 +47,7 @@
         <v-list-item-content>
           <v-list-item-title v-text="el.title"></v-list-item-title>
         </v-list-item-content>
+        <v-icon class="external" v-if="el.external" size="10px">fas fa-share</v-icon>
       </v-list-item>
     </v-list>
   </v-menu>
@@ -52,66 +56,23 @@
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 export default {
   name: "Navigation",
-  data() {
-    return {
-      menuShow: false,
-      overview: {},
-      partition: {},
-      otherNavigationItem: []
-    };
+  props: {
+      overview: Object,
+      partitions: Object,
+      otherNavigationItem: Array
   },
-  mounted() {
-    fetchData(this);
-  }
+  data(){
+    return {
+      menuShow:false
+    }
+  },
 };
-function fetchData(app) {
-  let domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
-  let overview = bgoStore.any(domain, ns.bgo("hasOverview"));
-  let credits = bgoStore.any(domain, ns.bgo("hasCredits"));
-  let terms = bgoStore.any(domain, ns.bgo("hasTerms"));
-  let tabview = bgoStore.any(domain, ns.bgo("hasTableView"));
-  //overview for navigation menu
-  app.overview.title = bgoStore.any(overview, ns.bgo("label")).value;
-  app.overview.icon = bgoStore.any(overview, ns.bgo("icon")).value;
-  app.overview.path = "/";
-  //partitions
-  let partitionNode = bgoStore.any(overview, ns.bgo("hasPartitions"));
-  let partitionList = bgoStore.any(partitionNode, ns.bgo("hasPartitionList"));
-  app.partition.title = bgoStore.any(partitionNode, ns.bgo("label")).value;
-  app.partition.icon = bgoStore.any(partitionNode, ns.bgo("icon")).value;
-  app.partition.partitionList = [];
-  if (partitionList && partitionList.elements.length != 0) {
-    partitionList.elements.forEach(el => {
-      app.partition.partitionList.push({
-        title: bgoStore.anyValue(el, ns.bgo("label")),
-        path: "/partition/" + bgoStore.any(el, ns.bgo("partitionId")).value
-      });
-    });
-  } else {
-    app.partition = undefined;
-  }
-  //otherlinks
-  if (tabview) {
-    app.otherNavigationItem.push({
-      icon: "fas fa-table",
-      title: bgoStore.any(tabview, ns.bgo("title")).value,
-      path: "/table"
-    });
-  }
-  if (credits) {
-    app.otherNavigationItem.push({
-      icon: "fas fa-users",
-      title: bgoStore.any(credits, ns.bgo("title")).value,
-      path: "/credits"
-    });
-  }
-  if (terms) {
-    app.otherNavigationItem.push({
-      icon: "fas fa-gavel",
-      title: bgoStore.any(terms, ns.bgo("title")).value,
-      path: "/terms"
-    });
-  }
-}
+
 </script>
+
+<style scoped>
+ .external{
+     padding: 0.5em;
+ }
+</style>
 

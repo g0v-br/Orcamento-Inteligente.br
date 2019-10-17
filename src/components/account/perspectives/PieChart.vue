@@ -2,11 +2,12 @@
   <div id="container" class="cds-container">
     <h4>{{title}}</h4>
     <template v-if="breakdown.length!=0">
-    <svg class="chart js-chart pie-chart" />
-    <div class="detail">
-      <p class="desc">{{ bd_title }}</p>
-      <Totalizer :total="bd_amount" :filtered="bd_filtered" :options="totalizerOptions" />
-    </div>
+      <svg class="chart js-chart pie-chart" />
+      <div class="detail">
+        <p class="desc">{{ bd_title }}</p>
+        {{ totalizer(bd_amount, bd_filtered) }}
+        <!-- <Totalizer :total="bd_amount" :filtered="bd_filtered" :options="totalizerOptions" /> -->
+      </div>
     </template>
   </div>
 </template>
@@ -146,19 +147,18 @@ function pieChart(options) {
 }
 export default {
   props: {
-    breakdown: {
-      type: Array
-    },
-
+    breakdown: Array,
     title: {
       type: String,
       default: "Bar chart"
     },
     total: {
       type: Number,
-      default: ""
+      default: 0
     },
-    totalizerOptions:{
+    totalizer: Function,
+    formatters: Object,
+    totalizerOptions: {
       type: Object
     }
   },
@@ -173,18 +173,18 @@ export default {
     };
   },
   mounted() {
-    if(this.breakdown.length!=0){
-    computeBoundaries();
-    drowPieChart(this);
-    updateDetail(this, -1);
-    intervalID = window.setInterval(() => {
-      updateDetail(this, -1);
-    }, cdsSpeed);
-    debouncedUpdate = _debounce(() => {
+    if (this.breakdown.length != 0) {
       computeBoundaries();
-      centerPieChart(this);
-    }, 200);
-    window.addEventListener("resize", debouncedUpdate);
+      drowPieChart(this);
+      updateDetail(this, -1);
+      intervalID = window.setInterval(() => {
+        updateDetail(this, -1);
+      }, cdsSpeed);
+      debouncedUpdate = _debounce(() => {
+        computeBoundaries();
+        centerPieChart(this);
+      }, 200);
+      window.addEventListener("resize", debouncedUpdate);
     }
   },
   beforeDestroy() {
@@ -192,10 +192,9 @@ export default {
     window.clearInterval(intervalID);
   }
 };
-
 </script>
 <style>
-p.dataError{
+p.dataError {
   color: red;
 }
 .selected {

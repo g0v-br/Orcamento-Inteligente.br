@@ -11,14 +11,14 @@
       <StringFormatter :string="abstract" />
     </div>
     <div class="numbers">
-      {{numberFormatter(this.total,this.totalFormatterOptions)}}
-      <Rate class="rate" :rate="rate" :show_icon="true" :formatterOptions="rateFormatterOptions"/>
+      {{formatAmount(this.total)}}
+      <Rate class="rate" :rate="rate" :formatter="formatPercentage" />
     </div>
   </div>
 </template>
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
-import {numberFormatter} from "@/utils/utils.js"
+import { numberFormatter } from "@/utils/utils.js";
 import StringFormatter from "@/components/StringFormatter";
 import Rate from "@/components/Rate";
 export default {
@@ -27,29 +27,25 @@ export default {
     Rate
   },
   props: {
-    title: Object,
-    description: Object,
-    abstract:Object,
-    total: String,
-    rate:Number,
-    accountId: {
-      type: String,
-      default: ""
-    },
-    totalFormatterOptions:{
-      type: Object
-    },
-    rateFormatterOptions:{
-      type: Object
-    }
+    title: String,
+    description: String,
+    abstract: String,
+    total: Number,
+    rate: Number,
+    accountId: String,
+    formatAmount: Function,
+    formatPercentage: Function
+    // totalFormatterOptions:{
+    //   type: Object
+    // },
+    // rateFormatterOptions:{
+    //   type: Object
+    // }
   },
-  methods:{
+  methods: {
     numberFormatter
   }
-
 };
-
-  
 </script>
 <style scoped>
 .metadata {
@@ -80,7 +76,7 @@ export default {
   /* position: absolute; */
   bottom: 0;
 }
-.rate{
+.rate {
   margin-left: auto;
 }
 </style>

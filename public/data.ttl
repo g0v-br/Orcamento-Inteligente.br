@@ -19,53 +19,51 @@
     bgo:abstract "These are **demo data** without a real meaning."^^bgo:MDString ;
 
     # add an item to default navigation menu
-    bgo:hasNavigationMenu [ 
+    bgo:hasNavigationMenu [
     	# a bgo:NavigationMenu ;
-    	bgo:withCustomMenuItems (
+    	bgo:withCustomMenuItem
     		[
     			# a bgo:MenuItem ;
 				bgo:icon "mdi-atom-variant" ;
 				bgo:title "reference implementation..." ;
 				bgo:link <https://github.com/linkeddatacenter/LODMAP2D>
 			]
-		) 	
     ] ;
 
     # Use the Option menu with two external links
     bgo:hasOptionMenu [
     	# a bgo:OptionMenu ;
-    	bgo:withCustomMenuItems (
+    	bgo:withCustomMenuItem
     		[
     			# a bgo:MenuItem ;
 				bgo:icon "mdi-information-outline" ;
 				bgo:title "about LODMAP2D..." ;
 				bgo:link <http://bit.ly/lodmap2d_p>
-			]
+			] ,
     		[
     			# a bgo:MenuItem ;
 				bgo:icon "mdi-lock" ;
 				bgo:title "about WebID-OIDC..." ;
 				bgo:link <https://github.com/solid/webid-oidc-spec>
 			]
-		)
+
     ] ;
 
-    # Add just a couple of short cuts icons to footer
+    # Add just a couple of shortcuts icons to footer
     bgo:hasFooterMenu [
     	# a bgo:FooterMenu ;
-    	bgo:withCustomMenuItems (
+    	bgo:withCustomMenuItem
     		[
     			# a bgo:MenuItem ;
 		    	bgo:icon "mdi-table" ;
 				bgo:link "/table"^^bgo:route  # this is internal link example, application dependent
-			]
+			] ,
     		[
     			# a bgo:MenuItem ;
 		    	bgo:icon "mda-github-box" ;
 		    	bgo:title "GitHub" ;
 				bgo:link <https://github.com/linkeddatacenter/LODMAP2D>
 			]
-		)
     ] ;
 
     # This domain likes social
@@ -73,7 +71,7 @@
 
     # This should be used if copyright is not present
     bgo:hasCopyrigth "(c) [LinkedData.Center](http://linkeddata.center)"^^bgo:MDString ;
-    
+
     bgo:hasOverview :overview ;
     bgo:hasTableView :table_view ;
     bgo:hasCredits :credits_page ;
@@ -90,7 +88,7 @@
     bgo:amountFormatter :amount_formatter;
     bgo:referenceFormatter :amount_formatter;
     bgo:trendFormatter :trend_formatter;
-    
+
 	bgo:hasHistoricalPerspective [
 		# a bgo:HistoricalPerspective ;
 		bgo:title "Storico dell'azione" ;
@@ -110,24 +108,24 @@
 	bgo:precision 2 ;
 .
 
-:smart_formatter 
+:smart_formatter
 	# a bgo:NumberFormatter ;
 	bgo:format "€ %s"^^bgo:Template  ;
 	bgo:precision 0 ;
 	bgo:maxValue 999999999.99 ;
-	bgo:minValue 0.005 ; 
+	bgo:minValue 0.005 ;
 	bgo:nanFormat "non definito" ;
 	bgo:moreThanMaxFormat "molto grande"^^bgo:Template ;
 	bgo:lessThanMinFormat "molto piccolo"^^bgo:Template
 .
 
-:trend_formatter 
+:trend_formatter
 	# a bgo:NumberFormatter ;
 	bgo:format "%s%"^^bgo:Template  ;
 	bgo:scaleFactor 100 ;
 	bgo:precision 2 ;
 	bgo:maxValue 100;
-	bgo:minValue -100 ; 
+	bgo:minValue -100 ;
 	bgo:nanFormat "non disponibile" ;
 	bgo:moreThanMaxFormat ">100%"^^bgo:Template ;
 	bgo:lessThanMinFormat "<-100%"^^bgo:Template
@@ -137,7 +135,7 @@
 # Credits
 ############################################
 
-:credits_page 
+:credits_page
 	# a bgo:CreditsView ;
     bgo:icon "fas fa-users";
 	bgo:title "Credits"@en ;
@@ -189,7 +187,7 @@ here palace your **Terms & conditions** about published service.
 # Partitions
 #######################################################
 
-:table_view 
+:table_view
 	# a bgo:TableView ;
 	bgo:title "Table view";
     bgo:hasTotalizer :filtered_total_formatter ;
@@ -203,19 +201,18 @@ here palace your **Terms & conditions** about published service.
     bgo:headerDescription "Description" ;
 .
 
-:overview 
+:overview
 	# a bgo:Overview ;
-	bgo:label "Stato" ;	
+	bgo:label "Stato" ;
 	bgo:icon "fas fa-atom" ;
 	bgo:title "Overview" ;
 	bgo:hasPartitions [
 		# a bgo:Partitions ;
 		bgo:icon "fas fa-atom" ;
 		bgo:label "Partitions";
-	    bgo:hasPartitionList (
-	        :p1
+	    bgo:hasPartition
+	        :p1 ,
 	        :p2
-	    )
     ];
 	bgo:hasTrendColorScheme :trend_color_scheme ;
     bgo:hasTotalizer :filtered_total_formatter ;
@@ -237,32 +234,40 @@ here palace your **Terms & conditions** about published service.
 	bgo:filteredFormat "In evidenza: € %s"^^bgo:Template  ;
 	bgo:precision 2 ;
 	bgo:ratioFormatter [
+		# a bgo:NumberFormatter
 		bgo:format " ( %s% del tot.)"^^bgo:Template  ;
 		bgo:precision 2 ;
 		bgo:scaleFactor 100 ;
 		bgo:maxValue 100 ;
-		bgo:minValue 1 ; 
+		bgo:minValue 1 ;
 		bgo:moreThanMaxFormat "" ;
 		bgo:lessThanMinFormat " (< 1% del tot.)"
 	]
 .
 
-
 ##### P1
-:p1 
+:p1
 	# a bgo:Partition ;
 	bgo:partitionId "p1" ;
 	bgo:label "partition1" ;
 	bgo:title "Partition 1 title" ;
 	bgo:withSortOrder bgo:ascending_sort ; # or bgo:descending_sort (default)
 	bgo:withSortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
-	bgo:withGroupFunction bgo:trend_average ; # or bgo:amounts_sum(default), bgo:accounts_count
-
+	bgo:withGroupFunction [
+		a bgo:TrendAverage ;
+		bgo:hasTotalizer [
+			# a bgo:Totalizer
+			bgo:format "€ %s" ;
+			bgo:filteredFormat "€ %s"^^bgo:Template  ;
+			bgo:precision 2 ;
+			bgo:ratioFormatter :trend_formatter
+		]
+	];
     bgo:hasAccountSubSet
         :p1_1 ,
         :p1_2
     ;
-    bgo:hasDefaultAccountSubSet [ 
+    bgo:hasDefaultAccountSubSet [
     	# a bgo:DefaultAccountSet  ;
 	    bgo:label "default" ;
 	    bgo:title "Default subset for p1"
@@ -270,9 +275,9 @@ here palace your **Terms & conditions** about published service.
 .
 
 
-:p1_1 
+:p1_1
 	#a bgo:AccountSet ;
-    bgo:title "Subset 1 title" ;
+    bgo:title "Subset 1_1 title" ;
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
@@ -281,7 +286,7 @@ here palace your **Terms & conditions** about published service.
 
 :p1_2
 	# a bgo:AccountSet ;
-    bgo:label "subset 2" ;
+    bgo:label "subset 1_2" ;
     bgo:title "Subset 2 title"
 .
 
@@ -295,16 +300,14 @@ here palace your **Terms & conditions** about published service.
     bgo:hasAccountSubSet
         :p2_1 ,
         :p2_2
-
     ;
-
 
     # Note no default partition is present : a default one should be create with title "Unassigned"
 .
 
 :p2_1
 	# a bgo:AccountSet ;
-    bgo:title "Subset 1 title" ;
+    bgo:title "Subset 2_1 title" ;
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
@@ -313,7 +316,7 @@ here palace your **Terms & conditions** about published service.
 
 :p2_2
 	# a bgo:AccountSet ;
-    bgo:label "subset 2" ;
+    bgo:label "subset 2_2" ;
     bgo:title "Subset 2 title" ;
     bgo:hasAccount
         :account_2
@@ -321,7 +324,7 @@ here palace your **Terms & conditions** about published service.
 
 
 ###### Trend Color Scheme #######
-:trend_color_scheme 
+:trend_color_scheme
 	# a bgo:TrendColorScheme ;
     bgo:title "Variazione percentuale rispetto al valore di acquisto" ;
     bgo:noTrendColor "#cdcdcd"^^bgo:RGB ;
@@ -336,17 +339,17 @@ here palace your **Terms & conditions** about published service.
 		[ bgo:rate  0.10 ;	bgo:colorId "#a6d96a"^^bgo:RGB ] ,
 		[ bgo:rate 0.25 ;	bgo:colorId "#66bd63"^^bgo:RGB ] ,
 		[ bgo:rate 0.50	;	bgo:colorId "#1a9850"^^bgo:RGB ] ,
-		[ bgo:rate 1.00 ;	bgo:colorId "#006837"^^bgo:RGB ] 
+		[ bgo:rate 10.00 ;	bgo:colorId "#006837"^^bgo:RGB ]
 .
 
 
-:search_pane 
+:search_pane
 	# a bgo:SearchPane ;
     bgo:label "Cerca"
 .
 
 
-:tag_cloud 
+:tag_cloud
 	# a bgo:TagCloud ;
 	bgo:hasTag # all are bgo:tags
 		[ bgo:label "rfgt2"; bgo:tagWeight 1.0 ] ,
@@ -378,7 +381,7 @@ here palace your **Terms & conditions** about published service.
     bgo:title "titolo account_1" ;
     bgo:description "descrizione account_1" ;
     bgo:abstract "Il rimborso dei titolo del debito statale tiene conto del: \n- pagamento delle quote capitale sui titoli del debito statale\n- rimborso del capitale relativo a buoni postali fruttiferi\n- rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazione\n- rimborso passività a carico dello Stato"^^bgo:MDString ;
-    bgo:depiction <http://bit.ly/2MxbJWQ> ;
+  #  bgo:depiction <http://bit.ly/2MxbJWQ> ;
     bgo:versionLabel "2019" ;
 
 	bgo:hasHistoryRec # All bgo:HistoryRec
@@ -402,8 +405,8 @@ here palace your **Terms & conditions** about published service.
     bgo:amount 100.00 ;
     bgo:referenceAmount 95.00 ;
     bgo:title "titolo account_2" ;
-    bgo:description "descrizione account_2" ;
-    bgo:depiction <http://bit.ly/2MxbJWQ>
+    #bgo:depiction <http://bit.ly/2MxbJWQ> ;
+    bgo:description "descrizione account_2"
 .
 
 :account_3

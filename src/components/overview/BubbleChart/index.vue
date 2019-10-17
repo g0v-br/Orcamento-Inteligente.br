@@ -1,10 +1,9 @@
 <template>
   <div ref="bound" class="bc-container">
-    <div ref="grid" v-if="activePartitionId != 'overview'" class="partitions-grid">
-      <div v-for="subset in activePartitionSubSets" :key="subset.id" class="grid-block">
-        <StringFormatter class="title" :string="subset.title" :popup="subset.abstract" />
-        <Totalizer v-if="condition_totalizer_rate" :total="subset.total" :filtered="subset.total_filtered" :options="totalizerOptions" />
-        <Rate v-else :rate="subset.total_filtered" :show_icon="true" :formatterOptions="totalizerOptions.rateFormatter" />
+    <div ref="grid" v-if="activePartition.id != 'overview'" class="partitions-grid">
+      <div v-for="subset in activePartition.subsets" :key="subset.id" class="grid-block">
+        <StringFormatter class="title" :string="subset.title||subset.label||subset.id" :popup="subset.abstract" />
+        <div class="amount">{{subset.formattedString}}</div>
       </div>
     </div>
     <svg ref="vis" id="vis" />
@@ -12,14 +11,13 @@
 </template>
 
 <script>
-import { bgoStore, fetcher, ns } from "@/models/bgo.js";
+import { store, fetcher, ns } from "@/services/rdfService.js";
 import BubbleChart from "@/components/overview/BubbleChart/BubbleChart.js";
 import _debounce from "lodash/debounce";
 import Totalizer from "@/components/Totalizer.vue";
-import Rate from "@/components/Rate"
+import Rate from "@/components/Rate";
 import StringFormatter from "@/components/StringFormatter.vue";
 let debouncedUpdate;
-let debouncedSearch;
 let chart;
 export default {
   components: {
@@ -28,62 +26,41 @@ export default {
     Rate
   },
   props: {
-    totOption:{
+    accounts: Array,
+    legend: Object,
+    totalizer: {
+      type: Function
+    },
+    activePartition: {
       type: Object
     },
-    activePartitionId: {
-      type: String
-    },
-    partitions: {
-      type: Array
-    },
     search: {
       type: String
     },
+    criteria: Object
   },
-  data(){
-    return{
-      totalizerOptions : this.totOption,
-      
-    }
+  data() {
+    return {
+      totalizerOptions: this.totOption
+    };
   },
   computed: {
-    activePartitionSubSets: function() {
-      let partition_active = this.partitions.find(partition => {
-        return partition.id == this.activePartitionId;
-      });
-      sortSubset(partition_active, ns);
-      return partition_active.subsets;
-    },
     //when rate group function is used show the rate for each subset
     //show total otherwise
-    condition_totalizer_rate: function(){
-      const cur_partition=bgoStore.any(undefined,ns.bgo("partitionId"),this.activePartitionId);
-      return bgoStore.anyValue(cur_partition,ns.bgo("withGroupFunction"))!=ns.bgo("trend_average").value;
+    condition_totalizer_rate: function() {
+      return this.activePartition.GroupFunction != this.criteria.TrendAdverage;
     }
   },
-  methods: {
-    total_subset(subset) {
-      return "" + subset.total + ";" + subset.total_filtered;
-    }
-  },
-  watch: {
-    search: {
-      handler: function(newVal) {
-        let app = this;
-        debouncedSearch(newVal, app);
-      },
-      deep: true
-    }
-  },
+
   mounted() {
+    // console.log(this.activePartition.subsets)
     chart = new BubbleChart(
       "#vis",
       this,
-      { bgoStore, ns },
-      this.partitions,
       this.$refs.bound.offsetWidth,
-      this.$refs.bound.offsetHeight
+      this.$refs.bound.offsetHeight,
+      this.accounts,
+      this.legend
     );
     const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
     chart.render(this.search);
@@ -91,41 +68,22 @@ export default {
       this.$refs.bound.offsetWidth,
       this.$refs.bound.offsetHeight,
       gridBloks,
-      this.activePartitionId
+      this.activePartition.subsets,
+      this.activePartition.id
     );
     //new update can't be called twice in 200ms
     debouncedUpdate = _debounce(() => {
+      console.log("DEBOUNCED");
       const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
       chart.update(
         this.$refs.bound.offsetWidth,
         this.$refs.bound.offsetHeight,
         gridBloks,
-        this.activePartitionId
-      );
-    }, 200);
-    //wait that user finisc to write search string
-    debouncedSearch = _debounce((newVal, app) => {
-      chart.filterBubbles(newVal);
-      let overviewPartition = app.partitions.find(p => {
-        return p.id == "overview";
-      });
-      emitTotalEvent(
-        app,
-        overviewPartition.total,
-        overviewPartition.total_filtered
+        this.activePartition.subsets,
+        this.activePartition.id
       );
     }, 200);
 
-    if (this.activePartitionId == "overview") {
-      let overviewPartition = this.partitions.find(p => {
-        return p.id == "overview";
-      });
-      emitTotalEvent(
-        this,
-        overviewPartition.total,
-        overviewPartition.total_filtered
-      );
-    }
     window.addEventListener("resize", debouncedUpdate);
   },
   beforeDestroy() {
@@ -137,26 +95,18 @@ export default {
       this.$refs.bound.offsetWidth,
       this.$refs.bound.offsetHeight,
       gridBloks,
-      this.activePartitionId
+      this.activePartition.subsets,
+      this.activePartition.id
     );
-  }
+  },
+   watch: {
+    search: function(newVal, oldVal) {
+      chart.filterBubbles(newVal)
+      
+    }
+    }
+
 };
-function emitTotalEvent(app, total, total_filtered) {
-  let data = {
-    total,
-    total_filtered
-  };
-  app.$emit("total_changed", data);
-}
-function sortSubset(partition_active, ns) {
-  // sort array asc or desc
-  partition_active.subsets.sort((a, b) => {
-    return a.total_filtered - b.total_filtered;
-  });
-  if (partition_active.sortOrder == ns.bgo("descending_sort").value) {
-    partition_active.subsets.reverse();
-  }
-}
 </script>
 
 
@@ -177,7 +127,8 @@ function sortSubset(partition_active, ns) {
 .grid-block {
   text-align: center;
 }
-.grid-block:nth-child(odd) {
+.amount{
+  font-size: 1.2em;
 }
 
 #vis {

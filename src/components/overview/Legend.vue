@@ -5,7 +5,7 @@
       <li v-for="(color, i) in colorTresholds" :key="i" :style="{background: color}"></li>
     </ul>
     <ul class="ranges">
-      <li v-for="(range, i) in rangeTresholds" :key="i"><Rate :rate="parseFloat(range)" :show_icon="false" :formatterOptions="rateFormatterOptions"/></li>
+      <li v-for="(range, i) in rangeTresholds" :key="i"><Rate :rate="parseFloat(range)" :show_icon="false" :formatter="formatter"/></li>
     </ul>
   </div>
 </template>
@@ -19,7 +19,7 @@ export default {
     noTrendColor: String,
     colorTresholds: Array,
     rangeTresholds: Array,
-    rateFormatterOptions: Object,
+    formatter: Function,
   },
 
   components: {

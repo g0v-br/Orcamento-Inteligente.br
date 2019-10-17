@@ -2,14 +2,14 @@ import Vue from 'vue'
 import App from './App.vue'
 import Error from './views/errors/500.vue'
 import router from './router'
-import store from './store'
 import vuetify from './plugins/vuetify';
-import { bgoStore, fetcher, ns, dref } from './models/bgo.js';
+import { store, dref, fetcher } from './services/rdfService';
 
-// console.table(dref("/partition/p1"));
+// console.table(dref("/app"));
 
 fetcher.load(dref("/app")).then(
   response => {
+    console.log ('store popolato')
     new Vue({
       router,
       store,

@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import { bgoStore, fetcher, dref } from './models/bgo.js';
+import { store, dref, fetcher  } from './services/rdfService';
 
-// console.table(dref("http://localhost:8080/app"));
+// console.table(dref("/partition/overview"));
 
 Vue.use(Router)
 

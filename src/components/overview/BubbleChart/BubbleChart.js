@@ -7,150 +7,6 @@ import { scaleLinear, scaleThreshold, scalePow } from "d3-scale";
 import { forceSimulation, forceManyBody, forceX, forceY } from "d3-force";
 
 
-
-
-function updateTotals(node, partitions_table, total, ns) {
-    //update overview total
-    let overviewPartition = partitions_table.find(p => {
-        return p.id == "overview"
-    });
-    if (total == "total" || total == undefined) {
-        overviewPartition.total += node.amount;
-    }
-    if ((total == "filtered" || total == undefined) && node.active) {
-        overviewPartition.total_filtered += node.amount;
-    }
-    Object.keys(node.partitions).forEach((partition_id) => {
-        let target_partition = partitions_table.find((partition) => {
-            return partition_id == partition.id;
-        });
-        let target_subset = target_partition.subsets.find((subset) => {
-            return subset.id == node.partitions[partition_id];
-        });
-
-        //groupFunction define the way to calculate totals
-        switch (target_partition.groupFunction) {
-            //total = (sum of nodes.ammount - sum of nodes.referenceAmount)/ sum of nodes.referenceAmount
-            case ns.bgo("trend_average").value:
-                if (target_subset.totalSupport == undefined) {
-                    target_subset.totalSupport = {
-                        amount: 0,
-                        amountFiltered: 0,
-                        referenceAmount: 0,
-                        referenceAmountFiltered: 0
-                    };
-                }
-                if (total == "total" || total == undefined) {
-                    target_subset.totalSupport.amount += node.amount;
-                    target_subset.totalSupport.referenceAmount += node.referenceAmount;
-                    target_subset.total = (target_subset.totalSupport.amount - target_subset.totalSupport.referenceAmount) / target_subset.totalSupport.referenceAmount;
-                }
-                if ((total == "filtered" || total == undefined) && node.active) {
-                    target_subset.totalSupport.amountFiltered += node.amount;
-                    target_subset.totalSupport.referenceAmountFiltered += node.referenceAmount;
-                    target_subset.total_filtered = (target_subset.totalSupport.amountFiltered - target_subset.totalSupport.referenceAmountFiltered) / target_subset.totalSupport.referenceAmountFiltered;
-                }
-                break;
-            //total = sum of node.account (absolute o natural)
-            case ns.bgo("amounts_sum").value:
-                if (total == "total" || total == undefined)
-                    target_subset.total += target_partition.sortCriteria == ns.bgo("abs_sort") ? Math.abs(node.amount) : node.amount;
-                if ((total == "filtered" || total == undefined) && node.active)
-                    target_subset.total_filtered += target_partition.sortCriteria == ns.bgo("abs_sort") ? Math.abs(node.amount) : node.amount;
-                break;
-            //total = number of nodes in the subset
-            case ns.bgo("accounts_count").value:
-                if (total == "total" || total == undefined)
-                    target_subset.total += 1;
-                if ((total == "filtered" || total == undefined) && node.active)
-                    target_subset.total_filtered += 1;
-                break;
-        }
-
-    });
-    
-}
-//reset filtered totals
-function resetTotal(partitions_table) {
-    partitions_table.forEach((partition) => {
-        if (partition.id != "overview") {
-            partition.subsets.forEach((subset) => {
-                subset.total_filtered = 0;
-
-                if (subset.totalSupport != undefined)
-                    subset.totalSupport = null;
-            })
-        } else {
-            partition.total_filtered = 0;
-        }
-
-    });
-
-}
-//called only the first time
-function createNodes(store, ns, width, height, searchText, partitions_table) {
-    let nodes = [];
-    store.each(null, ns.bgo('accountId')).forEach(account => {
-        let newNode;
-        let id = store.anyValue(account, ns.bgo('accountId'));
-
-        let title = store.anyValue(account, ns.bgo('title')) || "";
-
-        let description = store.anyValue(account, ns.bgo('description')) || "";
-
-        let abstract = store.anyValue(account, ns.bgo('abstract')) || "";
-        // description = description ? description : "";
-
-        let amount = store.anyValue(account, ns.bgo('amount'));
-        amount = amount ? parseFloat(amount) : 0;
-
-        let refAmount = store.anyValue(account, ns.bgo('referenceAmount'));
-        refAmount = refAmount ? parseFloat(refAmount) : 0;
-
-        let rate = (amount - refAmount) / refAmount;
-        rate = isFinite(rate) ? rate : NaN;
-
-        let bg = store.anyValue(account, ns.bgo('depiction')) || null;
-        let partitions = {};
-
-        partitions_table.slice(1).forEach(p => {
-            partitions[p.id] = "default";
-        })
-        let subSetUris = store.each(undefined, ns.bgo("hasAccount"), account);
-        subSetUris.forEach(subSetUri => {
-            let partition = store.any(undefined, ns.bgo("hasAccountSubSet"), subSetUri);
-            let partitionId = store.anyValue(partition, ns.bgo("partitionId"))
-            const isPartitionPresent = partitions_table.some(p => p.id == partitionId);
-            if (isPartitionPresent)
-                partitions[partitionId] = subSetUri.value;
-        });
-
-        newNode = {
-            id,
-            title,
-            description,
-            abstract,
-            amount,
-            referenceAmount: refAmount,
-            rate,
-            bg,
-            partitions,
-            x: Math.random() * width,
-            y: Math.random() * height,
-        };
-        newNode["active"] = match(newNode, searchText);
-        updateTotals(newNode, partitions_table, null, ns);
-        nodes.push(newNode);
-    })
-    nodes.sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
-    return nodes;
-}
-
-// if account contains text return true, false otherwise
-function match(account, text) {
-    return account.id == text || account.title.toLowerCase().includes(text) || account.description.toLowerCase().includes(text) || account.abstract.toLowerCase().includes(text);
-}
-
 function getCenters(gridBlocks) {
     const centers = [];
     gridBlocks.forEach(block => {
@@ -163,52 +19,37 @@ function getCenters(gridBlocks) {
 
 export default class BubbleChart {
 
-    constructor(el, app, bgolib, partitions, width, height) {
+    constructor(el, app, width, height, accounts, legend) {
         this.el = el;
         this.app = app;
         this.height = height;
         this.width = width;
-        this.store = bgolib.bgoStore;
-        this.ns = bgolib.ns;
-        this.partitions = partitions
         this.velocityDecay = 0.2;
         this.forceStrength = 0.03;
         this.simulation;
-        this.nodes = [];
+        this.nodes = accounts;
         this.totalDefaultArea = 0;
+        this.legend = legend;
     }
     //called only the first time
     render(searchText) {
-        this.nodes = createNodes(this.store, this.ns, this.width, this.height, searchText, this.partitions);
-        const domain = this.store.any(undefined, this.ns.bgo("hasOverview"));
-        const overview = this.store.any(domain, this.ns.bgo("hasOverview"));
-
-        // Colore schema
-        const colorScheme = this.store.any(overview, this.ns.bgo('hasTrendColorScheme'));
-        const noTrendColor = this.store.anyValue(colorScheme, this.ns.bgo('noTrendColor'));
-        const colorTresholds = [];
-        const rangeTresholds = [];
-        this.store.each(colorScheme, this.ns.bgo("rateTreshold"))
-            .sort((tresholdA, tresholdB) => {
-                let rateA = this.store.anyValue(tresholdA, this.ns.bgo("rate"));
-                let rateB = this.store.anyValue(tresholdB, this.ns.bgo("rate"));
-                return rateA - rateB;
-            })
-            .forEach(treshold => {
-
-                rangeTresholds.push(this.store.anyValue(treshold, this.ns.bgo("rate")));
-                colorTresholds.push(this.store.anyValue(treshold, this.ns.bgo("colorId")))
-            })
+        this.nodes = this.nodes.map((node) => {
+            return {
+                ...node,
+                x: Math.random() * this.width,
+                y: Math.random() * this.height
+            }
+        }).sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
 
         const colorScale = (val) => {
             let fill = scaleLinear()
-                .domain(rangeTresholds)
-                .range(colorTresholds).clamp(true);
+                .domain(this.legend.rangeTresholds)
+                .range(this.legend.colorTresholds).clamp(true);
 
             if (isFinite(val)) {
                 return fill(val);
             }
-            return noTrendColor;
+            return this.legend.noTrendColor;
         }
 
         // Appends patterns for circle bg without dimension
@@ -292,10 +133,6 @@ export default class BubbleChart {
             .nodes(this.nodes)
             .on("tick", ticked)
             .stop()
-
-        // this.updateSimulation();
-        // groupBubble(this);
-
     }
 
     // Update bubbles radius and update the simulation obj with the new charge force according to the new radius
@@ -348,38 +185,29 @@ export default class BubbleChart {
     }
 
     // called when partition change, group or split bubbles
-    update(width, height, gridBlocks, activePartitionId) {
+    update(width, height, gridBlocks, subsets, activePartitionId) {
 
         // update with new boundaries
         this.height = height;
         this.width = width;
-
-        if (activePartitionId == 'overview') {
+        if (!subsets) {
             this.updateSimulation()
             this.groupBubble();
         } else {
-
             const centers = getCenters(gridBlocks);
             let subsetToCenterMap = {};
-
-            let active_subsets = this.partitions.find(partition => {
-                return partition.id == activePartitionId;
-            }).subsets;
-            active_subsets.forEach((subset, i) => {
+            subsets.forEach((subset, i) => {
                 subsetToCenterMap[subset.id] = centers[i];
             });
 
-
-
-            // TODO aggiungere ai gridblock un blocco per i default, i nodi senza partizioni sono a posto
             this.simulation.force(
                 "x",
                 forceX()
                     .strength(this.forceStrength)
                     .x(function (d) {
-                        let nodePartition = d.partitions[activePartitionId];
-                        if (nodePartition) {
-                            return subsetToCenterMap[nodePartition].x;
+                        let targetSubset = d.partitions[activePartitionId];
+                        if (targetSubset) {
+                            return subsetToCenterMap[targetSubset].x;
                         } else {
                             return centers[centers.length - 1].x;
                         }
@@ -390,9 +218,9 @@ export default class BubbleChart {
                 forceY()
                     .strength(this.forceStrength)
                     .y(function (d) {
-                        let nodePartition = d.partitions[activePartitionId];
-                        if (nodePartition) {
-                            return subsetToCenterMap[nodePartition].y;
+                        let targetSubset = d.partitions[activePartitionId];
+                        if (targetSubset) {
+                            return subsetToCenterMap[targetSubset].y;
                         } else {
                             return centers[centers.length - 1].y;
                         }
@@ -414,13 +242,16 @@ export default class BubbleChart {
 
     //called when filter changhe filter bubble and compute new filtered totals
     filterBubbles(searchText) {
-        resetTotal(this.partitions);
         select("svg#vis")
             .selectAll("circle")
             .classed("disabled", d => {
-                d.active = match(d, searchText.toLowerCase());
-                updateTotals(d, this.partitions, "filtered", this.ns);
-                return !d.active // if is active disabled must be false
+                console.log(d.active, d.isActive)
+                return !(
+                    d.id == searchText ||
+                    d.title.toLowerCase().includes(searchText) ||
+                    d.description.toLowerCase().includes(searchText) ||
+                    d.abstract.toLowerCase().includes(searchText)
+                );
             });
 
     }

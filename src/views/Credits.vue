@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <h1>
-      <StringFormatter :string="title" />
+      <StringFormatter :string="data.title" />
     </h1>
-    <StringFormatter :string="abstract" />
+    <StringFormatter :string="data.abstract" />
     <!-- Warning: removing or changing the following statement breaks the LODMAP2D license -->
     <div class="ldc-credits">
       <p>
@@ -17,8 +17,10 @@
   </div>
 </template>
 <script>
-import { bgoStore, fetcher, ns } from "@/models/bgo.js";
+import { ServiceFactory } from "@/services/ServiceFactory.js";
 import StringFormatter from "@/components/StringFormatter.vue";
+
+const CreditsService = ServiceFactory.get("credits");
 export default {
   name: "Credits",
   components: {
@@ -26,16 +28,14 @@ export default {
   },
   data() {
     return {
-      title: {},
-      abstract: {}
+      data: {
+        title: {},
+        abstract: {}
+      }
     };
   },
   created() {
-    const domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
-    const creditsView = bgoStore.any(domain, ns.bgo("hasCredits"));
-
-    this.title = bgoStore.any(creditsView, ns.bgo("title"));
-    this.abstract = bgoStore.any(creditsView, ns.bgo("abstract"));
+    this.data = CreditsService.getData();
   }
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <p>{{display}}</p>
+  <div>{{display}}</div>
 </template>
 <script>
 import { bgoStore, fetcher, ns } from "@/models/bgo.js";
@@ -31,7 +31,6 @@ export default {
           format: this.options.filteredFormat
         });
         text = text + numberFormatter(rate, this.options.rateFormatter);
-       
       }
 
       return text;

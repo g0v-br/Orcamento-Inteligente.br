@@ -1,9 +1,9 @@
 <template>
   <div class="container-fluid">
     <!-- partitioned is used to remove the side content -->
-    <div :class="{'content-grid':true, 'partitioned': activePartitionId != 'overview'}">
+    <div :class="{'content-grid':true, 'partitioned': activePartition.id != 'overview'}">
       <div class="partitions">
-        <v-btn-toggle v-model="activePartitionId" mandatory active-class="primary--text">
+        <v-btn-toggle v-model="activePartition.id" mandatory active-class="primary--text">
           <v-btn
             v-for="partition in partitions"
             :key="partition.id"
@@ -19,30 +19,32 @@
           outlined
           clearable
           v-model="search"
-          :placeholder="searchPaneLabel"
+          :placeholder="searchPane.label"
           @input="onSearchInput"
         ></v-text-field>
       </div>
 
       <div class="meta">
         <p class="meta-description">{{metadata.description}}</p>
-        <Totalizer :total="total" :filtered="total_filtered" :options="totalizerOptions" />
+        {{totalizer(total,totalFiltered)}}
         <StringFormatter class="meta-abstract" :string="metadata.abstract" />
       </div>
 
       <div ref="chart" class="chart">
         <BubbleChart
-          :active-partition-id="activePartitionId"
-          :partitions="partitions"
-          :search="search"
-          :totOption="totalizerOptions"
-          @total_changed="onTotalChanged"
+          :active-partition="activePartition"
+          :search="search_chart"
+          :totalizer="totalizer"
+          :accounts="accounts"
+          :legend="legendData"
+          :criteria="criteria"
           @nodeover="onNodeOver"
           @nodeout="isNodeHovered = false"
         ></BubbleChart>
         <Tooltip
           v-if="isNodeHovered"
-          :options="tooltipOptions"
+          :amountFormatter="formatters.formatTooltipAmount"
+          :rateFormatter="formatters.formatTooltipPercentage"
           :node="hoveredNode"
           :style="{top: hoveredNode.top+'px', left:hoveredNode.left+'px'}"
           class="tooltip"
@@ -52,21 +54,21 @@
       <div class="tools">
         <div class="tagcloud">
           <router-link
-            v-for="tag in tags.slice(0,30)"
+            v-for="tag in tags"
             :key="tag.label"
             :to="{ name: 'accounts-partition',
-          params: { partitionId: activePartitionId },
+          params: { partitionId: activePartition.id },
           query: { s: tag.label }}"
             :style="{fontSize: tag.weight *1.4 +0.5 +'em'}"
             class="tag"
           >{{tag.label}}</router-link>
         </div>
         <Legend
-          :label="legendData.label"
+          :label="legendData.title"
           :no-trend-color="legendData.noTrendColor"
           :color-tresholds="legendData.colorTresholds"
           :range-tresholds="legendData.rangeTresholds"
-          :rateFormatterOptions="legendData.rateFormatterLegend"
+          :formatter="formatters.formatLegendPercentage"
           class="legend-bottom"
         />
       </div>
@@ -75,20 +77,26 @@
 </template>
 
 <script>
-import { bgoStore, fetcher, ns } from "@/models/bgo.js";
+import { ServiceFactory } from "@/services/ServiceFactory.js";
 import BubbleChart from "@/components/overview/BubbleChart";
 import Legend from "@/components/overview/Legend";
-import Totalizer from "@/components/Totalizer";
 import Tooltip from "@/components/overview/Tooltip";
 import StringFormatter from "@/components/StringFormatter.vue";
 import { debounce } from "lodash";
+import { log } from "util";
+
+function print(text) {
+  console.log(JSON.parse(JSON.stringify(text)));
+}
+
+const OverviewService = ServiceFactory.get("overview");
+let debouncedSearch;
 
 export default {
   name: "overview",
   components: {
     BubbleChart,
     Legend,
-    Totalizer,
     Tooltip,
     StringFormatter
   },
@@ -100,70 +108,90 @@ export default {
   },
   data() {
     return {
-      activePartitionId: this.partitionId,
-      partitions: [],
-      searchPaneLabel: "",
-      search: null,
+      accounts: null,
+      activePartition: null,
+      totalizer: null,
+      searchPane: null,
+      partitions: null,
+      criteria: null,
       tags: [],
+      search: null,
+      search_chart:"",
+      metadata: {},
+      legendData: {},
+      formatters: {},
+
+      // Totali per il totalizer nei meta
       total: 0,
-      total_filtered: 0,
+      totalFiltered: 0,
+      //
       isNodeHovered: false,
-      hoveredNode: {},
-      legendData: {
-        label: "",
-        noTrendColor: "",
-        colorTresholds: [],
-        rangeTresholds: [],
-        rateFormatterLegend:{}
-      },
-      totalizerOptions: {
-        format: "",
-        filteredFormat: "",
-        precision: 0,
-        rateFormatter: {
-          format: "",
-          precision: 0,
-          scaleFactor: 0,
-          maxValue: 0,
-          minValue: 0,
-          moreThanMaxFormat: "",
-          lessThanMinFormat: ""
-        }
-      },
-      tooltipOptions: {
-        totalFormatter:{
-        format: "",
-        precision: 0
-        },
-        rateFormatter: {
-          format: "",
-          nanFormat: "",
-          precision: 0,
-          scaleFactor: 0,
-          maxValue: 0,
-          minValue: 0,
-          moreThanMaxFormat: "",
-          lessThanMinFormat: ""
-        }
-      },
-      metadata: {
-        description: "",
-        abstract: null
-      }
+      hoveredNode: {}
     };
   },
 
   beforeRouteUpdate(to, from, next) {
     // Necessary when the component  si reused after a tag is cliked
-    this.activePartitionId = to.params.partitionId; //serve perche quando navigo col menu non chiamo onPartitionChange
+    this.activePartition = this.partitions.find(partition => {
+      //serve perche quando navigo col menu non chiamo onPartitionChange
+      return partition.id == to.params.partitionId;
+    });
     this.search = to.query.s || "";
     next();
   },
   created() {
-    fetchData(this);
+    this.searchPane = OverviewService.getSearchPane();
+    this.totalizer = OverviewService.getTotalizer();
+    this.tags = OverviewService.getTagCloud();
+    this.partitions = OverviewService.getPartitions();
+    this.legendData = OverviewService.getLegendData();
+    this.metadata = OverviewService.getMetadata();
+    this.formatters = OverviewService.getFormatters();
+    this.accounts = OverviewService.getAccounts().map(account => ({
+      ...account,
+      active: true
+    }));
+    this.criteria = OverviewService.getCriteria();
     this.search = this.$route.query.s || "";
+    this.activePartition = this.partitions.find(partition => {
+      return partition.id == this.partitionId;
+    });
+
+    // print(this.partitions);
+    // this.partitions[1].subsets[0].resetTotals();
+
+    //wait that user finish to write search string
+    debouncedSearch = debounce((newVal)=>{
+      this.updateAccounts()
+      this.search_chart=newVal;
+      }, 200);
+    //initialize accounts
+    debouncedSearch();
+    // this.updateAccounts();
   },
+  watch: {
+    search: function(newVal, oldVal) {
+      debouncedSearch(newVal);
+      
+    }
+    // deep: true
+  },
+
   methods: {
+    //reset totals, active accounts, compute new totals
+    //each time search string change
+    updateAccounts() {
+      this.resetTotal();
+      this.accounts.forEach(account => {
+        account.active = this.match(account, this.search);
+        this.updateTotals(account);
+      });
+      this.sortSubsets();
+      // console.log('', this.partit);
+      this.makeFormattedStringForPartitions();
+      print(this.partitions);
+      // this.partitions[1].subsets[1].getFormattedString()
+    },
     onPartitionChange(partitionId) {
       this.$router.push({
         name: "accounts-partition",
@@ -175,14 +203,11 @@ export default {
       // this.selectedTag = null;
       this.$router.replace({
         name: "accounts-partition",
-        params: { partitionId: this.activePartitionId },
+        params: { partitionId: this.activePartition.id },
         query: { s: this.search }
       });
     },
-    onTotalChanged(data) {
-      this.total = data.total;
-      this.total_filtered = data.total_filtered;
-    },
+    //tooltip
     onNodeOver(node) {
       const tooltipHeight = 130;
       const tooltipWidth = 400;
@@ -204,221 +229,148 @@ export default {
         left
       });
       this.isNodeHovered = true;
+    },
+    //compute totals for each subset and partition. called on search text change after resetting previus values
+    updateTotals(account) {
+      // Aggiornare sempre
+      this.total += account.amount;
+
+      if (account.active) {
+        // Aggiorno i totali di overview
+        this.totalFiltered += account.amount;
+
+        // Aggiorno i totali di tutte le partizioni e subset diversi dal primo ( overview )
+        this.partitions.slice(1).forEach(partition => {
+          partition.subsets.forEach(subset => {
+            if (account.partitions[partition.id] == subset.id) {
+              subset.count += 1;
+              subset.amountTotal += account.amount;
+              subset.referenceAmountTotal += account.refAmount;
+            }
+          });
+        });
+      }
+    },
+    //reset filtered totals
+    resetTotal() {
+      this.total = 0;
+      this.totalFiltered = 0;
+
+      this.partitions.slice(1).forEach(partition => {
+        partition.subsets.forEach(subset => {
+          subset.count = 0;
+          subset.amountTotal = 0;
+          subset.referenceAmountTotal = 0;
+        });
+      });
+    },
+
+    sortSubsets() {
+      this.partitions.slice(1).forEach(partition => {
+        const sortOrder =
+          partition.sortOrder == this.criteria["ascending_sort"] ? 1 : -1;
+
+        partition.subsets.sort((subsetA, subsetB) => {
+          if (partition.sortCriteria == this.criteria["natural_sort"]) {
+            switch (partition.groupFunction) {
+              case this.criteria["AccountsCount"]:
+                return sortOrder * (subsetA.count - subsetB.count);
+                break;
+
+              case this.criteria["AccountsSum"]:
+                return sortOrder * (subsetA.amountTotal - subsetB.amountTotal);
+                break;
+
+              case this.criteria["TrendAverage"]:
+                let trendA =
+                  (subsetA.amountTotal - subsetA.referenceAmountTotal) /
+                  subsetA.referenceAmountTotal;
+                let trendB =
+                  (subsetB.amountTotal - subsetB.referenceAmountTotal) /
+                  subsetB.referenceAmountTotal;
+                // Non posso lascare NaN, altrimenti non ordina
+                trendA = isFinite(trendA) ? trendA : 0;
+                trendB = isFinite(trendB) ? trendB : 0;
+                return sortOrder * (trendA - trendB);
+                break;
+
+              default:
+                return sortOrder * (subsetA.amountTotal - subsetB.amountTotal);
+                break;
+            }
+          } else if (partition.sortCriteria == this.criteria["abs_sort"]) {
+            switch (partition.groupFunction) {
+              case this.criteria["AccountsCount"]:
+                return sortOrder * (subsetA.count - subsetB.count);
+                break;
+
+              case this.criteria["AccountsSum"]:
+                return (
+                  sortOrder *
+                  (Math.abs(subsetA.amountTotal) -
+                    Math.abs(subsetB.amountTotal))
+                );
+                break;
+
+              case this.criteria["TrendAverage"]:
+                let trendA =
+                  (subsetA.amountTotal - subsetA.referenceAmountTotal) /
+                  subsetA.referenceAmountTotal;
+                let trendB =
+                  (subsetB.amountTotal - subsetB.referenceAmountTotal) /
+                  subsetB.referenceAmountTotal;
+                return sortOrder * (Math.abs(trendA) - Math.abs(trendB));
+                break;
+
+              default:
+                return (
+                  sortOrder *
+                  (Math.abs(subsetA.amountTotal) -
+                    Math.abs(subsetB.amountTotal))
+                );
+                break;
+            }
+          }
+        });
+      });
+    },
+
+    makeFormattedStringForPartitions() {
+      this.partitions.slice(1).forEach(partition => {
+        partition.subsets.forEach(subset => {
+          switch (partition.groupFunction) {
+            case this.criteria["AccountsCount"]:
+              subset.formattedString = partition.formatCount(subset.count);
+              break;
+            case this.criteria["AmountsSum"]:
+              subset.formattedString = partition.formatAmount(
+                subset.amountTotal
+              );
+              break;
+            case this.criteria["TrendAverage"]:
+              subset.formattedString = partition.formatPercentage(
+                (subset.amountTotal - subset.referenceAmountTotal) /
+                  subset.referenceAmountTotal
+              );
+              break;
+
+            default:
+              break;
+          }
+        });
+      });
+    },
+    // if account contains text return true, false otherwise
+    match(account, text) {
+      return (
+        account.id == text ||
+        account.title.toLowerCase().includes(text) ||
+        account.description.toLowerCase().includes(text) ||
+        account.abstract.toLowerCase().includes(text)
+      );
     }
   }
 };
-
-function fetchData(app) {
-  const domain = bgoStore.any(undefined, ns.bgo("hasOverview"));
-  const overview = bgoStore.any(domain, ns.bgo("hasOverview"));
-  // Domain Metadata
-  app.metadata.description = bgoStore.anyValue(domain, ns.bgo("description"));
-  app.metadata.abstract = bgoStore.any(domain, ns.bgo("abstract"));
-  // Partition metadata
-  // Push default partition with id 'overview'
-  app.partitions.push({
-    id: "overview",
-    label: bgoStore.anyValue(overview, ns.bgo("label")),
-    total: 0,
-    total_filtered: 0
-  });
-  const partitionsNode = bgoStore.any(overview, ns.bgo("hasPartitions"));
-  const partitions = bgoStore.any(partitionsNode, ns.bgo("hasPartitionList"))
-    .elements;
-  //add other partitions
-  //fetch partitions data
-  for (const partition of partitions) {
-    let id = bgoStore.anyValue(partition, ns.bgo("partitionId"));
-    let label = bgoStore.anyValue(partition, ns.bgo("label"));
-    let title = bgoStore.anyValue(partition, ns.bgo("title"));
-    let sortOrder =
-      bgoStore.anyValue(partition, ns.bgo("withSortOrder")) ||
-      ns.bgo("descending_sort").value;
-    let sortCriteria =
-      bgoStore.anyValue(partition, ns.bgo("withSortCriteria")) ||
-      ns.bgo("abs_sort").value;
-    let groupFunction =
-      bgoStore.anyValue(partition, ns.bgo("withGroupFunction")) ||
-      ns.bgo("amounts_sum").value;
-
-    //fetch subset data
-    let subsets_uris = bgoStore.each(partition, ns.bgo("hasAccountSubSet"));
-    let subsets = [];
-
-    // Add default subset
-    let defaultSubset = bgoStore.any(
-      partition,
-      ns.bgo("hasDefaultAccountSubSet")
-    );
-    let subsetLabel;
-    let subsetTitle;
-    if (defaultSubset) {
-      subsetLabel = bgoStore.anyValue(defaultSubset, ns.bgo("label")) || "";
-      subsetTitle = bgoStore.any(defaultSubset, ns.bgo("title"));
-    }
-    subsets.push({
-      id: "default",
-      title: subsetTitle, //TODO "Unassigned", sistemare lo string formatter in modo che gestica le stringhe non gli oggetti
-      label: subsetLabel ? subsetLabel : "",
-      total: 0,
-      total_filtered: 0,
-      description: "",
-      abstract: undefined
-    });
-
-    //for each partition add its subsets
-    subsets_uris.forEach(subset => {
-      let s_title = bgoStore.any(subset, ns.bgo("title"));
-      let s_label = bgoStore.anyValue(subset, ns.bgo("label")) || "";
-      let description = bgoStore.anyValue(subset, ns.bgo("description")) || "";
-      let abstract = bgoStore.any(subset, ns.bgo("abstract"));
-      subsets.push({
-        id: subset.value,
-        title: s_title,
-        description,
-        abstract,
-        label: s_label,
-        total: 0,
-        total_filtered: 0
-      });
-    });
-
-    app.partitions.push({
-      id,
-      label,
-      title,
-      sortOrder,
-      sortCriteria,
-      groupFunction,
-      subsets
-    });
-  }
-  // Search metadata
-  const searchPane = bgoStore.any(overview, ns.bgo("hasSearchPane"));
-  app.searchPaneLabel = bgoStore.anyValue(searchPane, ns.bgo("label"));
-
-  // TagCloud metadata
-  const tagCloud = bgoStore.any(overview, ns.bgo("hasTagCloud"));
-  bgoStore.each(tagCloud, ns.bgo("hasTag")).forEach(tag => {
-    const label = bgoStore.anyValue(tag, ns.bgo("label"));
-    const weight = bgoStore.anyValue(tag, ns.bgo("tagWeight"));
-    app.tags.push({ label, weight });
-  });
-
-  // Legend metadata
-  const colorScheme = bgoStore.any(overview, ns.bgo("hasTrendColorScheme"));
-  app.legendData.label = bgoStore.anyValue(colorScheme, ns.bgo("title"));
-  app.legendData.noTrendColor = bgoStore.anyValue(
-    colorScheme,
-    ns.bgo("noTrendColor")
-  );
-  bgoStore
-    .each(colorScheme, ns.bgo("rateTreshold"))
-    .sort((tresholdA, tresholdB) => {
-      let rateA = bgoStore.anyValue(tresholdA, ns.bgo("rate"));
-      let rateB = bgoStore.anyValue(tresholdB, ns.bgo("rate"));
-      return rateA - rateB;
-    })
-    .forEach(treshold => {
-      app.legendData.rangeTresholds.push(
-        bgoStore.anyValue(treshold, ns.bgo("rate"))
-      );
-      app.legendData.colorTresholds.push(
-        bgoStore.anyValue(treshold, ns.bgo("colorId"))
-      );
-    });
-
-  // Totalizer
-  let totalizer = bgoStore.any(overview, ns.bgo("hasTotalizer"));
-  let rateFormatter = bgoStore.any(totalizer, ns.bgo("ratioFormatter"));
-
-  app.totalizerOptions.format = bgoStore.anyValue(totalizer, ns.bgo("format"));
-  app.totalizerOptions.filteredFormat = bgoStore.anyValue(
-    totalizer,
-    ns.bgo("filteredFormat")
-  );
-  app.totalizerOptions.precision = bgoStore.anyValue(
-    totalizer,
-    ns.bgo("precision")
-  );
-
-  app.totalizerOptions.rateFormatter.format = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("format")
-  );
-  app.totalizerOptions.rateFormatter.precision = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("precision")
-  );
-  app.totalizerOptions.rateFormatter.scaleFactor = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("scaleFactor")
-  );
-  app.totalizerOptions.rateFormatter.maxValue = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("maxValue")
-  );
-  app.totalizerOptions.rateFormatter.minValue = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("minValue")
-  );
-  app.totalizerOptions.rateFormatter.moreThanMaxFormat = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("moreThanMaxFormat")
-  );
-  app.totalizerOptions.rateFormatter.lessThanMinFormat = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("lessThanMinFormat")
-  );
-
-  //tooltip
-  let tooltip = bgoStore.any(overview, ns.bgo("hasTooltip"));
-  let amountFormatter = bgoStore.any(tooltip, ns.bgo("amountFormatter"));
-  rateFormatter = bgoStore.any(tooltip, ns.bgo("trendFormatter"));
-
-  app.tooltipOptions.totalFormatter.format = bgoStore.anyValue(
-    amountFormatter,
-    ns.bgo("format")
-  );
-  app.tooltipOptions.totalFormatter.precision = bgoStore.anyValue(
-    amountFormatter,
-    ns.bgo("precision")
-  );
-
-  app.tooltipOptions.rateFormatter.format = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("format")
-  );
-  app.tooltipOptions.rateFormatter.nanFormat = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("nanFormat")
-  );
-  app.tooltipOptions.rateFormatter.scaleFactor = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("scaleFactor")
-  );
-  app.tooltipOptions.rateFormatter.precision = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("precision")
-  );
-  app.tooltipOptions.rateFormatter.maxValue = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("maxValue")
-  );
-  app.tooltipOptions.rateFormatter.minValue = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("minValue")
-  );
-  app.tooltipOptions.rateFormatter.moreThanMaxFormat = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("moreThanMaxFormat")
-  );
-  app.tooltipOptions.rateFormatter.lessThanMinFormat = bgoStore.anyValue(
-    rateFormatter,
-    ns.bgo("lessThanMinFormat")
-  );
-  app.legendData.rateFormatterLegend=app.tooltipOptions.rateFormatter;
-}
 </script>
 
 <style scoped>
@@ -471,9 +423,6 @@ function fetchData(app) {
 /* .meta-description {
   overflow: auto;
   } */
-
-.meta-abstract {
-}
 
 .chart {
   position: relative;
@@ -528,9 +477,6 @@ function fetchData(app) {
 
 /* Landscape phones and down */
 @media (max-width: 768px) {
-  .container-fluid {
-    /* min-height: 120vh; */
-  }
   .content-grid {
     grid-template-areas:
       "part"

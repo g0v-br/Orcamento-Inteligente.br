@@ -3,8 +3,7 @@
     <div ref="grid" v-if="activePartition.id != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartition.subsets" :key="subset.id" class="grid-block">
         <!-- <StringFormatter class="title" :string="subset.title||subset.label||subset.id" :popup="subset.abstract" /> -->
-        <!-- <div> {{activePartition.formatter(subset.total, subset.totalFiltered)}}</div> -->
-
+        <div class="amount">{{subset.formattedString}}</div>
       </div>
     </div>
     <svg ref="vis" id="vis" />
@@ -28,7 +27,7 @@ export default {
   },
   props: {
     accounts: Array,
-    legend : Object,
+    legend: Object,
     totalizer: {
       type: Function
     },
@@ -49,7 +48,7 @@ export default {
     //when rate group function is used show the rate for each subset
     //show total otherwise
     condition_totalizer_rate: function() {
-      return this.activePartition.GroupFunction!=this.criteria.TrendAdverage;
+      return this.activePartition.GroupFunction != this.criteria.TrendAdverage;
     }
   },
 
@@ -74,7 +73,7 @@ export default {
     );
     //new update can't be called twice in 200ms
     debouncedUpdate = _debounce(() => {
-      console.log("DEBOUNCED")
+      console.log("DEBOUNCED");
       const gridBloks = this.$refs.grid ? this.$refs.grid.childNodes : [];
       chart.update(
         this.$refs.bound.offsetWidth,
@@ -84,8 +83,6 @@ export default {
         this.activePartition.id
       );
     }, 200);
-
-
 
     window.addEventListener("resize", debouncedUpdate);
   },
@@ -123,7 +120,8 @@ export default {
 .grid-block {
   text-align: center;
 }
-.grid-block:nth-child(odd) {
+.amount{
+  font-size: 1.2em;
 }
 
 #vis {

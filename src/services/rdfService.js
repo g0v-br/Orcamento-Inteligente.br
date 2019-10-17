@@ -68,7 +68,7 @@ export const getNumberFormatter = (formatter) => {
 		return (number) => formatNumber(number, options)
 
 	}
-	return (number) => number;
+	return (number) => `${number}`;
 }
 
 

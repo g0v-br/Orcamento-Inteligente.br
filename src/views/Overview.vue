@@ -172,23 +172,20 @@ export default {
     // deep: true
   },
 
-  computed: {
-    // accountsTotal(){
-    //   // return this.accounts.reduce
-    // }
-  },
-
   methods: {
     //reset totals, active accounts, compute new totals
     //each time search string change
-
-    updateAccounts(total_to_compute) {
+    updateAccounts() {
       this.resetTotal();
       this.accounts.forEach(account => {
+        account.active = this.match(account, this.search);
         this.updateTotals(account);
       });
       this.sortSubsets();
+      // console.log('', this.partit);
+      this.makeFormattedStringForPartitions();
       print(this.partitions);
+      // this.partitions[1].subsets[1].getFormattedString()
     },
     onPartitionChange(partitionId) {
       this.$router.push({
@@ -264,78 +261,98 @@ export default {
     },
 
     sortSubsets() {
-      this.partitions.forEach(partition => {
-        if (partition.id != "overview") {
-          const sortOrder =
-            partition.sortOrder == this.criteria["ascending_sort"] ? 1 : -1;
+      this.partitions.slice(1).forEach(partition => {
+        const sortOrder =
+          partition.sortOrder == this.criteria["ascending_sort"] ? 1 : -1;
 
-          partition.subsets.sort((subsetA, subsetB) => {
-            if (partition.sortCriteria == this.criteria["natural_sort"]) {
-              switch (partition.groupFunction) {
-                case this.criteria["AccountsCount"]:
-                  return sortOrder * (subsetA.count - subsetB.count);
-                  break;
+        partition.subsets.sort((subsetA, subsetB) => {
+          if (partition.sortCriteria == this.criteria["natural_sort"]) {
+            switch (partition.groupFunction) {
+              case this.criteria["AccountsCount"]:
+                return sortOrder * (subsetA.count - subsetB.count);
+                break;
 
-                case this.criteria["AccountsSum"]:
-                  return (
-                    sortOrder * (subsetA.amountTotal - subsetB.amountTotal)
-                  );
-                  break;
+              case this.criteria["AccountsSum"]:
+                return sortOrder * (subsetA.amountTotal - subsetB.amountTotal);
+                break;
 
-                case this.criteria["TrendAverage"]:
-                  let trendA =
-                    (subsetA.amountTotal - subsetA.referenceAmountTotal) /
-                    subsetA.referenceAmountTotal;
-                  let trendB =
-                    (subsetB.amountTotal - subsetB.referenceAmountTotal) /
-                    subsetB.referenceAmountTotal;
-                  // Non posso lascare NaN, altrimenti non ordina
-                  trendA = isFinite(trendA) ? trendA : 0;
-                  trendB = isFinite(trendB) ? trendB : 0;
-                  return sortOrder * (trendA - trendB);
-                  break;
+              case this.criteria["TrendAverage"]:
+                let trendA =
+                  (subsetA.amountTotal - subsetA.referenceAmountTotal) /
+                  subsetA.referenceAmountTotal;
+                let trendB =
+                  (subsetB.amountTotal - subsetB.referenceAmountTotal) /
+                  subsetB.referenceAmountTotal;
+                // Non posso lascare NaN, altrimenti non ordina
+                trendA = isFinite(trendA) ? trendA : 0;
+                trendB = isFinite(trendB) ? trendB : 0;
+                return sortOrder * (trendA - trendB);
+                break;
 
-                default:
-                  return (
-                    sortOrder * (subsetA.amountTotal - subsetB.amountTotal)
-                  );
-                  break;
-              }
-            } else if (partition.sortCriteria == this.criteria["abs_sort"]) {
-              switch (partition.groupFunction) {
-                case this.criteria["AccountsCount"]:
-                  return sortOrder * (subsetA.count - subsetB.count);
-                  break;
-
-                case this.criteria["AccountsSum"]:
-                  return (
-                    sortOrder *
-                    (Math.abs(subsetA.amountTotal) -
-                      Math.abs(subsetB.amountTotal))
-                  );
-                  break;
-
-                case this.criteria["TrendAverage"]:
-                  let trendA =
-                    (subsetA.amountTotal - subsetA.referenceAmountTotal) /
-                    subsetA.referenceAmountTotal;
-                  let trendB =
-                    (subsetB.amountTotal - subsetB.referenceAmountTotal) /
-                    subsetB.referenceAmountTotal;
-                  return sortOrder * (Math.abs(trendA) - Math.abs(trendB));
-                  break;
-
-                default:
-                  return (
-                    sortOrder *
-                    (Math.abs(subsetA.amountTotal) -
-                      Math.abs(subsetB.amountTotal))
-                  );
-                  break;
-              }
+              default:
+                return sortOrder * (subsetA.amountTotal - subsetB.amountTotal);
+                break;
             }
-          });
-        }
+          } else if (partition.sortCriteria == this.criteria["abs_sort"]) {
+            switch (partition.groupFunction) {
+              case this.criteria["AccountsCount"]:
+                return sortOrder * (subsetA.count - subsetB.count);
+                break;
+
+              case this.criteria["AccountsSum"]:
+                return (
+                  sortOrder *
+                  (Math.abs(subsetA.amountTotal) -
+                    Math.abs(subsetB.amountTotal))
+                );
+                break;
+
+              case this.criteria["TrendAverage"]:
+                let trendA =
+                  (subsetA.amountTotal - subsetA.referenceAmountTotal) /
+                  subsetA.referenceAmountTotal;
+                let trendB =
+                  (subsetB.amountTotal - subsetB.referenceAmountTotal) /
+                  subsetB.referenceAmountTotal;
+                return sortOrder * (Math.abs(trendA) - Math.abs(trendB));
+                break;
+
+              default:
+                return (
+                  sortOrder *
+                  (Math.abs(subsetA.amountTotal) -
+                    Math.abs(subsetB.amountTotal))
+                );
+                break;
+            }
+          }
+        });
+      });
+    },
+
+    makeFormattedStringForPartitions() {
+      this.partitions.slice(1).forEach(partition => {
+        partition.subsets.forEach(subset => {
+          switch (partition.groupFunction) {
+            case this.criteria["AccountsCount"]:
+              subset.formattedString = partition.formatCount(subset.count);
+              break;
+            case this.criteria["AmountsSum"]:
+              subset.formattedString = partition.formatAmount(
+                subset.amountTotal
+              );
+              break;
+            case this.criteria["TrendAverage"]:
+              subset.formattedString = partition.formatPercentage(
+                (subset.amountTotal - subset.referenceAmountTotal) /
+                  subset.referenceAmountTotal
+              );
+              break;
+
+            default:
+              break;
+          }
+        });
       });
     },
     // if account contains text return true, false otherwise

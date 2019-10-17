@@ -87,7 +87,21 @@ export default function () {
                         sortOrder = store.anyValue(partition, ns.bgo("withSortOrder")) || ns.bgo("descending_sort").value,
                         sortCriteria = store.anyValue(partition, ns.bgo("withSortCriteria")) || ns.bgo("abs_sort").value;
                     let groupFunction = store.any(partition, ns.bgo("withGroupFunction"))
-                    groupFunction = groupFunction ? store.any(groupFunction, ns.rdf("type")).value : ns.bgo("AmountsSum").value;
+                    let groupFunctionValue = groupFunction ? store.any(groupFunction, ns.rdf("type")).value : ns.bgo("AmountsSum").value;
+
+                    const totalizer = store.any(groupFunction, ns.bgo("hasTotalizer"));
+
+                    let formatCount;
+                    let formatAmount;
+                    let formatPercentage;
+
+                    if (groupFunction) {
+                        formatCount = getNumberFormatter(undefined);
+                        formatAmount = getNumberFormatter(totalizer);
+                        formatPercentage = getNumberFormatter(store.any(totalizer, ns.bgo("ratioFormatter")));
+                    } else {
+                        formatCount = formatAmount = formatPercentage = getNumberFormatter(undefined);
+                    }
 
                     return {
                         id,
@@ -95,8 +109,14 @@ export default function () {
                         title,
                         sortOrder,
                         sortCriteria,
-                        groupFunction,
-                        subsets
+                        groupFunction: groupFunctionValue,
+                        subsets,
+
+                        formatCount,
+                        formatAmount,
+                        formatPercentage,
+
+
                     }
 
                 });
@@ -117,6 +137,8 @@ export default function () {
                         description = store.anyValue(subset, ns.bgo("description")) || "",
                         abstract = store.any(subset, ns.bgo("abstract")) || { value: "" };
 
+
+
                     return {
                         id: subset.value,
                         title,
@@ -125,8 +147,9 @@ export default function () {
                         label,
                         amountTotal: 0, /* Somma degli amount filtrati */
                         referenceAmountTotal: 0,  /* Somma degli referenceAmount filtrati */
-                        count: 0 /* Numero di bolle */
+                        count: 0, /* Numero di bolle */
 
+                        formattedString: "" /* Stringa da stampare direttamente nell'interfaccia */
                     };
                 });
             subsets.push(this.getDefautSubset(partition));
@@ -151,8 +174,9 @@ export default function () {
                 label,
                 amountTotal: 0, /* Somma degli amount filtrati */
                 referenceAmountTotal: 0,  /* Somma degli referenceAmount filtrati */
-                count: 0 /* Numero di bolle */
+                count: 0, /* Numero di bolle */
 
+                formattedString: "" /* Stringa da stampare direttamente nell'interfaccia */
             };
         },
 

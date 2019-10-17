@@ -242,12 +242,11 @@ export default class BubbleChart {
 
     //called when filter changhe filter bubble and compute new filtered totals
     filterBubbles(searchText) {
-        console.log('filterbubble', );
-        resetTotal(this.partitions);
         select("svg#vis")
             .selectAll("circle")
             .classed("disabled", d => {
-                return (
+                console.log(d.active, d.isActive)
+                return !(
                     d.id == searchText ||
                     d.title.toLowerCase().includes(searchText) ||
                     d.description.toLowerCase().includes(searchText) ||

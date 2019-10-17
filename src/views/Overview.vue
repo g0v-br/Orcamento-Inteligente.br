@@ -33,7 +33,7 @@
       <div ref="chart" class="chart">
         <BubbleChart
           :active-partition="activePartition"
-          :search="search"
+          :search="search_chart"
           :totalizer="totalizer"
           :accounts="accounts"
           :legend="legendData"
@@ -116,6 +116,7 @@ export default {
       criteria: null,
       tags: [],
       search: null,
+      search_chart:"",
       metadata: {},
       legendData: {},
       formatters: {},
@@ -160,14 +161,18 @@ export default {
     // this.partitions[1].subsets[0].resetTotals();
 
     //wait that user finish to write search string
-    debouncedSearch = debounce(this.updateAccounts, 200);
+    debouncedSearch = debounce((newVal)=>{
+      this.updateAccounts()
+      this.search_chart=newVal;
+      }, 200);
     //initialize accounts
     debouncedSearch();
     // this.updateAccounts();
   },
   watch: {
     search: function(newVal, oldVal) {
-      debouncedSearch();
+      debouncedSearch(newVal);
+      
     }
     // deep: true
   },

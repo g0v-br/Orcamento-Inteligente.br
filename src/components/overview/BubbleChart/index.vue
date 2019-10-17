@@ -2,7 +2,7 @@
   <div ref="bound" class="bc-container">
     <div ref="grid" v-if="activePartition.id != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartition.subsets" :key="subset.id" class="grid-block">
-        <!-- <StringFormatter class="title" :string="subset.title||subset.label||subset.id" :popup="subset.abstract" /> -->
+        <StringFormatter class="title" :string="subset.title||subset.label||subset.id" :popup="subset.abstract" />
         <div class="amount">{{subset.formattedString}}</div>
       </div>
     </div>
@@ -98,7 +98,14 @@ export default {
       this.activePartition.subsets,
       this.activePartition.id
     );
-  }
+  },
+   watch: {
+    search: function(newVal, oldVal) {
+      chart.filterBubbles(newVal)
+      
+    }
+    }
+
 };
 </script>
 

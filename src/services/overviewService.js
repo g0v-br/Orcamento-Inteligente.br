@@ -34,7 +34,7 @@ export default function () {
         getMetadata: () => {
             return {
                 description: store.anyValue(domain, ns.bgo("description")) || "",
-                abstract: store.any(domain, ns.bgo("abstract")),
+                abstract: store.anyValue(domain, ns.bgo("abstract")) || "",
             }
         },
 
@@ -82,8 +82,8 @@ export default function () {
                 .map(partition => {
                     const subsets = this.getSubsets(partition);
                     const id = store.anyValue(partition, ns.bgo("partitionId")),
-                        label = store.anyValue(partition, ns.bgo("label")),
-                        title = store.anyValue(partition, ns.bgo("title")),
+                        label = store.anyValue(partition, ns.bgo("label")) || "",
+                        title = store.anyValue(partition, ns.bgo("title")) || "",
                         sortOrder = store.anyValue(partition, ns.bgo("withSortOrder")) || ns.bgo("descending_sort").value,
                         sortCriteria = store.anyValue(partition, ns.bgo("withSortCriteria")) || ns.bgo("abs_sort").value;
                     let groupFunction = store.any(partition, ns.bgo("withGroupFunction"))
@@ -123,7 +123,7 @@ export default function () {
 
             partitions.unshift({
                 id: "overview",
-                label: store.anyValue(overview, ns.bgo("label"))
+                label: store.anyValue(overview, ns.bgo("label")) || ""
             });
 
             return partitions;
@@ -132,10 +132,10 @@ export default function () {
         getSubsets: function (partition) {
             const subsets = store.each(partition, ns.bgo("hasAccountSubSet"))
                 .map(subset => {
-                    const title = store.any(subset, ns.bgo("title")) || "",
+                    const title = store.anyValue(subset, ns.bgo("title")) || "",
                         label = store.anyValue(subset, ns.bgo("label")) || "",
                         description = store.anyValue(subset, ns.bgo("description")) || "",
-                        abstract = store.any(subset, ns.bgo("abstract")) || { value: "" };
+                        abstract = store.anyValue(subset, ns.bgo("abstract")) || "";
 
 
 
@@ -163,8 +163,8 @@ export default function () {
                 title,
                 defaultSubset = store.any(partition, ns.bgo("hasDefaultAccountSubSet"));
             if (defaultSubset !== undefined) {
-                label = store.anyValue(defaultSubset, ns.bgo("label")) || { value: "", term };
-                title = store.any(defaultSubset, ns.bgo("title")) || undefined;
+                label = store.anyValue(defaultSubset, ns.bgo("label")) || "";
+                title = store.anyValue(defaultSubset, ns.bgo("title")) || "";
             }
             return {
                 id: "default",

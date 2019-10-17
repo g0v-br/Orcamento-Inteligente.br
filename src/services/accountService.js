@@ -7,16 +7,11 @@ export default function () {
     const accountView = store.any(domain, ns.bgo("hasAccountView"));
     return {
         getAccountById: accountId => {
-            // Meta
-            const defaultVal = {
-                value: "",
-                datatype: "litteral"
-            };
             // TODO sistemare la gestione delle stringe MD, per non usare oggetti per title description e abstract
             const account = store.any(null, ns.bgo("accountId"), accountId),
-                title = store.any(account, ns.bgo("title")) || accountId || defaultVal,
-                description = store.any(account, ns.bgo("description")) || defaultVal,
-                abstract = store.any(account, ns.bgo("abstract")) || defaultVal,
+                title = store.anyValue(account, ns.bgo("title")) || accountId || "",
+                description = store.anyValue(account, ns.bgo("description")) || "",
+                abstract = store.anyValue(account, ns.bgo("abstract")) || "",
                 amount = parseFloat(store.anyValue(account, ns.bgo("amount"))) || 0,
                 referenceAmount = parseFloat(store.anyValue(account, ns.bgo("referenceAmount"))) || 0,
                 rate = (amount - referenceAmount) / referenceAmount;
@@ -25,8 +20,8 @@ export default function () {
             const historicRecords = [];
             store.each(account, ns.bgo("hasHistoryRec")).forEach(rec => {
                 historicRecords.push({
-                    version: store.anyValue(rec, ns.bgo("versionLabel")),
-                    amount: store.anyValue(rec, ns.bgo("amount"))
+                    version: store.anyValue(rec, ns.bgo("versionLabel")) || "",
+                    amount: store.anyValue(rec, ns.bgo("amount")) || 0
                 })
             });
 
@@ -34,8 +29,8 @@ export default function () {
             const breakDownRecords = [];
             store.each(account, ns.bgo("hasBreakdown")).forEach(br => {
                 breakDownRecords.push({
-                    title: store.anyValue(br, ns.bgo("title")),
-                    amount: store.anyValue(br, ns.bgo("amount"))
+                    title: store.anyValue(br, ns.bgo("title")) || "",
+                    amount: store.anyValue(br, ns.bgo("amount")) || 0
                 });
             });
 

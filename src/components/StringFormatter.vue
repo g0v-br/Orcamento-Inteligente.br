@@ -1,8 +1,7 @@
 <template>
-  <!-- <div style="display:flex; align-items:center;"> -->
   <div>
-    <span class="stringDisplayed" v-html="getFormattedString(string)" :id="hash(string.value)"></span>
-    <v-icon class="info-icon" v-if="hasPopup" @click="dialog=true">mdi-information-outline</v-icon>
+    <span class="stringDisplayed" v-html="getFormattedString(string)"></span>
+    <v-icon class="info-icon" v-if="popup" @click="dialog=true">mdi-information-outline</v-icon>
     <v-dialog v-model="dialog" max-width="290" clearable>
       <v-card>
         <v-card-text v-html="getFormattedString(popup)"></v-card-text>
@@ -12,26 +11,19 @@
 </template>
 
 <script>
-let defaultObject = {
-  value: "default",
-  datatype: {
-    value: "default"
-  }
-};
-import { ns } from "@/models/bgo.js";
 import Markdown from "markdown-it";
 export default {
   props: {
-    popup: {
-      type: Object,
-      default: () => {
-        return defaultObject;
-      }
-    },
     string: {
-      type: Object,
+      type:String,
       default: () => {
-        return defaultObject;
+        return "";
+      }  
+    },
+    popup: {
+      type:String,
+      default: () => {
+        return "";
       }
     }
   },
@@ -40,58 +32,11 @@ export default {
       dialog: false
     };
   },
-  // created() {
-  //   let element;
-  //   // if (this.isDefined(this.string)) {
-  //   //   element = document.getElementById(this.hash(this.string.value));
-  //   //   element.innerHTML = this.getFormattedString(this.string);
-  //   // }
-
-  //   // if (this.isDefined(this.popup)) {
-  //   //   /*element = document.getElementById("ekkle");*/
-  //   //   this.popup.value = this.getFormattedString(this.popup);
-  //   // }
-  // },
-
   methods: {
-    hash(string) {
-      let hash = 0;
-      if (string.length == 0) {
-        return hash;
-      }
-      for (let i = 0; i < string.length; i++) {
-        var char = string.charCodeAt(i);
-        hash = (hash << 5) - hash + char;
-        hash = hash & hash;
-      }
-      return hash;
-    },
-    isDefined(literal) {
-      return literal == undefined || literal.value == defaultObject.value
-        ? false
-        : true;
-    },
-    getFormattedString(literal) {
-      let display, md;
-
+    getFormattedString(value) {
+      let md;
       md = new Markdown();
-      switch (literal.datatype.value) {
-        case ns.bgo("MDString").value:
-          display = md.render(literal.value);
-          break;
-        default:
-          display = literal.value;
-          break;
-      }
-      /*element.innerHTML =*/
-      return display;
-    }
-  },
-  computed: {
-    hasPopup() {
-      return this.popup == undefined || this.popup.value == defaultObject.value
-        ? false
-        : true;
+      return md.render(value);
     }
   }
 };

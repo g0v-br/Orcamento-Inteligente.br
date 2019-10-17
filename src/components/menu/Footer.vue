@@ -25,7 +25,7 @@ export default {
   },
   props: {
       footerItems: Array,
-      copyright: Object
+      copyright: String
   },
 };
 

@@ -27,9 +27,9 @@ export default {
     Rate
   },
   props: {
-    title: Object,
-    description: Object,
-    abstract: Object,
+    title: String,
+    description: String,
+    abstract: String,
     total: Number,
     rate: Number,
     accountId: String,

@@ -111,7 +111,7 @@ export default class AppService {
         footer["hasIt"] = footerNode != undefined
         if (footer.hasIt) {
             footer.footerItems = getDefaultMenuItems(footerNode);
-            footer.copyright = store.any(this.domain, ns.bgo("hasCopyrigth")) || "(c) LinkedData.Center";
+            footer.copyright = store.anyValue(this.domain, ns.bgo("hasCopyrigth")) || "(c) LinkedData.Center";
         }
         return footer;
 

@@ -8,8 +8,8 @@ export default function () {
         getData: () => {
             return {
 
-                title: store.any(creditsView, ns.bgo("title")),
-                abstract: store.any(creditsView, ns.bgo("abstract"))
+                title: store.anyValue(creditsView, ns.bgo("title")) || "",
+                abstract: store.anyValue(creditsView, ns.bgo("abstract")) || ""
 
             }
         },

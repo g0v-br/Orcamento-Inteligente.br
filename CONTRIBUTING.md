@@ -39,11 +39,10 @@ HERE INSTRUCTION TO EXECUTE TESTS
 
 ## Publish image to dockerhub
 
-This process generates a new docker images that configure and runs a stand-alone apache server:
+This process generates a new docker image that configure and runs a stand-alone nginx server:
 
 ```
-docker build -t linkeddatacenter/lodmap2d -f docker/Dockerfile .
-docker login --username=yourhubusername --email=youremail@company.com
+docker build --no-cache -t linkeddatacenter/lodmap2d -f docker/Dockerfile .
 docker tag linkeddatacenter/lodmap2d-api linkeddatacenter/lodmap2d-api:x.y.z
 docker push linkeddatacenter/lodmap2d-api
 ```

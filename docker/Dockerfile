@@ -20,6 +20,6 @@ COPY --from=build-stage /app/dist /usr/share/nginx/html
 # loads nginx optimized config
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/run_server.sh /run_server.sh
-
+RUN chmod +rx /run_server.sh
 
 CMD ["/run_server.sh"]

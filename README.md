@@ -1,7 +1,7 @@
 ![ldc](http://linkeddata.center/resources/v4/logo/Logo-colori-trasp_oriz-640x220.png)
 # LODMAP2D
 
-LODMAP2D is a data driven web application to explore a lot of detailed information without loosing the big picture [see overview](http://bit.ly/lodmap2d_p).
+LODMAP2D is a data driven web application to explore the detailed information without loosing the big picture [see overview](http://bit.ly/lodmap2d_p).
 
 LODMAP2D uses the SOLID specifications and the Semantic Web standards to ensure an high level of security and privacy. Data can be centralized in a Knowledge Graph or distributed as Linked Data. LODMAP2D can be easily customized to match a specific data domain. See for example the [Italian Budget](https://budget.g0v.it) produced by the [g0v.it team](https://github.com/gov-it/) and published by the [Copernicani Association](http://copernicani.it)
 
@@ -38,9 +38,9 @@ Free docker resources with:
 docker rm -f lodmap2d
 ```
 
-### Connecting to a remote data source
+### Connecting to a custom data source
 
-You can also run the standard distibution connected to a custom dataset defining the environment variable **LODMAP2D_DATA**:
+You can connect LODMAP2D to a dataset assigning the environment variable **LODMAP2D_DATA** to a remote file or  to a remote api endpoint:
 
 ```bash
 docker run -d -e LODMAP2D_DATA=http://localhost:8080/data.ttl  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
@@ -54,6 +54,8 @@ docker run -d -e LODMAP2D_DATA="http://pub.linkeddata.center:29340/"  --name lod
 
 If the http(s) resource pointed by the LODMAP2D_DATA variable ends with a /, it is supposed to be a LODMAP2D-api endpoint; else it is supposed to be a RDF resource
 (see *Customization* section for more options)
+
+**WARNING: if you connect LODMAP2D to a cross-origin data source, CORS restrictions applies (see the security section above)**
 
 
 
@@ -105,17 +107,18 @@ TODO: LODMAP2D supports self signed certificates and  authenticate users with [W
 Login is required only to access  private data. Unlogged users can always access public data.
 
 
-**Notes on CORS:**
+### Notes on CORS
 
-The data is loaded by rdflib.js that uses a very strict security pattern to access web resource. 
-If you need to read cross-origin data resources, be sure that the remote server is configured to:
+LODMAP2D (through rdflib.js) uses a very stringent security pattern to access cross origin data resources. 
+Be sure that your data provider is configured to:
 
-- explicit allow your host ( unfortunatelly, just `Access-Control-Allow-Origin: *` is not enough because of credential support request)
+- allow access from your host
 - allow request method GET
 - allow request header 'accept'
 - force allowed headers to pre flight response
 - set request credentials supported
 
+Any SOLID POD  matches these requirements.
 
 ## Customization
 

@@ -53,7 +53,6 @@ export default {
   },
 
   mounted() {
-    // console.log(this.activePartition.subsets)
     chart = new BubbleChart(
       "#vis",
       this,

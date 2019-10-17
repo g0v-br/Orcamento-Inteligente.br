@@ -88,21 +88,22 @@ export default function () {
                         sortCriteria = store.anyValue(partition, ns.bgo("withSortCriteria")) || ns.bgo("abs_sort").value;
                     let groupFunction = store.any(partition, ns.bgo("withGroupFunction"))
                     let groupFunctionValue = groupFunction ? store.any(groupFunction, ns.rdf("type")).value : ns.bgo("AmountsSum").value;
-
-                    const totalizer = store.any(groupFunction, ns.bgo("hasTotalizer"));
-
+                    const totalizerNode = store.any(groupFunction, ns.bgo("hasTotalizer"))
+                    let totalizer;
+                    if (groupFunction)
+                        totalizer = getTotalizer(groupFunction, ns.bgo("hasTotalizer"), store.anyValue(groupFunction, ns.rdf("type")));
+                    else
+                        totalizer = getTotalizer(groupFunction, ns.bgo("hasTotalizer"), ns.bgo("AmountSum").value);
                     let formatCount;
                     let formatAmount;
                     let formatPercentage;
-
                     if (groupFunction) {
                         formatCount = getNumberFormatter(undefined);
-                        formatAmount = getNumberFormatter(totalizer);
-                        formatPercentage = getNumberFormatter(store.any(totalizer, ns.bgo("ratioFormatter")));
+                        formatAmount = getNumberFormatter(totalizerNode);
+                        formatPercentage = getNumberFormatter(store.any(totalizerNode, ns.bgo("ratioFormatter")));
                     } else {
                         formatCount = formatAmount = formatPercentage = getNumberFormatter(undefined);
                     }
-
                     return {
                         id,
                         label,
@@ -111,7 +112,7 @@ export default function () {
                         sortCriteria,
                         groupFunction: groupFunctionValue,
                         subsets,
-
+                        totalizer,
                         formatCount,
                         formatAmount,
                         formatPercentage,
@@ -145,9 +146,12 @@ export default function () {
                         description,
                         abstract,
                         label,
+                        amountTotal_filtered: 0,
                         amountTotal: 0, /* Somma degli amount filtrati */
                         referenceAmountTotal: 0,  /* Somma degli referenceAmount filtrati */
+                        referenceAmountTotal_filtered: 0,  /* Somma degli referenceAmount filtrati */
                         count: 0, /* Numero di bolle */
+                        count_filtered: 0, /* Numero di bolle */
 
                         formattedString: "" /* Stringa da stampare direttamente nell'interfaccia */
                     };

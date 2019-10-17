@@ -116,7 +116,7 @@ export default {
       criteria: null,
       tags: [],
       search: null,
-      search_chart:"",
+      search_chart: "",
       metadata: {},
       legendData: {},
       formatters: {},
@@ -161,10 +161,10 @@ export default {
     // this.partitions[1].subsets[0].resetTotals();
 
     //wait that user finish to write search string
-    debouncedSearch = debounce((newVal)=>{
-      this.updateAccounts()
-      this.search_chart=newVal;
-      }, 200);
+    debouncedSearch = debounce(newVal => {
+      this.updateAccounts();
+      this.search_chart = newVal;
+    }, 200);
     //initialize accounts
     debouncedSearch();
     // this.updateAccounts();
@@ -172,7 +172,6 @@ export default {
   watch: {
     search: function(newVal, oldVal) {
       debouncedSearch(newVal);
-      
     }
     // deep: true
   },
@@ -238,7 +237,7 @@ export default {
       if (account.active) {
         // Aggiorno i totali di overview
         this.totalFiltered += account.amount;
-
+      }
         // Aggiorno i totali di tutte le partizioni e subset diversi dal primo ( overview )
         this.partitions.slice(1).forEach(partition => {
           partition.subsets.forEach(subset => {
@@ -246,10 +245,15 @@ export default {
               subset.count += 1;
               subset.amountTotal += account.amount;
               subset.referenceAmountTotal += account.refAmount;
+              if (account.active) {
+                subset.count_filtered += 1;
+                subset.amountTotal_filtered += account.amount;
+                subset.referenceAmountTotal_filtered += account.refAmount;
+              }
             }
           });
         });
-      }
+      
     },
     //reset filtered totals
     resetTotal() {
@@ -261,6 +265,9 @@ export default {
           subset.count = 0;
           subset.amountTotal = 0;
           subset.referenceAmountTotal = 0;
+          subset.count_filtered = 0;
+          subset.amountTotal_filtered = 0;
+          subset.referenceAmountTotal_filtered = 0;
         });
       });
     },
@@ -340,17 +347,16 @@ export default {
         partition.subsets.forEach(subset => {
           switch (partition.groupFunction) {
             case this.criteria["AccountsCount"]:
-              subset.formattedString = partition.formatCount(subset.count);
+              subset.formattedString = partition.totalizer(subset.count,subset.count_filtered)
               break;
             case this.criteria["AmountsSum"]:
-              subset.formattedString = partition.formatAmount(
-                subset.amountTotal
-              );
+              console.log(subset)
+              subset.formattedString = partition.totalizer(subset.amountTotal,subset.amountTotal_filtered)
               break;
             case this.criteria["TrendAverage"]:
               subset.formattedString = partition.formatPercentage(
-                (subset.amountTotal - subset.referenceAmountTotal) /
-                  subset.referenceAmountTotal
+                (subset.amountTotal_filtered - subset.referenceAmountTotal_filtered) /
+                  subset.referenceAmountTotal_filtered
               );
               break;
 

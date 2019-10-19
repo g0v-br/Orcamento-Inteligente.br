@@ -7,10 +7,8 @@ export default function () {
     return {
         getData: () => {
             return {
-
-                title: store.any(termsView, ns.bgo("title")),
-                abstract: store.any(termsView, ns.bgo("abstract"))
-
+                title: store.anyValue(termsView, ns.bgo("title")) || "",
+                abstract: store.anyValue(termsView, ns.bgo("abstract")) || ""
             }
         },
 

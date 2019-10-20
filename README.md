@@ -163,6 +163,9 @@ docker build -t mylodmap2d .
 docker run -d -p 8080:80 mylodmap2d
 ```
 
+For an example of LOADMAP2D customisation see the [web-budget](https://github.com/g0v-it/web-budget) project by [G0V italian team](https://copernicani.it/g0v)
+
+
 ## Thanks
 
 - [Enrico Fagnoni](https://github.com/ecow),[Miah Mohd Ehtesham](https://github.com/miahmohd), [Leonardo Longhi](https://github.com/LeonardoLonghi) and [Yassine Ouahidi](https://github.com/YassineOuahidi) for the webapp code design.

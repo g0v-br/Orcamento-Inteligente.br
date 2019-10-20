@@ -27,3 +27,23 @@ Please see http://help.github.com/pull-requests/.
 We kindly ask you to add following sentence to your pull request:
 
 “I hereby assign copyright in this code to the project, to be licensed under the same terms as the rest of the code.”
+
+
+Before submitting a pull request clean your code and test it
+
+```
+HERE INSTRUCTION TO EXECUTE TESTS
+```
+
+
+
+## Publish image to dockerhub
+
+This process generates a new docker image that configure and runs a stand-alone nginx server:
+
+```
+docker build --no-cache -t linkeddatacenter/lodmap2d -f docker/Dockerfile .
+docker tag linkeddatacenter/lodmap2d linkeddatacenter/lodmap2d:x.y.z
+docker push linkeddatacenter/lodmap2d-api
+```
+

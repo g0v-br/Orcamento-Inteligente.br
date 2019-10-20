@@ -1,0 +1,11 @@
+@prefix bgo: <http://linkeddata.center/lodmap-bgo/v1#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix resource: <http://example.com/resource/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+
+resource:account_5 a bgo:Account ;
+ 	bgo:accountId "account_5" ;
+    bgo:amount 100.00
+.
+	

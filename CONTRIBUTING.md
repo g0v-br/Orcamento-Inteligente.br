@@ -43,7 +43,7 @@ This process generates a new docker image that configure and runs a stand-alone 
 
 ```
 docker build --no-cache -t linkeddatacenter/lodmap2d -f docker/Dockerfile .
-docker tag linkeddatacenter/lodmap2d-api linkeddatacenter/lodmap2d-api:x.y.z
+docker tag linkeddatacenter/lodmap2d linkeddatacenter/lodmap2d:x.y.z
 docker push linkeddatacenter/lodmap2d-api
 ```
 

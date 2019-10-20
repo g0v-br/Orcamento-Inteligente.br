@@ -62,7 +62,7 @@
     ] ;
 
     # This domain likes social
-    bgo:hasSocialSharing "true"^^xsd:boolean ;
+    bgo:hasSocialSharing 1 ;
 
     # This should be used if copyright is not present
     bgo:hasCopyrigth "(c) [LinkedData.Center](http://linkeddata.center)"^^bgo:MDString ;

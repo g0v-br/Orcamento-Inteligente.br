@@ -82,13 +82,14 @@ The optional parameter *s* allows filtering the displayed objects whose title, d
 
 From the Semantic Web point of view, LODMAP2D is an implementation of a [Bubble Graph Ontology(BGO)](http://linkeddata.center/lodmap-bgo/v1) reasoner.
 
-LODMAP2D uses following additional axioms and implementationon restrictions:
+LODMAP2D implements following additional axioms:
 
-- **bgo:icon**: if its data type is a string, it is considered as the name of an icon in [materialdesignicons.com](https://materialdesignicons.com/) library;
-- **bgo:link**: if it is a string, it is considered an route (e.g. "/table" );
-- does not support the bgo:SubDomain concept
-- does not supports langiage tags.
-- is tolerant towards cardinality errors: i.e. provides default for missing informations and ignores multiplicity
+- *bgo:icon*: if its data type is a string, it is considered as the name of an icon in [materialdesignicons.com](https://materialdesignicons.com/) library;
+- *bgo:link*: if it is a string, it is considered an route (e.g. "/table" );
+- bgo:SubDomain concept is not recognized
+- language tags limited support
+
+LODMAP2D reasoner is tolerant towards cardinality errors: i.e. provides default for missing informations and ignores unexpected multiplicity.
 
 From a technical point of view, LODMAP2D is a single page web application (SPA) developed with the [Vue framework](https://vuejs.org/) according to the [SOLID specifications](https://github.com/solid/solid-spec) and based on the [Data Driven Document (d3)](https://d3js.org/) library.
 

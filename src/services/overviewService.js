@@ -161,7 +161,7 @@ export default function () {
                     };
                 });
             subsets.push(this.getDefautSubset(partition));
-            // console.log(subsets);
+            // console.lo(subsets);
             return subsets;
 
         },

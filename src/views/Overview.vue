@@ -86,7 +86,7 @@ import { debounce } from "lodash";
 import { log } from "util";
 
 function print(text) {
-  console.log(JSON.parse(JSON.stringify(text)));
+  //console.lo(JSON.parse(JSON.stringify(text)));
 }
 
 const OverviewService = ServiceFactory.get("overview");
@@ -186,7 +186,7 @@ export default {
         this.updateTotals(account);
       });
       this.sortSubsets();
-      // console.log('', this.partit);
+      // \\\console.lo('', this.partit);
       this.makeFormattedStringForPartitions();
       print(this.partitions);
       // this.partitions[1].subsets[1].getFormattedString()

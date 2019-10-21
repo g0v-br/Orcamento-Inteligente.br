@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <h1>
-      <StringFormatter :string="data.title" />
+      <StringFormatter :string="title" />
     </h1>
-    <StringFormatter :string="data.abstract" />
+    <StringFormatter :string="abstract" />
   </div>
 </template>
 <script>
@@ -18,14 +18,15 @@ export default {
   },
   data() {
     return {
-      data: {
-        title: {},
-        abstract: {}
-      }
+      title: {},
+      abstract: {}
     };
   },
   created() {
-    this.data = TermsService.getData();
+    const data = TermsService.getData();
+
+    this.title = data.title;
+    this.abstract = data.abstract;
   }
 };
 </script>

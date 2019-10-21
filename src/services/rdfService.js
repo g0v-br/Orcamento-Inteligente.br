@@ -31,7 +31,7 @@ export function getDefaultMenuItems(parent) {
 
 
 const formatNumber = (number, options) => {
-	// console.log('number', number);
+	// console.lo('number', number);
 	let formattedAmount, res;
 	if (isFinite(number)) {
 		number = number * options.scaleFactor;

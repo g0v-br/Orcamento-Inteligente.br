@@ -18,7 +18,7 @@ export const formatAmount = (amount, precision = 2) => {
 
 export const numberFormatter = (number, options = {precision: 2}) => {
     let formattedAmount, text;
-    // console.log(number,options)
+    // console.lo(number,options)
     if (!isFinite(number) || number === undefined) {
         text = options.nanFormat || "N/A";
     } else {

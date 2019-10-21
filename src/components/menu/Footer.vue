@@ -12,7 +12,7 @@
       <v-icon  size="24px">{{ el.icon }}</v-icon>{{el.title}}
     </v-btn>
     <span class="copyright">
-      <StringFormatter :string="copyright"/>
+      <StringFormatter :string="copyright" :inline="true"/>
     </span>
   </v-footer>
 </template>
@@ -28,7 +28,7 @@ export default {
   },
   methods:{
     hasIcon(el){
-      console.log(el)
+      //console.lo(el)
       return true;
     }
   }

@@ -76,7 +76,7 @@ export default class AppService {
         if (navigationNode) {
             navigation.otherNavigationItems.push(...getDefaultMenuItems(navigationNode));
         }
-        console.log(navigation)
+        //console.lo(navigation)
         return navigation
     }
     getSocialSharingMenu()

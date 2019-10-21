@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <h1>
-      <StringFormatter :string="data.title" />
+      <StringFormatter :string="title" />
     </h1>
-    <StringFormatter :string="data.abstract" />
+    <StringFormatter :string="abstract"/>
     <!-- Warning: removing or changing the following statement breaks the LODMAP2D license -->
     <div class="ldc-credits">
       <p>
@@ -28,14 +28,15 @@ export default {
   },
   data() {
     return {
-      data: {
-        title: {},
-        abstract: {}
-      }
+      title: {},
+      abstract: {}
     };
   },
   created() {
-    this.data = CreditsService.getData();
+    const data = CreditsService.getData();
+
+    this.title = data.title;
+    this.abstract = data.abstract;
   }
 };
 </script>

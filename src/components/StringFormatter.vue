@@ -15,15 +15,21 @@ import Markdown from "markdown-it";
 export default {
   props: {
     string: {
-      type:String,
+      type: String,
       default: () => {
         return "";
       }  
     },
     popup: {
-      type:String,
+      type: String,
       default: () => {
         return "";
+      }
+    },
+    inline: {
+      type: Boolean,
+      default: () => {
+        return false;
       }
     }
   },
@@ -36,7 +42,8 @@ export default {
     getFormattedString(value) {
       let md;
       md = new Markdown();
-      return md.renderInline(value);
+      value = this.inline ? md.renderInline(value) : md.render(value);
+      return value;
     }
   }
 };
@@ -45,10 +52,11 @@ export default {
 .info-icon:hover {
   color: #1976d2;
 }
+
 .stringDisplayed {
   margin-right: 0.3em;
-}
-.stringDisplayed{
+  margin-bottom: 0em;
+  margin-top: 0em;
   display: inline-block;
 }
 

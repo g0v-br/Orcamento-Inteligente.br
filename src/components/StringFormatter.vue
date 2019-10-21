@@ -36,7 +36,7 @@ export default {
     getFormattedString(value) {
       let md;
       md = new Markdown();
-      return md.render(value);
+      return md.renderInline(value);
     }
   }
 };

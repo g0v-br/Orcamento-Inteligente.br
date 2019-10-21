@@ -6,14 +6,16 @@
     <div class="description">
       <StringFormatter :string="description" />
     </div>
-    <hr />
-    <div class="abstract">
-      <StringFormatter :string="abstract" />
-    </div>
     <div class="numbers">
       {{formatAmount(this.total)}}
       <Rate class="rate" :rate="rate" :formatter="formatPercentage" />
     </div>
+    
+    <br>
+    <div class="abstract">
+      <StringFormatter :string="abstract" />
+    </div>
+   
   </div>
 </template>
 <script>
@@ -35,12 +37,6 @@ export default {
     accountId: String,
     formatAmount: Function,
     formatPercentage: Function
-    // totalFormatterOptions:{
-    //   type: Object
-    // },
-    // rateFormatterOptions:{
-    //   type: Object
-    // }
   },
   methods: {
     numberFormatter
@@ -55,6 +51,7 @@ export default {
   position: relative;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll
 }
 .title div {
   margin-bottom: 0.5em;
@@ -68,6 +65,7 @@ export default {
 .abstract {
   margin-bottom: 0.5em;
   margin-top: 0.5em;
+  /*overflow:auto;*/
 }
 .numbers {
   margin-top: auto;

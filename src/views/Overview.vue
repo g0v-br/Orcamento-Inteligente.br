@@ -253,7 +253,7 @@ export default {
             }
           });
         });
-      
+
     },
     //reset filtered totals
     resetTotal() {
@@ -350,7 +350,7 @@ export default {
               subset.formattedString = partition.totalizer(subset.count,subset.count_filtered)
               break;
             case this.criteria["AmountsSum"]:
-              console.log(subset)
+
               subset.formattedString = partition.totalizer(subset.amountTotal,subset.amountTotal_filtered)
               break;
             case this.criteria["TrendAverage"]:

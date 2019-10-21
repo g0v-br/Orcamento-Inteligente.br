@@ -73,37 +73,40 @@ export const getNumberFormatter = (formatter) => {
 
 
 export const getTotalizer = (subject, predicate) => {
-	const totalizer = store.any(subject, predicate),
-		rateFormatter = getNumberFormatter(store.any(totalizer, ns.bgo("ratioFormatter"))),
-		filteredFormat = store.anyValue(totalizer, ns.bgo("filteredFormat")) || "%s",
-		format = store.anyValue(totalizer, ns.bgo("format")) || "%s";
-	let options = {
-		precision: store.anyValue(totalizer, ns.bgo("precision")) || 2,
-		nanFormat: store.anyValue(totalizer, ns.bgo("nanFormat")) || "N/A",
-		scaleFactor: store.anyValue(totalizer, ns.bgo("scaleFactor")) || 1,
-		maxValue: store.anyValue(totalizer, ns.bgo("maxValue")) || Infinity,
-		minValue: store.anyValue(totalizer, ns.bgo("minValue")) || -Infinity,
-		moreThanMaxFormat: store.anyValue(totalizer, ns.bgo("moreThanMaxFormat")) || "%s",
-		lessThanMinFormat: store.anyValue(totalizer, ns.bgo("lessThanMinFormat")) || "%s"
-	}
+	const totalizer = store.any(subject, predicate)
+	if (totalizer) {
+		let rateFormatter = getNumberFormatter(store.any(totalizer, ns.bgo("ratioFormatter"))),
+			filteredFormat = store.anyValue(totalizer, ns.bgo("filteredFormat")) || "%s",
+			format = store.anyValue(totalizer, ns.bgo("format")) || "%s";
+		let options = {
+			precision: store.anyValue(totalizer, ns.bgo("precision")) || 2,
+			nanFormat: store.anyValue(totalizer, ns.bgo("nanFormat")) || "N/A",
+			scaleFactor: store.anyValue(totalizer, ns.bgo("scaleFactor")) || 1,
+			maxValue: store.anyValue(totalizer, ns.bgo("maxValue")) || Infinity,
+			minValue: store.anyValue(totalizer, ns.bgo("minValue")) || -Infinity,
+			moreThanMaxFormat: store.anyValue(totalizer, ns.bgo("moreThanMaxFormat")) || "%s",
+			lessThanMinFormat: store.anyValue(totalizer, ns.bgo("lessThanMinFormat")) || "%s"
+		}
 
-	return (total, filteredTotal) => {
-		let formattedTotal;
-		if (total == filteredTotal) {
-			formattedTotal = formatNumber(total, {
-				...options,
-				format: format
-			});
-			return formattedTotal
-		} else {
-			let formattedRatio = rateFormatter(filteredTotal / total);
-			formattedTotal = formatNumber(filteredTotal, {
-				...options,
-				format: filteredFormat
-			});
-			return formattedTotal + formattedRatio;
+		return (total, filteredTotal) => {
+			let formattedTotal;
+			if (total == filteredTotal) {
+				formattedTotal = formatNumber(total, {
+					...options,
+					format: format
+				});
+				return formattedTotal
+			} else {
+				let formattedRatio = rateFormatter(filteredTotal / total);
+				formattedTotal = formatNumber(filteredTotal, {
+					...options,
+					format: filteredFormat
+				});
+				return formattedTotal + formattedRatio;
+			}
 		}
 	}
+	return (total, filteredTotal) => `${filteredTotal} / ${total}`;
 }
 
 

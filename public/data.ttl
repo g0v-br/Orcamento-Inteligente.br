@@ -55,7 +55,7 @@
     	# a bgo:FooterMenu ;
     	bgo:withCustomMenuItem
     		[
-    			# a bgo:MenuItem 
+    			# a bgo:MenuItem
 		    	bgo:title "GitHub" ;
 				bgo:link <https://github.com/linkeddatacenter/LODMAP2D>
 			]
@@ -249,7 +249,7 @@ here palace your **Terms & conditions** about published service.
 	bgo:withSortOrder bgo:ascending_sort ; # or bgo:descending_sort (default)
 	bgo:withSortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
 	bgo:withGroupFunction [
-		a bgo:TrendAverage ;
+		a bgo:AmountsSum;
 		bgo:hasTotalizer [
 			# a bgo:Totalizer
 			bgo:format "€ %s" ;
@@ -376,12 +376,12 @@ here palace your **Terms & conditions** about published service.
     bgo:title "titolo account_1" ;
     bgo:description "descrizione account_1" ;
     bgo:abstract """
-    Il rimborso dei titolo del debito statale tiene conto del: 
+    Il rimborso dei titolo del debito statale tiene conto del:
     pagamento delle quote capitale sui titoli del debito statale
     rimborso del capitale relativo a buoni postali fruttiferi
-    rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazionerimborso passività 
+    rimborso alla Banca d'Italia del controvalore delle lire presentate al cambio per il ritiro dalla circolazionerimborso passività
     a carico dello Stato.
-    
+
 Il passaggio standard del Lorem Ipsum, utilizzato sin dal sedicesimo secolo
 
 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."

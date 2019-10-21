@@ -17,7 +17,7 @@ export function getDefaultMenuItems(parent) {
 				if (path != undefined) {
 					items.push({
 						title: store.anyValue(element, ns.bgo("title")) || "",
-						icon: store.anyValue(element, ns.bgo("icon")) || "fas fa-bullseye",
+						icon: store.anyValue(element, ns.bgo("icon")) || "",
 						path: path.value,
 						external: path.termType == "NamedNode"
 					});

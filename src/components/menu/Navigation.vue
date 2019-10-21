@@ -34,12 +34,24 @@
           </v-list-item-content>
         </v-list-item>
       </v-list-group>
+      <!--table view-->
+      <v-list-item
+        v-on:click="menuShow=false"
+        :to="tableView.path + '?s='+($route.query.s||'')"
+      >
+        <v-list-item-icon>
+          <v-icon v-text="tableView.icon"></v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title v-text="tableView.title"></v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
       <!--otherlinks-->
       <v-list-item
         v-for="el in otherNavigationItem"
         :key="el.title"
         v-on:click="menuShow=false"
-        :to="el.path + '?s='+($route.query.s||'')"
+        :href="el.path"
       >
         <v-list-item-icon>
           <v-icon v-text="el.icon"></v-icon>
@@ -48,6 +60,20 @@
           <v-list-item-title v-text="el.title"></v-list-item-title>
         </v-list-item-content>
         <v-icon class="external" v-if="el.external" size="10px">fas fa-share</v-icon>
+      </v-list-item>
+      <!-- default -->
+      <v-list-item
+        v-for="el in defaultNavigationItems"
+        :key="el.title"
+        v-on:click="menuShow=false"
+        :to="el.path"
+      >
+        <v-list-item-icon>
+          <v-icon v-text="el.icon"></v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title v-text="el.title"></v-list-item-title>
+        </v-list-item-content>
       </v-list-item>
     </v-list>
   </v-menu>
@@ -59,7 +85,9 @@ export default {
   props: {
       overview: Object,
       partitions: Object,
-      otherNavigationItem: Array
+      otherNavigationItem: Array,
+      tableView:Object,
+      defaultNavigationItems:Array
   },
   data(){
     return {

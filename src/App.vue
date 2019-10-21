@@ -2,7 +2,12 @@
   <v-app>
     <!-- TOOLBAR -->
     <v-app-bar app light>
-      <Navigation :overview="navigationMenu.overview" :partitions="navigationMenu.partitions" :otherNavigationItem="navigationMenu.otherNavigationItems" />
+      <Navigation 
+      :overview="navigationMenu.overview" 
+      :partitions="navigationMenu.partitions" 
+      :otherNavigationItem="navigationMenu.otherNavigationItems" 
+      :tableView="navigationMenu.tableViewNavigationItems"
+      :defaultNavigationItems="navigationMenu.defaultNavigationItems"/>
       <v-toolbar-title class="headline text-uppercase title">
         <span>{{title}}</span>
       </v-toolbar-title>

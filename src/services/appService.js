@@ -17,7 +17,9 @@ export default class AppService {
         let navigation={
             overview:{},
             partitions:{},
-            otherNavigationItems:[]
+            tableViewNavigationItems:{},
+            otherNavigationItems:[],
+            defaultNavigationItems:[]
         };
         let navigationNode=store.any(this.domain, ns.bgo("hasNavigationMenu"));
         let overview = store.any(this.domain, ns.bgo("hasOverview"));
@@ -50,21 +52,21 @@ export default class AppService {
         }
         //other default links
         if (tabview) {
-            navigation.otherNavigationItems.push({
+            navigation.tableViewNavigationItems={
                 icon: store.anyValue(tabview, ns.bgo("icon"))||"fas fa-table",
                 title: store.anyValue(tabview, ns.bgo("label")) || store.anyValue(tabview, ns.bgo("title")) || "Table",
                 path: "/table"
-            });
+            };
         }
         if (credits) {
-            navigation.otherNavigationItems.push({
+            navigation.defaultNavigationItems.push({
                 icon: store.anyValue(credits, ns.bgo("icon"))||"fas fa-users",
                 title: store.anyValue(credits, ns.bgo("label")) || store.anyValue(credits, ns.bgo("title")) || "Credits",
                 path: "/credits"
             });
         }
         if (terms) {
-            navigation.otherNavigationItems.push({
+            navigation.defaultNavigationItems.push({
                 icon: store.anyValue(terms, ns.bgo("icon"))||"fas fa-gavel",
                 title: store.anyValue(terms, ns.bgo("label"))||store.anyValue(terms, ns.bgo("title"))|| "Terms & Conditions",
                 path: "/terms"
@@ -74,7 +76,7 @@ export default class AppService {
         if (navigationNode) {
             navigation.otherNavigationItems.push(...getDefaultMenuItems(navigationNode));
         }
-
+        console.log(navigation)
         return navigation
     }
     getSocialSharingMenu()

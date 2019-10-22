@@ -281,11 +281,11 @@ export default {
           if (partition.sortCriteria == this.criteria["natural_sort"]) {
             switch (partition.groupFunction) {
               case this.criteria["AccountsCount"]:
-                return sortOrder * (subsetA.count - subsetB.count);
+                return sortOrder * (subsetA.count_filtered - subsetB.count_filtered);
                 break;
 
               case this.criteria["AccountsSum"]:
-                return sortOrder * (subsetA.amountTotal - subsetB.amountTotal);
+                return sortOrder * (subsetA.amountTotal_filtered - subsetB.amountTotal_filtered);
                 break;
 
               case this.criteria["TrendAverage"]:
@@ -302,20 +302,20 @@ export default {
                 break;
 
               default:
-                return sortOrder * (subsetA.amountTotal - subsetB.amountTotal);
+                return sortOrder * (subsetA.amountTotal_filtered - subsetB.amountTotal_filtered);
                 break;
             }
           } else if (partition.sortCriteria == this.criteria["abs_sort"]) {
             switch (partition.groupFunction) {
               case this.criteria["AccountsCount"]:
-                return sortOrder * (subsetA.count - subsetB.count);
+                return sortOrder * (subsetA.count_filtered - subsetB.count_filtered);
                 break;
 
               case this.criteria["AccountsSum"]:
                 return (
                   sortOrder *
-                  (Math.abs(subsetA.amountTotal) -
-                    Math.abs(subsetB.amountTotal))
+                  (Math.abs(subsetA.amountTotal_filtered) -
+                    Math.abs(subsetB.amountTotal_filtered))
                 );
                 break;
 
@@ -332,8 +332,8 @@ export default {
               default:
                 return (
                   sortOrder *
-                  (Math.abs(subsetA.amountTotal) -
-                    Math.abs(subsetB.amountTotal))
+                  (Math.abs(subsetA.amountTotal_filtered) -
+                    Math.abs(subsetB.amountTotal_filtered))
                 );
                 break;
             }

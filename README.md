@@ -40,7 +40,11 @@ docker rm -f lodmap2d
 
 ### Connecting to a custom data source
 
-You can connect LODMAP2D to a dataset assigning the environment variable **LODMAP2D_DATA** to a remote file or  to a remote api endpoint:
+LODMAP2D renders any linked data resource exposing a [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
+
+Here is an [example of a BGO resouce](https://linkeddatacenter.github.io/LODMAP-ontologies/v1/bgo/examples/data.ttl).
+
+You can connect LODMAP2D to a data source assigning the environment variable **LODMAP2D_DATA** to a remote file or to a remote api endpoint:
 
 ```bash
 docker run -d -e LODMAP2D_DATA=http://localhost:8080/data.ttl  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
@@ -49,11 +53,11 @@ docker run -d -e LODMAP2D_DATA=http://localhost:8080/data.ttl  --name lodmap2d -
 Or run it using a [LODMAP2D-api](https://github.com/linkeddatacenter/LODMAP2D-api) compatible endpoint:
 
 ```bash
-docker run -d -e LODMAP2D_DATA="http://pub.linkeddata.center:29340/"  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
+docker run -d -e LODMAP2D_DATA="http://data.budget.g0v.it/ldp/"  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
 ```
 
-If the http(s) resource pointed by the LODMAP2D_DATA variable ends with a /, it is supposed to be a LODMAP2D-api endpoint; else it is supposed to be a RDF resource
-(see *Customization* section for more options)
+If the http(s) resource pointed by the LODMAP2D_DATA variable ends with a /, it is supposed to be a LODMAP2D-api compatible endpoint; 
+else it is supposed to be a RDF resource (see *Customization* section for more info)
 
 **WARNING: if you connect LODMAP2D to a cross-origin data source, CORS restrictions applies (see the security section above)**
 
@@ -80,7 +84,7 @@ The optional parameter *s* allows filtering the displayed objects whose title, d
 
 ## Project Overview
 
-From the Semantic Web point of view, LODMAP2D is an implementation of a [Bubble Graph Ontology(BGO)](http://linkeddata.center/lodmap-bgo/v1) reasoner.
+From a conceptual point of view, LODMAP2D is an implementation of a [Bubble Graph Ontology(BGO)](http://linkeddata.center/lodmap-bgo/v1) reasoner.
 
 LODMAP2D implements following additional axioms:
 
@@ -96,7 +100,7 @@ From a technical point of view, LODMAP2D is a single page web application (SPA) 
 The data model adopts the [Resource Description Framework (RDF)](https://www.w3.org/RDF/) and the [Semantic Web standards](https://www.w3.org/standards/semanticweb/data). 
 LODMAP2D recognizes the [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
 
-The data can be fully distributed. They are fetched by dereferencing the application routes through the rewriting  rules managed by the the src/modesls/bgolib.js library, that is based on [rdflib.sj](https://github.com/linkeddata/rdflib.js/) by Timm Berners Lee & friends.
+The data can be fully distributed. They are fetched by dereferencing the application routes through the rewriting  rules managed by the the src/models/bgolib.js library, that is based on [rdflib.js](https://github.com/linkeddata/rdflib.js/) by Timm Berners Lee & LinkedData friends.
 
 
 ## Security

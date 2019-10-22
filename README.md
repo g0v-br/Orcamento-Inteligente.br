@@ -43,22 +43,20 @@ docker rm -f lodmap2d
 
 LODMAP2D renders any linked data resource exposing a [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
 
-Here is an [example of a BGO resouce](https://linkeddatacenter.github.io/LODMAP-ontologies/v1/bgo/examples/data.ttl).
-
-You can connect LODMAP2D to a data source assigning the environment variable **LODMAP2D_DATA** to a remote file or to a remote api endpoint:
+By default, LODMAP2D loads [the data.ttl file](public/data.ttl) from the *public* directory. You can connect to any other web data source assigning the environment variable **LODMAP2D_DATA** to its URL:
 
 ```bash
 docker run -d -e LODMAP2D_DATA=http://localhost:8080/data.ttl  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
 ```
 
-Or run it using a [LODMAP2D-api](https://github.com/linkeddatacenter/LODMAP2D-api) compatible endpoint:
+or even using a [LODMAP2D-api](https://github.com/linkeddatacenter/LODMAP2D-api) compatible endpoint:
 
 ```bash
 docker run -d -e LODMAP2D_DATA="http://data.budget.g0v.it/ldp/"  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
 ```
 
-If the http(s) resource pointed by the LODMAP2D_DATA variable ends with a /, it is supposed to be a LODMAP2D-api compatible endpoint; 
-else it is supposed to be a RDF resource (see *Customization* section for more info)
+If the http(s) resource pointed by the LODMAP2D_DATA variable ends with a **/**, it is supposed to be a LODMAP2D-api compatible endpoint; 
+else it is supposed to be a plain RDF resource (see *Customization* section for more options)
 
 **WARNING: if you connect LODMAP2D to a cross-origin data source, CORS restrictions applies (see the security section above)**
 
@@ -113,7 +111,7 @@ TODO: LODMAP2D supports self signed certificates and  authenticate users with [W
 Login is required only to access  private data. Unlogged users can always access public data.
 
 
-### Notes on CORS
+**About CORS:**
 
 LODMAP2D (through rdflib.js) uses a very stringent security pattern to access cross origin data resources. 
 Be sure that your data provider is configured to:

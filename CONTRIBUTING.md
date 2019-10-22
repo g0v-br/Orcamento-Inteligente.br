@@ -42,7 +42,7 @@ HERE INSTRUCTION TO EXECUTE TESTS
 This process generates a new docker image that configure and runs a stand-alone nginx server:
 
 ```
-docker build --no-cache -t linkeddatacenter/lodmap2d -f docker/Dockerfile .
+docker build  -t linkeddatacenter/lodmap2d -f docker/Dockerfile .
 docker tag linkeddatacenter/lodmap2d linkeddatacenter/lodmap2d:x.y.z
 docker push linkeddatacenter/lodmap2d
 ```

@@ -11,7 +11,7 @@
         <a
           href="https://github.com/linkeddatacenter/LODMAP2D"
         >LODMAP2D software</a> developed by
-        <a href="http://LinkedData.Center/">LinkedData.Center</a> and contributors.
+        <a href="http://LinkedData.Center/"><img src="https://linkeddatacenter.github.io/LODMAP2D/public/favicon-32x32.png"  height="32" width="32"> LinkedData.Center</a> and contributors.
       </p>
     </div>
   </div>

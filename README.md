@@ -3,22 +3,11 @@
 
 LODMAP2D is a data driven web application to explore detailed information without loosing the big picture [see overview](http://bit.ly/lodmap2d_p).
 
-LODMAP2D uses the SOLID specifications and the Semantic Web standards to ensure an high level of security and privacy. Data can be centralized in a Knowledge Graph or distributed as Linked Data. LODMAP2D can be easily customized to match a specific data domain. See for example the [Italian Budget](https://budget.g0v.it) produced by the [g0v.it team](https://github.com/gov-it/) and published by the [Copernicani Association](http://copernicani.it)
+LODMAP2D uses the SOLID specifications and the Semantic Web standards to ensure an high level of security and privacy. Data can be centralized in a Knowledge Graph or distributed as Linked Data. LODMAP2D can be easily customized to match a specific data domain. See for an example the [Italian Budget](https://budget.g0v.it) produced by the g0v.it team.
 
 ![ldc](public/preview.png)
 
-## Build and run with node
 
-Be sure to have [node](https://nodejs.org) v 12.8+ installed, open a console and type:
-
-```bash
-npm install
-npm run serve
-```
-
-The application will be ready on port 8080
-
- 
 ## Quick start with docker
 
 The platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized  environment up and running. If you do not already have Docker on your computer, 
@@ -27,7 +16,6 @@ The platform is shipped with a [Docker](https://docker.com) setup that makes it 
 To run build & run LODMAP2D container:
 
 ```bash
-docker build -t linkeddatacenter/lodmap2d -f docker/Dockerfile .
 docker run -d --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
 ```
 
@@ -102,6 +90,18 @@ LODMAP2D recognizes the [Bubble Graph Ontology](http://linkeddata.center/lodmap-
 The data can be fully distributed. They are fetched by dereferencing the application routes through the rewriting  rules managed by the the src/models/bgolib.js library, that is based on [rdflib.js](https://github.com/linkeddata/rdflib.js/) by Timm Berners Lee & LinkedData friends.
 
 
+## Build and run with node
+
+Be sure to have [node](https://nodejs.org) v 12.8+ installed, open a console and type:
+
+```bash
+npm install
+npm run serve
+```
+
+The application will be ready on port 8080
+
+ 
 ## Security
 
 LODMAP2D is very respectful of users' privacy; it does not use tracking codes and does not use any cookies.

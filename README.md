@@ -5,6 +5,7 @@ LODMAP2D is a data driven web application to explore detailed information withou
 
 LODMAP2D uses the SOLID specifications and the Semantic Web standards to ensure an high level of security and privacy. Data can be centralized in a Knowledge Graph or distributed as Linked Data. LODMAP2D can be easily customized to match a specific data domain. See for example the [Italian Budget](https://budget.g0v.it) produced by the [g0v.it team](https://github.com/gov-it/) and published by the [Copernicani Association](http://copernicani.it)
 
+![ldc](public/preview.png)
 
 ## Build and run with node
 

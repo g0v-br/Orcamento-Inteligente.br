@@ -12,9 +12,15 @@
   </div>
 </template>
 <script>
-import * as d3 from "d3";
-import Totalizer from "@/components/Totalizer";
+// import * as d3 from "d3";
+import { select, selectAll } from "d3-selection";
+import { scaleOrdinal } from "d3-scale";
+import { interpolate } from "d3-interpolate";
+import { schemeCategory10 } from "d3-scale-chromatic";
+import { transition } from "d3-transition";
+import { pie, arc } from "d3-shape";
 import _debounce from "lodash/debounce";
+
 //---------------------------------------------------------
 //BUILDER
 let cdsSpeed = 4000;
@@ -40,7 +46,7 @@ let updateDetail = function(context, overed_index) {
   currentElement = (currentElement + 1) % slices.length;
 };
 const computeBoundaries = function() {
-  let container = d3.select("#container")._groups[0][0];
+  let container = select("#container")._groups[0][0];
   width = container.offsetWidth;
   height = container.offsetHeight;
 
@@ -53,8 +59,7 @@ const drowPieChart = function(context) {
   let chart_obj = pieChart()
     .outerRadius(outerRadius)
     .innerRadius(innerRadius);
-  let svg = d3
-    .select(".js-chart")
+  let svg = select(".js-chart")
     .attr("width", width)
     .attr("height", height);
   let domPieChart = svg
@@ -64,8 +69,8 @@ const drowPieChart = function(context) {
     .call(chart_obj.data(context.breakdown));
   domPieChart.call(chart_obj.data(context.breakdown));
   //UPDATE CDS DETAIL
-  slices = d3.selectAll(".slice")._groups[0];
-  d3.selectAll(".slice")
+  slices = selectAll(".slice")._groups[0];
+  selectAll(".slice")
     .on("mouseenter", (actual, i) => {
       window.clearInterval(intervalID);
       updateDetail(context, i);
@@ -77,9 +82,8 @@ const drowPieChart = function(context) {
     });
 };
 const centerPieChart = function() {
-  let chart = d3.select("g");
-  let svg = d3
-    .select(".js-chart")
+  let chart = select("g");
+  let svg = select(".js-chart")
     .attr("width", width)
     .attr("height", height);
 
@@ -87,13 +91,12 @@ const centerPieChart = function() {
 };
 function pieChart(options) {
   var animationDuration = 750,
-    color = d3.scaleOrdinal(d3.schemeCategory10),
+    color = scaleOrdinal(schemeCategory10),
     data = [],
     innerRadius = 0,
     outerRadius = 100,
-    arc = d3.arc(),
-    pie = d3
-      .pie()
+    arcC = arc(),
+    pieC = pie()
       .sort(null)
       //.padAngle(0.02)
       .value(function(d) {
@@ -101,10 +104,10 @@ function pieChart(options) {
       });
 
   function updateTween(d) {
-    var i = d3.interpolate(this._current, d);
+    var i = interpolate(this._current, d);
     this._current = i(0);
     return function(t) {
-      return arc(i(t));
+      return arcC(i(t));
     };
   }
 
@@ -113,7 +116,7 @@ function pieChart(options) {
   }
 
   function pieChart(context) {
-    var slices = context.selectAll(".slice").data(pie(data), joinKey);
+    var slices = context.selectAll(".slice").data(pieC(data), joinKey);
     var newSlices = slices
       .enter()
       .append("path")
@@ -124,9 +127,9 @@ function pieChart(options) {
       .style("fill", function(d) {
         return color(joinKey(d));
       });
-    var t = d3.transition().duration(animationDuration);
+    var t = transition().duration(animationDuration);
 
-    arc.innerRadius(innerRadius).outerRadius(outerRadius);
+    arcC.innerRadius(innerRadius).outerRadius(outerRadius);
 
     var t2 = t.transition();
     slices.transition(t2).attrTween("d", updateTween);
@@ -163,7 +166,6 @@ export default {
     }
   },
   components: {
-    Totalizer
   },
   data() {
     return {

@@ -79,7 +79,6 @@
   </v-menu>
 </template>
 <script>
-import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 export default {
   name: "Navigation",
   props: {

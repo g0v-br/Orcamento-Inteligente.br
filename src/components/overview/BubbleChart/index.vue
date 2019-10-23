@@ -11,17 +11,14 @@
 </template>
 
 <script>
-import { store, fetcher, ns } from "@/services/rdfService.js";
 import BubbleChart from "@/components/overview/BubbleChart/BubbleChart.js";
 import _debounce from "lodash/debounce";
-import Totalizer from "@/components/Totalizer.vue";
 import Rate from "@/components/Rate";
 import StringFormatter from "@/components/StringFormatter.vue";
 let debouncedUpdate;
 let chart;
 export default {
   components: {
-    Totalizer,
     StringFormatter,
     Rate
   },
@@ -100,7 +97,7 @@ export default {
    watch: {
     search: function(newVal, oldVal) {
       chart.filterBubbles(newVal)
-      
+
     }
     }
 

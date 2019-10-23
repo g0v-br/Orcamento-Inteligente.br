@@ -1,6 +1,6 @@
 
 import { select } from "d3-selection";
-import * as d3 from 'd3'
+// import * as d3 from 'd3'
 import { transition } from "d3-transition";
 import { rgb } from "d3-color";
 import { scaleLinear, scaleThreshold, scalePow } from "d3-scale";

@@ -82,12 +82,8 @@ import BubbleChart from "@/components/overview/BubbleChart";
 import Legend from "@/components/overview/Legend";
 import Tooltip from "@/components/overview/Tooltip";
 import StringFormatter from "@/components/StringFormatter.vue";
-import { debounce } from "lodash";
-import { log } from "util";
+import debounce from "lodash/debounce";
 
-function print(text) {
-  //console.lo(JSON.parse(JSON.stringify(text)));
-}
 
 const OverviewService = ServiceFactory.get("overview");
 let debouncedSearch;
@@ -188,7 +184,6 @@ export default {
       this.sortSubsets();
       // \\\console.lo('', this.partit);
       this.makeFormattedStringForPartitions();
-      print(this.partitions);
       // this.partitions[1].subsets[1].getFormattedString()
     },
     onPartitionChange(partitionId) {
@@ -238,22 +233,21 @@ export default {
         // Aggiorno i totali di overview
         this.totalFiltered += account.amount;
       }
-        // Aggiorno i totali di tutte le partizioni e subset diversi dal primo ( overview )
-        this.partitions.slice(1).forEach(partition => {
-          partition.subsets.forEach(subset => {
-            if (account.partitions[partition.id] == subset.id) {
-              subset.count += 1;
-              subset.amountTotal += account.amount;
-              subset.referenceAmountTotal += account.refAmount;
-              if (account.active) {
-                subset.count_filtered += 1;
-                subset.amountTotal_filtered += account.amount;
-                subset.referenceAmountTotal_filtered += account.refAmount;
-              }
+      // Aggiorno i totali di tutte le partizioni e subset diversi dal primo ( overview )
+      this.partitions.slice(1).forEach(partition => {
+        partition.subsets.forEach(subset => {
+          if (account.partitions[partition.id] == subset.id) {
+            subset.count += 1;
+            subset.amountTotal += account.amount;
+            subset.referenceAmountTotal += account.refAmount;
+            if (account.active) {
+              subset.count_filtered += 1;
+              subset.amountTotal_filtered += account.amount;
+              subset.referenceAmountTotal_filtered += account.refAmount;
             }
-          });
+          }
         });
-
+      });
     },
     //reset filtered totals
     resetTotal() {
@@ -281,11 +275,16 @@ export default {
           if (partition.sortCriteria == this.criteria["natural_sort"]) {
             switch (partition.groupFunction) {
               case this.criteria["AccountsCount"]:
-                return sortOrder * (subsetA.count_filtered - subsetB.count_filtered);
+                return (
+                  sortOrder * (subsetA.count_filtered - subsetB.count_filtered)
+                );
                 break;
 
               case this.criteria["AccountsSum"]:
-                return sortOrder * (subsetA.amountTotal_filtered - subsetB.amountTotal_filtered);
+                return (
+                  sortOrder *
+                  (subsetA.amountTotal_filtered - subsetB.amountTotal_filtered)
+                );
                 break;
 
               case this.criteria["TrendAverage"]:
@@ -302,13 +301,18 @@ export default {
                 break;
 
               default:
-                return sortOrder * (subsetA.amountTotal_filtered - subsetB.amountTotal_filtered);
+                return (
+                  sortOrder *
+                  (subsetA.amountTotal_filtered - subsetB.amountTotal_filtered)
+                );
                 break;
             }
           } else if (partition.sortCriteria == this.criteria["abs_sort"]) {
             switch (partition.groupFunction) {
               case this.criteria["AccountsCount"]:
-                return sortOrder * (subsetA.count_filtered - subsetB.count_filtered);
+                return (
+                  sortOrder * (subsetA.count_filtered - subsetB.count_filtered)
+                );
                 break;
 
               case this.criteria["AccountsSum"]:
@@ -347,15 +351,21 @@ export default {
         partition.subsets.forEach(subset => {
           switch (partition.groupFunction) {
             case this.criteria["AccountsCount"]:
-              subset.formattedString = partition.totalizer(subset.count,subset.count_filtered)
+              subset.formattedString = partition.totalizer(
+                subset.count,
+                subset.count_filtered
+              );
               break;
             case this.criteria["AmountsSum"]:
-
-              subset.formattedString = partition.totalizer(subset.amountTotal,subset.amountTotal_filtered)
+              subset.formattedString = partition.totalizer(
+                subset.amountTotal,
+                subset.amountTotal_filtered
+              );
               break;
             case this.criteria["TrendAverage"]:
               subset.formattedString = partition.formatPercentage(
-                (subset.amountTotal_filtered - subset.referenceAmountTotal_filtered) /
+                (subset.amountTotal_filtered -
+                  subset.referenceAmountTotal_filtered) /
                   subset.referenceAmountTotal_filtered
               );
               break;

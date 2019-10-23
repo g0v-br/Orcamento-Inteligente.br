@@ -10,16 +10,15 @@
       {{formatAmount(this.total)}}
       <Rate class="rate" :rate="rate" :formatter="formatPercentage" />
     </div>
-    
+
     <br>
     <div class="abstract">
       <StringFormatter :string="abstract" />
     </div>
-   
+
   </div>
 </template>
 <script>
-import { bgoStore, fetcher, ns } from "@/models/bgo.js";
 import { numberFormatter } from "@/utils/utils.js";
 import StringFormatter from "@/components/StringFormatter";
 import Rate from "@/components/Rate";

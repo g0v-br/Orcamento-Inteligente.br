@@ -2,7 +2,11 @@
   <div ref="bound" class="bc-container">
     <div ref="grid" v-if="activePartition.id != 'overview'" class="partitions-grid">
       <div v-for="subset in activePartition.subsets" :key="subset.id" class="grid-block">
-        <StringFormatter class="title" :string="subset.title||subset.label||subset.id" :popup="subset.abstract" />
+        <StringFormatter
+          class="title"
+          :string="subset.title||subset.label||subset.id"
+          :popup="subset.abstract"
+        />
         <div class="amount">{{subset.formattedString}}</div>
       </div>
     </div>
@@ -94,13 +98,11 @@ export default {
       this.activePartition.id
     );
   },
-   watch: {
+  watch: {
     search: function(newVal, oldVal) {
-      chart.filterBubbles(newVal)
-
+      chart.filterBubbles(newVal);
     }
-    }
-
+  }
 };
 </script>
 
@@ -121,14 +123,18 @@ export default {
 
 .grid-block {
   text-align: center;
+  z-index: 10;
+  pointer-events: none;
 }
-.amount{
+.amount {
   font-size: 1.2em;
+  pointer-events: all;
+}
+.title {
+  pointer-events: all;
 }
 
 #vis {
-  /* background-color: aqua; */
-  pointer-events: none;
   height: 100%;
   width: 100%;
   position: absolute;
@@ -138,7 +144,6 @@ export default {
 
 /* buuble svg el */
 #vis circle.bubble {
-  pointer-events: all;
   stroke-width: 1px;
   opacity: 1;
   transition: opacity 0.5s;

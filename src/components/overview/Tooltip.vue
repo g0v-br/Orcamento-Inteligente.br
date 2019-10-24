@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     withIcon: function() {
-      
+
       return isFinite(this.node.rate) && this.node.rate != 0;
     }
   }
@@ -41,10 +41,12 @@ export default {
 <style scoped>
 .tooltip {
   position: relative;
+  z-index: 50;
   display: grid;
   /* grid-gap: 16px; */
   padding: 16px;
   width: 400px;
+  /* height: 140px; */
 }
 
 .tooltip h4 {

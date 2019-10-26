@@ -8,7 +8,7 @@ LODMAP2D uses the SOLID specifications and the Semantic Web standards to ensure 
 ![ldc](public/preview.png)
 
 
-## Quick start with docker
+## Quick start with Docker
 
 The platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized  environment up and running. If you do not already have Docker on your computer, 
 [it's the right time to install it](https://docs.docker.com/install/).
@@ -40,14 +40,13 @@ docker run -d -e LODMAP2D_DATA=http://localhost:8080/data.ttl  --name lodmap2d -
 or even using a [LODMAP2D-api](https://github.com/linkeddatacenter/LODMAP2D-api) compatible endpoint:
 
 ```bash
-docker run -d -e LODMAP2D_DATA="http://data.budget.g0v.it/ldp/"  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
+docker run -d -e LODMAP2D_DATA="https://data.budget.g0v.it/ldp/"  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
 ```
 
 If the http(s) resource pointed by the LODMAP2D_DATA variable ends with a **/**, it is supposed to be a LODMAP2D-api compatible endpoint; 
 else it is supposed to be a plain RDF resource (see *Customization* section for more options)
 
 **WARNING: if you connect LODMAP2D to a cross-origin data source, CORS restrictions applies (see the security section above)**
-
 
 
 ## Using LODMAP2D
@@ -126,11 +125,29 @@ Any SOLID POD  matches these requirements.
 
 ## Customization
 
-### Web App customization
+### Customize app title, description and add tracking snippets
 
-You can override all files in the *public* directory :
+Besides **LODMAP2D_DATA**, the Docker loadmap2d image manages some other environment variables for SEO:
 
-- index.html can be customized adding analytics snippets (e.g. Google Analytics), custom css, changing the title and other SEO related parameters.
+- **LODMAP2D_LANG**: allows to change the default HTML page default LANG type (default: *en*)
+- **LODMAP2D_TITLE**: allows to change the title of the application (default: *LODMAP2D application*)
+- **LODMAP2D_DESCRIPTION**: allows changing the  og:description property 
+- **LODMAP2D_MATOMO_ID**: add a MATOMO tracking snipped to **LODMAP2D_MATOMO_URL** (default https://matomo.app.copernicani.it/)
+- **LODMAP2D_GA_UA**: add a Google Analytics tracking snipped for your Google Analytics  UA
+
+By default, no tracking code is enabled.
+
+**limitations:**
+
+- LODMAP2A is a Single Page Application. Tracking is limited to the initial page loading (i.e. no tracking of internal routes).
+- you can't use the ^ character in variables
+
+
+
+### Resource customization
+
+You can override the following files in the *public* directory :
+
 - the *favicon* and *logos* files can be customized as needed. The preview.png file is used as preview image in social network posts
 - IE_alert manages incompatible old browsers.
 - the file *config.js* that contains the rules for the data discovery. 

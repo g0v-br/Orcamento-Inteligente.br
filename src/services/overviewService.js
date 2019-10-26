@@ -200,10 +200,10 @@ export default function () {
 
         getAccounts: function () {
             const accounts = store.each(null, ns.bgo("accountId"));
+            const partTable = this.getPartitions();
             return accounts.map(account => {
 
                 let partitions = {};
-                const partTable = this.getPartitions();
                 partTable.slice(1).forEach(p => {
                     partitions[p.id] = "default";
                 })

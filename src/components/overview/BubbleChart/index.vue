@@ -123,7 +123,7 @@ export default {
 
 .grid-block {
   text-align: center;
-  z-index: 10;
+  z-index: 4;
   pointer-events: none;
 }
 .amount {

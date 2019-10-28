@@ -1,6 +1,7 @@
 
-import { select } from "d3-selection";
+import { select, event } from "d3-selection";
 // import * as d3 from 'd3'
+import { drag } from "d3-drag";
 import { transition } from "d3-transition";
 import { rgb } from "d3-color";
 import { scaleLinear, scaleThreshold, scalePow } from "d3-scale";
@@ -114,7 +115,11 @@ export default class BubbleChart {
                     name: "account",
                     params: { accountId: d.id }
                 });
-            });
+            })
+        // .call(drag()
+        //     .on("start", dragstarted)
+        //     .on("drag", dragged)
+        //     .on("end", dragended));
 
 
 
@@ -127,6 +132,23 @@ export default class BubbleChart {
                     return d.y;
                 });
         }
+
+        // function dragstarted(d) {
+        //     if (!event.active) self.simulation.alphaTarget(.3).restart();
+
+        //     d.fx = d.x;
+        //     d.fy = d.y;
+        // }
+        // function dragged(d) {
+        //     self.app.$emit('nodeout');
+        //     d.fx = event.x;
+        //     d.fy = event.y;
+        // }
+        // function dragended(d) {
+        //     if (!event.active) self.simulation.alphaTarget(.3);
+        //     d.fx = null;
+        //     d.fy = null;
+        // }
 
         this.simulation = forceSimulation()
             .velocityDecay(this.velocityDecay)

@@ -16,7 +16,7 @@ The platform is shipped with a [Docker](https://docker.com) setup that makes it 
 To run build & run LODMAP2D container:
 
 ```bash
-docker run -d --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
+	docker run -d --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
 ```
 
 Try it pointing your browser to http://localhost:8080

@@ -53,7 +53,7 @@ var _paq = window._paq || [];
 _paq.push(['trackPageView']);
 _paq.push(['enableLinkTracking']);
 (function() {
-var u="${LODMAP2D_MATOMO_URL:-"https://matomo.app.copernicani.it/"}";
+var u='${LODMAP2D_MATOMO_URL:-"https://matomo.app.copernicani.it/"}';
 _paq.push(['setTrackerUrl', u+'matomo.php']);
 _paq.push(['setSiteId', '$LODMAP2D_MATOMO_ID']);
 var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];

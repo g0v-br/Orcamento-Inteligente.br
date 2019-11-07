@@ -203,7 +203,7 @@ export default {
     },
     //tooltip
     onNodeOver(node) {
-      const tooltipHeight = 130;
+      const tooltipHeight = 160;
       const tooltipWidth = 400;
       const boundHeight = this.$refs.chart.offsetHeight;
       const boundWidth = this.$refs.chart.offsetWidth;

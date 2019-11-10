@@ -106,7 +106,7 @@ export default {
 
 @media (max-width: 768px) {
   .content-grid {
-    grid-template-rows: repeat(3, minmax(500px, 1fr));
+    grid-template-rows: repeat(3, 500px);
     grid-template-columns: 1fr;
   }
 }

@@ -5,7 +5,7 @@
         </template>
         <v-list>
           <v-list-item-group color="primary">
-            <v-list-item v-for="(el, i) in optionItems" :key="i" :href="el.path" target="_blank">
+            <v-list-item v-for="(el, i) in optionItems" :key="i" :href="el.path" :target="el.target">
               <v-list-item-icon>
                 <v-icon v-text="el.icon"></v-icon>
               </v-list-item-icon>

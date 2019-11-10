@@ -7,7 +7,7 @@
       :key="k"
       class="my-2 footer-btn"
       :href="el.path"
-      target="_blank"
+      :target="el.target"
     >
       <v-icon  size="24px">{{ el.icon }}</v-icon>{{el.title}}
     </v-btn>

@@ -19,7 +19,8 @@ export function getDefaultMenuItems(parent) {
 						title: store.anyValue(element, ns.bgo("title")) || "",
 						icon: store.anyValue(element, ns.bgo("icon")) || "",
 						path: path.value,
-						external: path.termType == "NamedNode"
+						external: path.termType == "NamedNode",
+						target: path.termType == "NamedNode"? "_blank" : "_self"
 					});
 				}
 			});

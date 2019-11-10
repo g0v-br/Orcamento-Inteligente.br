@@ -52,6 +52,7 @@
         :key="el.title"
         v-on:click="menuShow=false"
         :href="el.path"
+        :target="el.target"
       >
         <v-list-item-icon>
           <v-icon v-text="el.icon"></v-icon>

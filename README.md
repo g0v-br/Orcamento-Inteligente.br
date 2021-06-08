@@ -1,13 +1,18 @@
-# LODMAP2D
+#ORÇAMENTO INTELIGENTE DA PREFEITURA DE SÃO PAULO 2020
 
-LODMAP2D is a data driven web application to explore detailed information without loosing the big picture [see overview](http://bit.ly/lodmap2d_p).
+Este projeto foi criado por voluntários do Gabinete da Vereadora Janaína Lima. Trata-se de uma ferramenta para visualização e análise de dados do orçamento da prefeitura em 2020 e anos anteriores. A ideia é oferecer maior transparência e simplicidade às contas públicas do munícipio. Este trabalho é uma adaptação da visualização criada pelo grupo italiano g0v.it em https://budget.g0v.it . Utilizamos a api LODMAP2D desenvolvida pela equipe do [Linked Data Center](https://github.com/linkeddatacenter/LODMAP2D-api). 
+
+
+## LODMAP2D
+
+LODMAP2D é uma aplicação web feita para explorar informações detalhada sem perder a visão geral de um projeto [see overview](http://bit.ly/lodmap2d_p).
 
 LODMAP2D uses the SOLID specifications and the Semantic Web standards to ensure an high level of security and privacy. Data can be centralized in a Knowledge Graph or distributed as Linked Data. LODMAP2D can be easily customized to match a specific data domain. See for an example the [Italian Budget](https://budget.g0v.it) produced by the g0v.it team.
 
 ![ldc](public/preview.png)
 
 
-## Quick start with Docker
+### Quick start with Docker
 
 The platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized  environment up and running. If you do not already have Docker on your computer, 
 [it's the right time to install it](https://docs.docker.com/install/).
@@ -26,7 +31,7 @@ Free docker resources with:
 docker rm -f lodmap2d
 ```
 
-### Connecting to a custom data source
+#### Connecting to a custom data source
 
 LODMAP2D renders any linked data resource exposing a [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
 

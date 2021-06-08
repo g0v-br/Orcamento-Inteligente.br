@@ -7,7 +7,7 @@ Este projeto foi criado por voluntários do Gabinete da Vereadora Janaína Lima.
 
 LODMAP2D é uma aplicação web feita para explorar informações detalhada sem perder a visão geral de um projeto [see overview](http://bit.ly/lodmap2d_p).
 
-LODMAP2D uses the SOLID specifications and the Semantic Web standards to ensure an high level of security and privacy. Data can be centralized in a Knowledge Graph or distributed as Linked Data. LODMAP2D can be easily customized to match a specific data domain. See for an example the [Italian Budget](https://budget.g0v.it) produced by the g0v.it team.
+LODMAP2D utiliza especificações SOLID e o padrão Semantic Web para garantir o maior nível de segurança e privacidade. Os dados podem ser centralizados em um grafo de conhecimento ou distribuído como dados linkados. LODMAP2D pode ser facilmente customizado para base de dados específicas como fizemos com os dados da Secretaria da Fazenda de SP.
 
 ![ldc](public/preview.png)
 

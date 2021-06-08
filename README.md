@@ -1,4 +1,3 @@
-![ldc](http://linkeddata.center/resources/v4/logo/Logo-colori-trasp_oriz-640x220.png)
 # LODMAP2D
 
 LODMAP2D is a data driven web application to explore detailed information without loosing the big picture [see overview](http://bit.ly/lodmap2d_p).

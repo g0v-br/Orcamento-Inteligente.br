@@ -1,2 +1,2 @@
-# Or-amento-Inteligente
+# Orcamento-Inteligente
 Ferramenta LODMAP2D para visualização do orçamento da prefeitura de São Paulo

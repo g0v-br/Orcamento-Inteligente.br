@@ -3,201 +3,28 @@
 Este projeto foi criado por voluntários do Gabinete da Vereadora Janaína Lima. Trata-se de uma ferramenta para visualização e análise de dados do orçamento da prefeitura em 2020 e anos anteriores. A ideia é oferecer maior transparência e simplicidade às contas públicas do munícipio. Este trabalho é uma adaptação da visualização criada pelo grupo italiano g0v.it em https://budget.g0v.it . Utilizamos a api LODMAP2D desenvolvida pela equipe do [Linked Data Center](https://github.com/linkeddatacenter/LODMAP2D-api). 
 
 
-## LODMAP2D
+### Setup do servidor
 
-LODMAP2D é uma aplicação web feita para explorar informações detalhada sem perder a visão geral de um projeto [see overview](http://bit.ly/lodmap2d_p).
-
-LODMAP2D utiliza especificações SOLID e o padrão Semantic Web para garantir o maior nível de segurança e privacidade. Os dados podem ser centralizados em um grafo de conhecimento ou distribuído como dados linkados. LODMAP2D pode ser facilmente customizado para base de dados específicas como fizemos com os dados da Secretaria da Fazenda de SP.
-
-![ldc](public/preview.png)
-
-
-### Quick start with Docker
-
-The platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized  environment up and running. If you do not already have Docker on your computer, 
-[it's the right time to install it](https://docs.docker.com/install/).
-
-To run build & run LODMAP2D container:
+O primeiro passo para fazer o setup dessa plataforma é baixando os arquivos deste repositório no seu computador. Para fazer isso, escolha uma pasta de arquivos apropriada e rode o seguinte código em seu terminal
 
 ```bash
-docker run -d --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
+git clone "https://github.com/g0v-br/Orcamento-Inteligente.git"
 ```
 
-Try it pointing your browser to http://localhost:8080
+Para os próximos passos será necessário que você tenha Docker instalado em seu computador. Caso você não tenha, instale através desste [link](https://docs.docker.com/install/).
+Tendo feito isso, entre no diretório "Orcamento-Inteligente". Ele deve estar disponível para você.
 
-Free docker resources with:
-
-```
-docker rm -f lodmap2d
-```
-
-#### Connecting to a custom data source
-
-LODMAP2D renders any linked data resource exposing a [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
-
-By default, LODMAP2D loads [the data.ttl file](public/data.ttl) from the *public* directory. You can connect to any other web data source assigning the environment variable **LODMAP2D_DATA** to its URL:
+Deste diretório você pode executar o seguinte comando
 
 ```bash
-docker run -d -e LODMAP2D_DATA=http://localhost:8080/data.ttl  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
+docker build -t myloadmap2d -f docker/Dockerfile .
 ```
-
-or even using a [LODMAP2D-api](https://github.com/linkeddatacenter/LODMAP2D-api) compatible endpoint:
+E em seguida, o código
 
 ```bash
-docker run -d -e LODMAP2D_DATA="https://data.budget.g0v.it/ldp/"  --name lodmap2d -p 8080:80 linkeddatacenter/lodmap2d
+docker run -d -e LODMAP2D_DATA=http://localhost:8080/data.ttl -p 8080:80 myloadmap2d
 ```
 
-If the http(s) resource pointed by the LODMAP2D_DATA variable ends with a **/**, it is supposed to be a LODMAP2D-api compatible endpoint; 
-else it is supposed to be a plain RDF resource (see *Customization* section for more options)
+Usando o navegador de sua preferência, vá para o endereço http://localhost:8080
 
-**WARNING: if you connect LODMAP2D to a cross-origin data source, CORS restrictions applies (see the security section above)**
-
-
-## Using LODMAP2D
-
-LODMAP2D functions are available from any recent browser by some routes managed directly by the application (i.e. without accessing the network), and in particular:
-
-| route template                | expected behavior                     |
-|------------------------------ |-------------------------------------- |
-| /                             | redirects to /partition/overview		|
-| /partition/overview{?s}       | renders a bgo:Overview subject		|
-| /table{?s}                    | renders a bgo:TableView subject		|
-| /credits                      | renders a bgo:CreditsView subject		|
-| /terms                        | renders a bgo:TermsView subject		|
-| /account/{account_id}         | renders a bgo:ProfiledAccount subject	|
-| /partition/{partition_id}{?s} | renders any bgo:Partition subject		|
-
-
-
-The optional parameter *s* allows filtering the displayed objects whose title, description or id contains, even partially, match the parameter value.
-
-
-## Project Overview
-
-From a conceptual point of view, LODMAP2D is an implementation of a [Bubble Graph Ontology(BGO)](http://linkeddata.center/lodmap-bgo/v1) reasoner.
-
-LODMAP2D implements following additional axioms:
-
-- *bgo:icon*: if its data type is a string, it is considered as the name of an icon in [materialdesignicons.com](https://materialdesignicons.com/) library;
-- *bgo:link*: if it is a string, it is considered an route (e.g. "/table" );
-- bgo:SubDomain concept is not recognized
-- language tags limited support
-
-LODMAP2D reasoner is tolerant towards cardinality errors: i.e. provides default for missing informations and ignores unexpected multiplicity.
-
-From a technical point of view, LODMAP2D is a single page web application (SPA) developed with the [Vue framework](https://vuejs.org/) according to the [SOLID specifications](https://github.com/solid/solid-spec) and based on the [Data Driven Document (d3)](https://d3js.org/) library.
-
-The data model adopts the [Resource Description Framework (RDF)](https://www.w3.org/RDF/) and the [Semantic Web standards](https://www.w3.org/standards/semanticweb/data). 
-LODMAP2D recognizes the [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1).
-
-The data can be fully distributed. They are fetched by dereferencing the application routes through the rewriting  rules managed by the the src/models/bgolib.js library, that is based on [rdflib.js](https://github.com/linkeddata/rdflib.js/) by Timm Berners Lee & LinkedData friends.
-
-
-## Build and run with node
-
-Be sure to have [node](https://nodejs.org) v 12.8+ installed, open a console and type:
-
-```bash
-npm install
-npm run serve
-```
-
-The application will be ready on port 8080
-
- 
-## Security
-
-LODMAP2D is very respectful of users' privacy; it does not use tracking codes and does not use any cookies.
-
-TODO: LODMAP2D supports self signed certificates and  authenticate users with [WebID protocol](https://www.w3.org/wiki/WebID) according SOLID specs. 
-
-Login is required only to access  private data. Unlogged users can always access public data.
-
-
-**About CORS:**
-
-LODMAP2D (through rdflib.js) uses a very stringent security pattern to access cross origin data resources. 
-Be sure that your data provider is configured to:
-
-- allow access from your host
-- allow request method GET
-- allow request header 'accept'
-- force allowed headers to pre flight response
-- set request credentials supported
-
-Any SOLID POD  matches these requirements.
-
-## Customization
-
-### Customize app title, description and add tracking snippets
-
-Besides **LODMAP2D_DATA**, the Docker loadmap2d image manages some other environment variables for SEO:
-
-- **LODMAP2D_LANG**: allows to change the default HTML page default LANG type (default: *en*)
-- **LODMAP2D_TITLE**: allows to change the title of the application (default: *LODMAP2D application*)
-- **LODMAP2D_DESCRIPTION**: allows changing the  og:description property 
-- **LODMAP2D_MATOMO_ID**: add a MATOMO tracking snipped to **LODMAP2D_MATOMO_URL** (default https://matomo.app.copernicani.it/)
-- **LODMAP2D_GA_UA**: add a Google Analytics tracking snipped for your Google Analytics  UA
-
-By default, no tracking code is enabled.
-
-**limitations:**
-
-- LODMAP2A is a Single Page Application. Tracking is limited to the initial page loading (i.e. no tracking of internal routes).
-- you can't use the ^ character in variables
-
-
-
-### Resource customization
-
-You can override the following files in the *public* directory :
-
-- the *favicon* and *logos* files can be customized as needed. The preview.png file is used as preview image in social network posts
-- IE_alert manages incompatible old browsers.
-- the file *config.js* that contains the rules for the data discovery. 
-- the file *data.ttl* that contains the ontology to be loaded by the default config.js. 
-   
-**config.js file format:**
-
-The config.js file contains  the rules that oversee the dereferencing of routes and it is 
-inspired by  [Apache mod_rewrite](https://httpd.apache.org/docs/current/rewrite/): 
-
-the *window.__dereferencingRules* global array allows to map routes onto a set of web resources in any way you like.
-
-A rewrite rule is composed of three attributes:
-
-- a regular expression (*regexp*) that is applied to the LODMAP2D route, in case of match the rule is evaluated,
-otherwise it is ignored
-- an array of strings (*targets*) where each element can contain references (with "$ 1", "$ 2" .. "$ n") to any groups present in the regexp.
-- an optional boolean value (*isLast*, default=false) that says if the elaboration of the rules must be considered concluded.
-
-The directory [docs/config-examples](docs/config-examples) contains some example of config.js files
-
-
-### Using docker to customize LOADMAP2D
-
-Using docker greatly simplify customization activities:
-
-- create an empty directory and copy in it the LOADMAP2D public dir
-- apply required modification to the files in your public directory
-- create a file named Dockerfile like in [this example](https://gist.github.com/ecow/4a5a22c2ed6b3987043931c3b8355fed)
-- build and run your customized docker image:
-
-```bash
-docker build -t mylodmap2d .
-docker run -d -p 8080:80 mylodmap2d
-```
-
-For an example of LOADMAP2D customisation see the [web-budget](https://github.com/g0v-it/web-budget) project by [G0V italian team](https://copernicani.it/g0v)
-
-
-## Thanks
-
-- [Enrico Fagnoni](https://github.com/ecow),[Miah Mohd Ehtesham](https://github.com/miahmohd), [Leonardo Longhi](https://github.com/LeonardoLonghi) and [Yassine Ouahidi](https://github.com/YassineOuahidi) for the webapp code design.
-- The [D3.js library](https://d3js.org/)
-- [Evan You](http://evanyou.me/) and the [Vue community](https://vuejs.org) for the great javascript framework
-- TimBL & LinkedData team for SOLID and [rdflib project](https://github.com/linkeddata/rdflib.js)
-
-## License
-
-Please see [License File](LICENSE) for more information.
+Pronto, você deve enxergar a imagem do servidor!

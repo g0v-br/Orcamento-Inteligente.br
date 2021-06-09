@@ -1,6 +1,6 @@
 ## ORÇAMENTO INTELIGENTE DA PREFEITURA DE SÃO PAULO 2020
 
-Este projeto foi criado por voluntários do Gabinete da Vereadora Janaína Lima. Trata-se de uma ferramenta para visualização e análise de dados do orçamento da prefeitura em 2020 e anos anteriores. A ideia é oferecer maior transparência e simplicidade às contas públicas do munícipio. Este trabalho é uma adaptação da visualização criada pelo grupo italiano g0v.it em https://budget.g0v.it . Utilizamos a api LODMAP2D desenvolvida pela equipe do [Linked Data Center](https://github.com/linkeddatacenter/LODMAP2D-api). 
+Este projeto foi criado por voluntários do Gabinete da Vereadora Janaína Lima. Trata-se de uma ferramenta para visualização e análise de dados do orçamento da prefeitura em 2020 e anos anteriores. A ideia é oferecer maior transparência e simplicidade às contas públicas do munícipio. Este trabalho é uma adaptação da visualização criada pelo grupo italiano g0v.it em https://budget.g0v.it . Utilizamos a api LODMAP2D desenvolvida pela equipe do Linked Data Center.
 
 
 ### Setup do servidor

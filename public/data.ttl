@@ -351,7 +351,8 @@ here palace your **Terms & conditions** about published service.
         :p1_84 , 
         :p1_85 , 
         :p1_86 , 
-        :p1_87 
+        :p1_87 ,
+        :p1_88
     ;
     bgo:hasDefaultAccountSubSet [
         # a bgo:DefaultAccountSet  ;
@@ -502,10 +503,40 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
+        :account_50,
+        :account_51,
+        :account_52,
+        :account_53,
+        :account_54,
+        :account_55,
+        :account_56,
+        :account_57,
+        :account_58,
+        :account_59,
+        :account_60,
+        :account_61,
+        :account_62,
+        :account_63,
+        :account_64,
+        :account_65,
+        :account_66,
+        :account_67,
+        :account_68,
         :account_69,
         :account_70,
         :account_71,
-        :account_72
+        :account_72,
+        :account_73,
+        :account_74,
+        :account_75,
+        :account_76,
+        :account_77,
+        :account_78,
+        :account_79,
+        :account_80,
+        :account_81,
+        :account_82,
+        :account_83
 .
 
 
@@ -957,6 +988,14 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
+        :account_242,
+        :account_243,
+        :account_244,
+        :account_245,
+        :account_246,
+        :account_247,
+        :account_248,
+        :account_249,
         :account_250,
         :account_251,
         :account_252,
@@ -971,7 +1010,19 @@ here palace your **Terms & conditions** about published service.
         :account_261,
         :account_262,
         :account_263,
-        :account_244
+        :account_264,
+        :account_265,
+        :account_266,
+        :account_267,
+        :account_268,
+        :account_269,
+        :account_270,
+        :account_271,
+        :account_272,
+        :account_273,
+        :account_274,
+        :account_275,
+        :account_276
 .
 
 
@@ -1393,7 +1444,20 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1260,
+        :account_1261,
+        :account_1262,
+        :account_1263,
+        :account_1264,
+        :account_1265,
+        :account_1266,
+        :account_1267,
+        :account_1268,
+        :account_1269,
+        :account_1270,
+        :account_1271,
+        :account_1272,
+        :account_1273
 .
 
 
@@ -1403,7 +1467,44 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_997,
+        :account_998,
+        :account_999,
+        :account_1000,
+        :account_1001,
+        :account_1002,
+        :account_1003,
+        :account_1004,
+        :account_1005,
+        :account_1006,
+        :account_1007,
+        :account_1008,
+        :account_1009,
+        :account_1010,
+        :account_1011,
+        :account_1012,
+        :account_1013,
+        :account_1014,
+        :account_1015,
+        :account_1016,
+        :account_1017,
+        :account_1018,
+        :account_1019,
+        :account_1020,
+        :account_1021,
+        :account_1022,
+        :account_1023,
+        :account_1024,
+        :account_1025,
+        :account_1026,
+        :account_1027,
+        :account_1028,
+        :account_1029,
+        :account_1030,
+        :account_1031,
+        :account_1032,
+        :account_1033,
+        :account_1034
 .
 
 
@@ -1413,7 +1514,30 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1052,
+        :account_1053,
+        :account_1054,
+        :account_1055,
+        :account_1056,
+        :account_1057,
+        :account_1058,
+        :account_1059,
+        :account_1060,
+        :account_1061,
+        :account_1062,
+        :account_1063,
+        :account_1064,
+        :account_1065,
+        :account_1066,
+        :account_1067,
+        :account_1068,
+        :account_1069,
+        :account_1070,
+        :account_1071,
+        :account_1072,
+        :account_1073,
+        :account_1074,
+        :account_1075
 .
 
 
@@ -1423,7 +1547,26 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1426,
+        :account_1427,
+        :account_1428,
+        :account_1429,
+        :account_1430,
+        :account_1431,
+        :account_1432,
+        :account_1433,
+        :account_1434,
+        :account_1435,
+        :account_1436,
+        :account_1437,
+        :account_1438,
+        :account_1439,
+        :account_1440,
+        :account_1441,
+        :account_1442,
+        :account_1443,
+        :account_1444,
+        :account_1445
 .
 
 
@@ -1433,7 +1576,22 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1410,
+        :account_1411,
+        :account_1412,
+        :account_1413,
+        :account_1414,
+        :account_1415,
+        :account_1416,
+        :account_1417,
+        :account_1418,
+        :account_1419,
+        :account_1420,
+        :account_1421,
+        :account_1422,
+        :account_1423,
+        :account_1424,
+        :account_1425
 .
 
 
@@ -1443,7 +1601,31 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_972,
+        :account_973,
+        :account_974,
+        :account_975,
+        :account_976,
+        :account_977,
+        :account_978,
+        :account_979,
+        :account_980,
+        :account_981,
+        :account_982,
+        :account_983,
+        :account_984,
+        :account_985,
+        :account_986,
+        :account_987,
+        :account_988,
+        :account_989,
+        :account_990,
+        :account_991,
+        :account_992,
+        :account_993,
+        :account_994,
+        :account_995,
+        :account_996
 .
 
 
@@ -1453,7 +1635,25 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1391,
+        :account_1392,
+        :account_1393,
+        :account_1394,
+        :account_1395,
+        :account_1396,
+        :account_1397,
+        :account_1398,
+        :account_1399,
+        :account_1400,
+        :account_1401,
+        :account_1402,
+        :account_1403,
+        :account_1404,
+        :account_1405,
+        :account_1406,
+        :account_1407,
+        :account_1408,
+        :account_1409
 .
 
 
@@ -1463,7 +1663,27 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1192,
+        :account_1193,
+        :account_1194,
+        :account_1195,
+        :account_1196,
+        :account_1197,
+        :account_1198,
+        :account_1199,
+        :account_1200,
+        :account_1201,
+        :account_1202,
+        :account_1203,
+        :account_1204,
+        :account_1205,
+        :account_1206,
+        :account_1207,
+        :account_1208,
+        :account_1209,
+        :account_1210,
+        :account_1211,
+        :account_1212
 .
 
 
@@ -1473,7 +1693,20 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_940,
+        :account_941,
+        :account_942,
+        :account_943,
+        :account_944,
+        :account_945,
+        :account_946,
+        :account_947,
+        :account_948,
+        :account_949,
+        :account_950,
+        :account_951,
+        :account_952,
+        :account_953
 .
 
 
@@ -1483,7 +1716,21 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1312,
+        :account_1313,
+        :account_1314,
+        :account_1315,
+        :account_1316,
+        :account_1317,
+        :account_1318,
+        :account_1319,
+        :account_1320,
+        :account_1321,
+        :account_1322,
+        :account_1323,
+        :account_1324,
+        :account_1325,
+        :account_1326
 .
 
 
@@ -1493,7 +1740,21 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1162,
+        :account_1163,
+        :account_1164,
+        :account_1165,
+        :account_1166,
+        :account_1167,
+        :account_1168,
+        :account_1169,
+        :account_1170,
+        :account_1171,
+        :account_1172,
+        :account_1173,
+        :account_1174,
+        :account_1175,
+        :account_1176
 .
 
 
@@ -1503,7 +1764,22 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1490,
+        :account_1491,
+        :account_1492,
+        :account_1493,
+        :account_1494,
+        :account_1495,
+        :account_1496,
+        :account_1497,
+        :account_1498,
+        :account_1499,
+        :account_1500,
+        :account_1501,
+        :account_1502,
+        :account_1503,
+        :account_1504,
+        :account_1505
 .
 
 
@@ -1513,7 +1789,22 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1359,
+        :account_1360,
+        :account_1361,
+        :account_1362,
+        :account_1363,
+        :account_1364,
+        :account_1365,
+        :account_1366,
+        :account_1367,
+        :account_1368,
+        :account_1369,
+        :account_1370,
+        :account_1371,
+        :account_1372,
+        :account_1373,
+        :account_1374
 .
 
 
@@ -1523,7 +1814,23 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1274,
+        :account_1275,
+        :account_1276,
+        :account_1277,
+        :account_1278,
+        :account_1279,
+        :account_1280,
+        :account_1281,
+        :account_1282,
+        :account_1283,
+        :account_1284,
+        :account_1285,
+        :account_1286,
+        :account_1287,
+        :account_1288,
+        :account_1289,
+        :account_1290
 .
 
 
@@ -1533,7 +1840,23 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1342,
+        :account_1343,
+        :account_1344,
+        :account_1345,
+        :account_1346,
+        :account_1347,
+        :account_1348,
+        :account_1349,
+        :account_1350,
+        :account_1351,
+        :account_1352,
+        :account_1353,
+        :account_1354,
+        :account_1355,
+        :account_1356,
+        :account_1357,
+        :account_1358
 .
 
 
@@ -1543,7 +1866,23 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1102,
+        :account_1103,
+        :account_1104,
+        :account_1105,
+        :account_1106,
+        :account_1107,
+        :account_1108,
+        :account_1109,
+        :account_1110,
+        :account_1111,
+        :account_1112,
+        :account_1113,
+        :account_1114,
+        :account_1115,
+        :account_1116,
+        :account_1117,
+        :account_1118
 .
 
 
@@ -1553,7 +1892,24 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_954,
+        :account_955,
+        :account_956,
+        :account_957,
+        :account_958,
+        :account_959,
+        :account_960,
+        :account_961,
+        :account_962,
+        :account_963,
+        :account_964,
+        :account_965,
+        :account_966,
+        :account_967,
+        :account_968,
+        :account_969,
+        :account_970,
+        :account_971
 .
 
 
@@ -1563,7 +1919,20 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1148,
+        :account_1149,
+        :account_1150,
+        :account_1151,
+        :account_1152,
+        :account_1153,
+        :account_1154,
+        :account_1155,
+        :account_1156,
+        :account_1157,
+        :account_1158,
+        :account_1159,
+        :account_1160,
+        :account_1161
 .
 
 
@@ -1573,7 +1942,9 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_360,
+        :account_361,
+        :account_362
 .
 
 
@@ -1583,7 +1954,22 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1244,
+        :account_1245,
+        :account_1246,
+        :account_1247,
+        :account_1248,
+        :account_1249,
+        :account_1250,
+        :account_1251,
+        :account_1252,
+        :account_1253,
+        :account_1254,
+        :account_1255,
+        :account_1256,
+        :account_1257,
+        :account_1258,
+        :account_1259
 .
 
 
@@ -1593,7 +1979,22 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1375,
+        :account_1376,
+        :account_1377,
+        :account_1378,
+        :account_1379,
+        :account_1380,
+        :account_1381,
+        :account_1382,
+        :account_1383,
+        :account_1384,
+        :account_1385,
+        :account_1386,
+        :account_1387,
+        :account_1388,
+        :account_1389,
+        :account_1390
 .
 
 
@@ -1603,7 +2004,20 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1134,
+        :account_1135,
+        :account_1136,
+        :account_1137,
+        :account_1138,
+        :account_1139,
+        :account_1140,
+        :account_1141,
+        :account_1142,
+        :account_1143,
+        :account_1144,
+        :account_1145,
+        :account_1146,
+        :account_1147
 .
 
 
@@ -1613,7 +2027,21 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1327,
+        :account_1328,
+        :account_1329,
+        :account_1330,
+        :account_1331,
+        :account_1332,
+        :account_1333,
+        :account_1334,
+        :account_1335,
+        :account_1336,
+        :account_1337,
+        :account_1338,
+        :account_1339,
+        :account_1340,
+        :account_1341
 .
 
 
@@ -1623,7 +2051,21 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1177,
+        :account_1178,
+        :account_1179,
+        :account_1180,
+        :account_1181,
+        :account_1182,
+        :account_1183,
+        :account_1184,
+        :account_1185,
+        :account_1186,
+        :account_1187,
+        :account_1188,
+        :account_1189,
+        :account_1190,
+        :account_1191
 .
 
 
@@ -1633,7 +2075,21 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1229,
+        :account_1230,
+        :account_1231,
+        :account_1232,
+        :account_1233,
+        :account_1234,
+        :account_1235,
+        :account_1236,
+        :account_1237,
+        :account_1238,
+        :account_1239,
+        :account_1240,
+        :account_1241,
+        :account_1242,
+        :account_1243
 .
 
 
@@ -1643,7 +2099,18 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1478,
+        :account_1479,
+        :account_1480,
+        :account_1481,
+        :account_1482,
+        :account_1483,
+        :account_1484,
+        :account_1485,
+        :account_1486,
+        :account_1487,
+        :account_1488,
+        :account_1489
 .
 
 
@@ -1653,7 +2120,32 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1076,
+        :account_1077,
+        :account_1078,
+        :account_1079,
+        :account_1080,
+        :account_1081,
+        :account_1082,
+        :account_1083,
+        :account_1084,
+        :account_1085,
+        :account_1086,
+        :account_1087,
+        :account_1088,
+        :account_1089,
+        :account_1090,
+        :account_1091,
+        :account_1092,
+        :account_1093,
+        :account_1094,
+        :account_1095,
+        :account_1096,
+        :account_1097,
+        :account_1098,
+        :account_1099,
+        :account_1100,
+        :account_1101
 .
 
 
@@ -1663,7 +2155,22 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1213,
+        :account_1214,
+        :account_1215,
+        :account_1216,
+        :account_1217,
+        :account_1218,
+        :account_1219,
+        :account_1220,
+        :account_1221,
+        :account_1222,
+        :account_1223,
+        :account_1224,
+        :account_1225,
+        :account_1226,
+        :account_1227,
+        :account_1228
 .
 
 
@@ -1673,7 +2180,21 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_1119,
+        :account_1120,
+        :account_1121,
+        :account_1122,
+        :account_1123,
+        :account_1124,
+        :account_1125,
+        :account_1126,
+        :account_1127,
+        :account_1128,
+        :account_1129,
+        :account_1130,
+        :account_1131,
+        :account_1132,
+        :account_1133
 .
 
 
@@ -1772,7 +2293,16 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_447,
+        :account_448,
+        :account_449,
+        :account_450,
+        :account_451,
+        :account_452,
+        :account_453,
+        :account_454,
+        :account_455,
+        :account_456
 .
 
 
@@ -1870,7 +2400,7 @@ here palace your **Terms & conditions** about published service.
     bgo:description "An account subset" ;
     bgo:abstract "This use **markdown**"^^bgo:MDString ;
     bgo:hasAccount
-        :account_1
+        :account_132
 .
 
 
@@ -1926,8 +2456,7 @@ here palace your **Terms & conditions** about published service.
         :account_7,
         :account_8,
         :account_9,
-        :account_10
-        
+        :account_10      
 .
 
 
@@ -1945,7 +2474,6 @@ here palace your **Terms & conditions** about published service.
         :account_368,
         :account_369,
         :account_370       
-
 .
 
 
@@ -2120,6 +2648,18 @@ here palace your **Terms & conditions** about published service.
         :account_136,
         :account_137,
         :account_138
+.
+
+
+:p1_88
+    #a bgo:AccountSet ;
+    bgo:title "Fundo Especial de Despesas do Tribunal de Contas" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_139,
+        :account_140,
+        :account_141
 .
 
 

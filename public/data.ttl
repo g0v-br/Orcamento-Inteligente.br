@@ -211,7 +211,9 @@ here palace your **Terms & conditions** about published service.
         bgo:label "Subdivisões";
         bgo:hasPartition
             :p1 ,
-            :p2
+            :p2 ,
+            :p3 ,
+            :p4
     ];
     bgo:hasTrendColorScheme :trend_color_scheme ;
     bgo:hasTotalizer :filtered_total_formatter ;
@@ -250,8 +252,8 @@ here palace your **Terms & conditions** about published service.
 :p1
     # a bgo:Partition ;
     bgo:partitionId "p1" ;
-    bgo:label "Órgão" ;
-    bgo:title "Órgão" ;
+    bgo:label "Secretarias" ;
+    bgo:title "Secretarias" ;
     bgo:withSortOrder bgo:descending_sort ;
     bgo:withSortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
     bgo:withGroupFunction [
@@ -4428,6 +4430,1031 @@ here palace your **Terms & conditions** about published service.
 .
 
 
+#####P3#########
+
+
+:p3
+    # a bgo:Partition ;
+    bgo:partitionId "p3" ;
+    bgo:label "Subprefeituras" ;
+    bgo:title "Subprefeituras" ;
+    bgo:withSortOrder bgo:descending_sort ;
+    bgo:withSortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
+    bgo:withGroupFunction [
+        a bgo:AmountsSum;
+        bgo:hasTotalizer [
+            # a bgo:Totalizer
+            bgo:format "R$ %s" ;
+            bgo:filteredFormat "R$ %s"^^bgo:Template  ;
+            bgo:precision 2 ;
+            bgo:ratioFormatter :trend_formatter
+        ]
+    ];
+    bgo:hasAccountSubSet
+        :p3_1 , 
+        :p3_2 , 
+        :p3_3 , 
+        :p3_4 , 
+        :p3_5 , 
+        :p3_6 , 
+        :p3_7 , 
+        :p3_8 , 
+        :p3_9 , 
+        :p3_10 , 
+        :p3_11 , 
+        :p3_12 , 
+        :p3_13 , 
+        :p3_14 , 
+        :p3_15 , 
+        :p3_16 , 
+        :p3_17 , 
+        :p3_18 , 
+        :p3_19 , 
+        :p3_20 , 
+        :p3_21 , 
+        :p3_22 , 
+        :p3_23 , 
+        :p3_24 , 
+        :p3_25 , 
+        :p3_26 , 
+        :p3_27 , 
+        :p3_28 , 
+        :p3_29 , 
+        :p3_30 , 
+        :p3_31 , 
+        :p3_32
+.
+
+:p3_1
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Parelheiros" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1291 ,
+        :account_1292 ,
+        :account_1293 ,
+        :account_1294 ,
+        :account_1295 ,
+        :account_1296 ,
+        :account_1297 ,
+        :account_1298 ,
+        :account_1299 ,
+        :account_1300 ,
+        :account_1301 ,
+        :account_1302 ,
+        :account_1303 ,
+        :account_1304 ,
+        :account_1305 ,
+        :account_1306 ,
+        :account_1307 ,
+        :account_1308 ,
+        :account_1309 ,
+        :account_1310 ,
+        :account_1311
+.
+
+
+:p3_2
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Sé" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1463 ,
+        :account_1464 ,
+        :account_1465 ,
+        :account_1466 ,
+        :account_1467 ,
+        :account_1468 ,
+        :account_1469 ,
+        :account_1470 ,
+        :account_1471 ,
+        :account_1472 ,
+        :account_1473 ,
+        :account_1474 ,
+        :account_1475 ,
+        :account_1476 ,
+        :account_1477
+.
+
+
+:p3_3
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura M'Boi Mirim" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1260,
+        :account_1261,
+        :account_1262,
+        :account_1263,
+        :account_1264,
+        :account_1265,
+        :account_1266,
+        :account_1267,
+        :account_1268,
+        :account_1269,
+        :account_1270,
+        :account_1271,
+        :account_1272,
+        :account_1273
+.
+
+
+:p3_4
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Capela do Socorro" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_997,
+        :account_998,
+        :account_999,
+        :account_1000,
+        :account_1001,
+        :account_1002,
+        :account_1003,
+        :account_1004,
+        :account_1005,
+        :account_1006,
+        :account_1007,
+        :account_1008,
+        :account_1009,
+        :account_1010,
+        :account_1011,
+        :account_1012,
+        :account_1013,
+        :account_1014,
+        :account_1015,
+        :account_1016,
+        :account_1017,
+        :account_1018,
+        :account_1019,
+        :account_1020,
+        :account_1021,
+        :account_1022,
+        :account_1023,
+        :account_1024,
+        :account_1025,
+        :account_1026,
+        :account_1027,
+        :account_1028,
+        :account_1029,
+        :account_1030,
+        :account_1031,
+        :account_1032,
+        :account_1033,
+        :account_1034
+.
+
+
+:p3_5
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Cidade Ademar" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1052,
+        :account_1053,
+        :account_1054,
+        :account_1055,
+        :account_1056,
+        :account_1057,
+        :account_1058,
+        :account_1059,
+        :account_1060,
+        :account_1061,
+        :account_1062,
+        :account_1063,
+        :account_1064,
+        :account_1065,
+        :account_1066,
+        :account_1067,
+        :account_1068,
+        :account_1069,
+        :account_1070,
+        :account_1071,
+        :account_1072,
+        :account_1073,
+        :account_1074,
+        :account_1075
+.
+
+
+:p3_6
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura São Miguel Paulista" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1426,
+        :account_1427,
+        :account_1428,
+        :account_1429,
+        :account_1430,
+        :account_1431,
+        :account_1432,
+        :account_1433,
+        :account_1434,
+        :account_1435,
+        :account_1436,
+        :account_1437,
+        :account_1438,
+        :account_1439,
+        :account_1440,
+        :account_1441,
+        :account_1442,
+        :account_1443,
+        :account_1444,
+        :account_1445
+.
+
+
+:p3_7
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura São Mateus" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1410,
+        :account_1411,
+        :account_1412,
+        :account_1413,
+        :account_1414,
+        :account_1415,
+        :account_1416,
+        :account_1417,
+        :account_1418,
+        :account_1419,
+        :account_1420,
+        :account_1421,
+        :account_1422,
+        :account_1423,
+        :account_1424,
+        :account_1425
+.
+
+
+:p3_8
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Campo Limpo" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_972,
+        :account_973,
+        :account_974,
+        :account_975,
+        :account_976,
+        :account_977,
+        :account_978,
+        :account_979,
+        :account_980,
+        :account_981,
+        :account_982,
+        :account_983,
+        :account_984,
+        :account_985,
+        :account_986,
+        :account_987,
+        :account_988,
+        :account_989,
+        :account_990,
+        :account_991,
+        :account_992,
+        :account_993,
+        :account_994,
+        :account_995,
+        :account_996
+.
+
+:p3_9
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Itaquera" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1192,
+        :account_1193,
+        :account_1194,
+        :account_1195,
+        :account_1196,
+        :account_1197,
+        :account_1198,
+        :account_1199,
+        :account_1200,
+        :account_1201,
+        :account_1202,
+        :account_1203,
+        :account_1204,
+        :account_1205,
+        :account_1206,
+        :account_1207,
+        :account_1208,
+        :account_1209,
+        :account_1210,
+        :account_1211,
+        :account_1212
+.
+
+
+:p3_10
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Aricanduva/Formosa/Carrão" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_940,
+        :account_941,
+        :account_942,
+        :account_943,
+        :account_944,
+        :account_945,
+        :account_946,
+        :account_947,
+        :account_948,
+        :account_949,
+        :account_950,
+        :account_951,
+        :account_952,
+        :account_953
+.
+
+
+:p3_11
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Penha" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1312,
+        :account_1313,
+        :account_1314,
+        :account_1315,
+        :account_1316,
+        :account_1317,
+        :account_1318,
+        :account_1319,
+        :account_1320,
+        :account_1321,
+        :account_1322,
+        :account_1323,
+        :account_1324,
+        :account_1325,
+        :account_1326
+.
+
+
+:p3_12
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Ipiranga" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1162,
+        :account_1163,
+        :account_1164,
+        :account_1165,
+        :account_1166,
+        :account_1167,
+        :account_1168,
+        :account_1169,
+        :account_1170,
+        :account_1171,
+        :account_1172,
+        :account_1173,
+        :account_1174,
+        :account_1175,
+        :account_1176
+.
+
+
+:p3_13
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Vila Mariana" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1490,
+        :account_1491,
+        :account_1492,
+        :account_1493,
+        :account_1494,
+        :account_1495,
+        :account_1496,
+        :account_1497,
+        :account_1498,
+        :account_1499,
+        :account_1500,
+        :account_1501,
+        :account_1502,
+        :account_1503,
+        :account_1504,
+        :account_1505
+.
+
+
+:p3_14
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Pirituba/Jaraguá" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1359,
+        :account_1360,
+        :account_1361,
+        :account_1362,
+        :account_1363,
+        :account_1364,
+        :account_1365,
+        :account_1366,
+        :account_1367,
+        :account_1368,
+        :account_1369,
+        :account_1370,
+        :account_1371,
+        :account_1372,
+        :account_1373,
+        :account_1374
+.
+
+
+:p3_15
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Mooca" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1274,
+        :account_1275,
+        :account_1276,
+        :account_1277,
+        :account_1278,
+        :account_1279,
+        :account_1280,
+        :account_1281,
+        :account_1282,
+        :account_1283,
+        :account_1284,
+        :account_1285,
+        :account_1286,
+        :account_1287,
+        :account_1288,
+        :account_1289,
+        :account_1290
+.
+
+
+:p3_16
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Pinheiros" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1342,
+        :account_1343,
+        :account_1344,
+        :account_1345,
+        :account_1346,
+        :account_1347,
+        :account_1348,
+        :account_1349,
+        :account_1350,
+        :account_1351,
+        :account_1352,
+        :account_1353,
+        :account_1354,
+        :account_1355,
+        :account_1356,
+        :account_1357,
+        :account_1358
+.
+
+
+:p3_17
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura de Guaianases" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1102,
+        :account_1103,
+        :account_1104,
+        :account_1105,
+        :account_1106,
+        :account_1107,
+        :account_1108,
+        :account_1109,
+        :account_1110,
+        :account_1111,
+        :account_1112,
+        :account_1113,
+        :account_1114,
+        :account_1115,
+        :account_1116,
+        :account_1117,
+        :account_1118
+.
+
+
+:p3_18
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Butantã" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_954,
+        :account_955,
+        :account_956,
+        :account_957,
+        :account_958,
+        :account_959,
+        :account_960,
+        :account_961,
+        :account_962,
+        :account_963,
+        :account_964,
+        :account_965,
+        :account_966,
+        :account_967,
+        :account_968,
+        :account_969,
+        :account_970,
+        :account_971
+.
+
+
+:p3_19
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Freguesia/Brasilândia" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1148,
+        :account_1149,
+        :account_1150,
+        :account_1151,
+        :account_1152,
+        :account_1153,
+        :account_1154,
+        :account_1155,
+        :account_1156,
+        :account_1157,
+        :account_1158,
+        :account_1159,
+        :account_1160,
+        :account_1161
+.
+
+
+
+
+:p3_20
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Lapa" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1244,
+        :account_1245,
+        :account_1246,
+        :account_1247,
+        :account_1248,
+        :account_1249,
+        :account_1250,
+        :account_1251,
+        :account_1252,
+        :account_1253,
+        :account_1254,
+        :account_1255,
+        :account_1256,
+        :account_1257,
+        :account_1258,
+        :account_1259
+.
+
+
+:p3_21
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Santana/Tucuruvi" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1375,
+        :account_1376,
+        :account_1377,
+        :account_1378,
+        :account_1379,
+        :account_1380,
+        :account_1381,
+        :account_1382,
+        :account_1383,
+        :account_1384,
+        :account_1385,
+        :account_1386,
+        :account_1387,
+        :account_1388,
+        :account_1389,
+        :account_1390
+.
+
+
+:p3_22
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Ermelino Matarazzo" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1134,
+        :account_1135,
+        :account_1136,
+        :account_1137,
+        :account_1138,
+        :account_1139,
+        :account_1140,
+        :account_1141,
+        :account_1142,
+        :account_1143,
+        :account_1144,
+        :account_1145,
+        :account_1146,
+        :account_1147
+.
+
+
+:p3_23
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Perus/Anhanguera" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1327,
+        :account_1328,
+        :account_1329,
+        :account_1330,
+        :account_1331,
+        :account_1332,
+        :account_1333,
+        :account_1334,
+        :account_1335,
+        :account_1336,
+        :account_1337,
+        :account_1338,
+        :account_1339,
+        :account_1340,
+        :account_1341
+.
+
+
+:p3_24
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Itaim Paulista" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1177,
+        :account_1178,
+        :account_1179,
+        :account_1180,
+        :account_1181,
+        :account_1182,
+        :account_1183,
+        :account_1184,
+        :account_1185,
+        :account_1186,
+        :account_1187,
+        :account_1188,
+        :account_1189,
+        :account_1190,
+        :account_1191
+.
+
+
+:p3_25
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Jaçanã/Tremembé" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1229,
+        :account_1230,
+        :account_1231,
+        :account_1232,
+        :account_1233,
+        :account_1234,
+        :account_1235,
+        :account_1236,
+        :account_1237,
+        :account_1238,
+        :account_1239,
+        :account_1240,
+        :account_1241,
+        :account_1242,
+        :account_1243
+.
+
+
+:p3_26
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Vila Maria/Vila Guilherme" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1478,
+        :account_1479,
+        :account_1480,
+        :account_1481,
+        :account_1482,
+        :account_1483,
+        :account_1484,
+        :account_1485,
+        :account_1486,
+        :account_1487,
+        :account_1488,
+        :account_1489
+.
+
+
+:p3_27
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Cidade Tiradentes" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1076,
+        :account_1077,
+        :account_1078,
+        :account_1079,
+        :account_1080,
+        :account_1081,
+        :account_1082,
+        :account_1083,
+        :account_1084,
+        :account_1085,
+        :account_1086,
+        :account_1087,
+        :account_1088,
+        :account_1089,
+        :account_1090,
+        :account_1091,
+        :account_1092,
+        :account_1093,
+        :account_1094,
+        :account_1095,
+        :account_1096,
+        :account_1097,
+        :account_1098,
+        :account_1099,
+        :account_1100,
+        :account_1101
+.
+
+
+:p3_28
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Jabaquara" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1213,
+        :account_1214,
+        :account_1215,
+        :account_1216,
+        :account_1217,
+        :account_1218,
+        :account_1219,
+        :account_1220,
+        :account_1221,
+        :account_1222,
+        :account_1223,
+        :account_1224,
+        :account_1225,
+        :account_1226,
+        :account_1227,
+        :account_1228
+.
+
+
+:p3_29
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura de Vila Prudente" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1119,
+        :account_1120,
+        :account_1121,
+        :account_1122,
+        :account_1123,
+        :account_1124,
+        :account_1125,
+        :account_1126,
+        :account_1127,
+        :account_1128,
+        :account_1129,
+        :account_1130,
+        :account_1131,
+        :account_1132,
+        :account_1133
+.
+
+
+:p3_30
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Sapopemba" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1446 ,
+        :account_1447 ,
+        :account_1448 ,
+        :account_1449 ,
+        :account_1450 ,
+        :account_1451 ,
+        :account_1452 ,
+        :account_1453 ,
+        :account_1454 ,
+        :account_1455 ,
+        :account_1456 ,
+        :account_1457 ,
+        :account_1458 ,
+        :account_1459 ,
+        :account_1460 ,
+        :account_1461 ,
+        :account_1462
+.
+
+
+:p3_31
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Casa Verde/Cachoeirinha" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1035 ,
+        :account_1036 ,
+        :account_1037 ,
+        :account_1038 ,
+        :account_1039 ,
+        :account_1040 ,
+        :account_1041 ,
+        :account_1042 ,
+        :account_1043 ,
+        :account_1044 ,
+        :account_1045 ,
+        :account_1046 ,
+        :account_1047 ,
+        :account_1048 ,
+        :account_1049 ,
+        :account_1050 ,
+        :account_1051 
+.
+
+:p3_32
+    #a bgo:AccountSet ;
+    bgo:title "Subprefeitura Santo Amaro" ;
+    bgo:description "An account subset" ;
+    bgo:abstract "This use **markdown**"^^bgo:MDString ;
+    bgo:hasAccount
+        :account_1391,
+        :account_1392,
+        :account_1393,
+        :account_1394,
+        :account_1395,
+        :account_1396,
+        :account_1397,
+        :account_1398,
+        :account_1399,
+        :account_1400,
+        :account_1401,
+        :account_1402,
+        :account_1403,
+        :account_1404,
+        :account_1405,
+        :account_1406,
+        :account_1407,
+        :account_1408,
+        :account_1409
+.
+
+#######P4######
+
+:p4
+    # a bgo:Partition ;
+    bgo:partitionId "p4" ;
+    bgo:label "Fundos e outros" ;
+    bgo:title "Fundos e outros" ;
+    bgo:withSortOrder bgo:descending_sort ;
+    bgo:withSortCriteria bgo:natural_sort ; # or bgo:abs_sort (default)
+    bgo:withGroupFunction [
+        a bgo:AmountsSum;
+        bgo:hasTotalizer [
+            # a bgo:Totalizer
+            bgo:format "R$ %s" ;
+            bgo:filteredFormat "R$ %s"^^bgo:Template  ;
+            bgo:precision 2 ;
+            bgo:ratioFormatter :trend_formatter
+        ]
+    ];
+    bgo:hasAccountSubSet
+        :p4_1 , 
+        :p4_2 , 
+        :p4_3 , 
+        :p4_4 , 
+        :p4_5 , 
+        :p4_6 , 
+        :p4_7 , 
+        :p4_8 , 
+        :p4_9 , 
+        :p4_10 , 
+        :p4_11 , 
+        :p4_12 , 
+        :p4_13 , 
+        :p4_14 , 
+        :p4_15 , 
+        :p4_16 , 
+        :p4_17 , 
+        :p4_18 , 
+        :p4_19 , 
+        :p4_20 , 
+        :p4_21 , 
+        :p4_22 , 
+        :p4_23 , 
+        :p4_24 , 
+        :p4_25 , 
+        :p4_26 , 
+        :p4_27 , 
+        :p4_28 , 
+        :p4_29 , 
+        :p4_30 , 
+        :p4_31 , 
+        :p4_32 , 
+        :p4_33 , 
+        :p4_34 , 
+        :p4_35 , 
+        :p4_36 , 
+        :p4_37 , 
+        :p4_38 , 
+        :p4_39 , 
+        :p4_40 , 
+        :p4_41 , 
+        :p4_42 , 
+        :p4_43 , 
+        :p4_44 , 
+        :p4_45 , 
+        :p4_46 , 
+        :p4_47 , 
+        :p4_48 , 
+        :p4_49 , 
+        :p4_50 , 
+        :p4_51 , 
+        :p4_52 , 
+        :p4_53 , 
+        :p4_54 , 
+        :p4_55 , 
+        :p4_56 , 
+        :p4_57 , 
+        :p4_58 , 
+        :p4_59 , 
+        :p4_60 , 
+        :p4_61 , 
+        :p4_62 , 
+        :p4_63 , 
+        :p4_64 , 
+        :p4_65 , 
+        :p4_66 , 
+        :p4_67 , 
+        :p4_68 , 
+        :p4_69 , 
+        :p4_70 , 
+        :p4_71 , 
+        :p4_72 , 
+        :p4_73 , 
+        :p4_74 , 
+        :p4_75 , 
+        :p4_76 , 
+        :p4_77 , 
+        :p4_78 , 
+        :p4_79 , 
+        :p4_80 , 
+        :p4_81 , 
+        :p4_82 , 
+        :p4_83 , 
+        :p4_84 , 
+        :p4_85 , 
+        :p4_86 , 
+        :p4_87 ,
+        :p4_88
+    ;
+    bgo:hasDefaultAccountSubSet [
+        # a bgo:DefaultAccountSet  ;
+        bgo:label "default" ;
+        bgo:title "Default subset for p4"
+    ]
+.
+
+
 ###### Trend Color Scheme #######
 :trend_color_scheme
     # a bgo:TrendColorScheme ;
@@ -4874,11 +5901,11 @@ here palace your **Terms & conditions** about published service.
     bgo:versionLabel "2020" ;
 
     bgo:hasHistoryRec # All bgo:HistoryRec
-        [ bgo:versionLabel "2019" ; bgo:amount 0.0 ],
-        [ bgo:versionLabel "2018" ; bgo:amount 300000.0 ],
-        [ bgo:versionLabel "2017" ; bgo:amount 0.0 ],
-        [ bgo:versionLabel "2016" ; bgo:amount 1077773751.0 ],
-        [ bgo:versionLabel "2015" ; bgo:amount 0.0 ]
+        [ bgo:versionLabel "2019" ; bgo:amount 1301698666.97 ],
+        [ bgo:versionLabel "2018" ; bgo:amount 1190983028.96 ],
+        [ bgo:versionLabel "2017" ; bgo:amount 1153523803.37 ],
+        [ bgo:versionLabel "2016" ; bgo:amount 1070628050.84 ],
+        [ bgo:versionLabel "2015" ; bgo:amount 1013801095.29 ]
     ;
     bgo:hasBreakdown # all bgo:PartialAmount
         [ bgo:title "account_16_part 1" ; bgo:amount 110.00 ] ,
@@ -5004,11 +6031,11 @@ here palace your **Terms & conditions** about published service.
     bgo:versionLabel "2020" ;
 
     bgo:hasHistoryRec # All bgo:HistoryRec
-        [ bgo:versionLabel "2019" ; bgo:amount 0.0 ],
-        [ bgo:versionLabel "2018" ; bgo:amount 300000.0 ],
-        [ bgo:versionLabel "2017" ; bgo:amount 0.0 ],
-        [ bgo:versionLabel "2016" ; bgo:amount 1077773751.0 ],
-        [ bgo:versionLabel "2015" ; bgo:amount 0.0 ]
+        [ bgo:versionLabel "2019" ; bgo:amount 866067509.38 ],
+        [ bgo:versionLabel "2018" ; bgo:amount 1033762471.85 ],
+        [ bgo:versionLabel "2017" ; bgo:amount 1184237720.76 ],
+        [ bgo:versionLabel "2016" ; bgo:amount 1077773750.70 ],
+        [ bgo:versionLabel "2015" ; bgo:amount 1012488795.37 ]
     ;
     bgo:hasBreakdown # all bgo:PartialAmount
         [ bgo:title "account_21_part 1" ; bgo:amount 110.00 ] ,
@@ -10570,7 +11597,7 @@ here palace your **Terms & conditions** about published service.
     bgo:hasHistoryRec # All bgo:HistoryRec
         [ bgo:versionLabel "2019" ; bgo:amount 823190877.0 ],
         [ bgo:versionLabel "2018" ; bgo:amount 801791658.8 ],
-        [ bgo:versionLabel "2017" ; bgo:amount 737993802.7 ],
+        [ bgo:versionLabel "2017" ; bgo:amount 781624580.95 ],
         [ bgo:versionLabel "2016" ; bgo:amount 744994410.0 ],
         [ bgo:versionLabel "2015" ; bgo:amount 651124013.0 ]
     ;
@@ -26899,8 +27926,8 @@ here palace your **Terms & conditions** about published service.
         [ bgo:versionLabel "2019" ; bgo:amount 3110483555.0 ],
         [ bgo:versionLabel "2018" ; bgo:amount 3319311376.0 ],
         [ bgo:versionLabel "2017" ; bgo:amount 2900000000.0 ],
-        [ bgo:versionLabel "2016" ; bgo:amount 15920106.0 ],
-        [ bgo:versionLabel "2015" ; bgo:amount 0.0 ]
+        [ bgo:versionLabel "2016" ; bgo:amount 2549207682.0 ],
+        [ bgo:versionLabel "2015" ; bgo:amount 1928395902.70 ]
     ;
     bgo:hasBreakdown # all bgo:PartialAmount
         [ bgo:title "account_863_part 1" ; bgo:amount 110.00 ] ,
@@ -27392,9 +28419,9 @@ here palace your **Terms & conditions** about published service.
     bgo:hasHistoryRec # All bgo:HistoryRec
         [ bgo:versionLabel "2019" ; bgo:amount 251877079.1 ],
         [ bgo:versionLabel "2018" ; bgo:amount 338465780.2 ],
-        [ bgo:versionLabel "2017" ; bgo:amount 0.0 ],
-        [ bgo:versionLabel "2016" ; bgo:amount 15920106.0 ],
-        [ bgo:versionLabel "2015" ; bgo:amount 0.0 ]
+        [ bgo:versionLabel "2017" ; bgo:amount 335982474.44 ],
+        [ bgo:versionLabel "2016" ; bgo:amount 345626029.0 ],
+        [ bgo:versionLabel "2015" ; bgo:amount 445000000.0 ]
     ;
     bgo:hasBreakdown # all bgo:PartialAmount
         [ bgo:title "account_882_part 1" ; bgo:amount 110.00 ] ,

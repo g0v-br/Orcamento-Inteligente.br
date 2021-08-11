@@ -6,16 +6,12 @@
     <div class="description">
       <StringFormatter :string="description" />
     </div>
-    <div class="numbers">
-      {{formatAmount(this.total)}}
-      <Rate class="rate" :rate="rate" :formatter="formatPercentage" />
-    </div>
-
-    <br>
     <div class="abstract">
       <StringFormatter :string="abstract" />
     </div>
-
+    <div class="numbers">
+      {{formatAmount(this.total)}}
+      <Rate class="rate" :rate="rate" :formatter="formatPercentage" />
   </div>
 </template>
 <script>
@@ -57,13 +53,13 @@ export default {
   font-size: 25px;
 }
 .description div {
-  margin-bottom: 0.5em;
+  margin-bottom: 0.0em;
   font-size: 20px;
   font-style: italic;
 }
 .abstract {
-  margin-bottom: 0.5em;
-  margin-top: 0.5em;
+  margin-bottom: 0.0em;
+  margin-top: 0.0em;
   /*overflow:auto;*/
 }
 .numbers {

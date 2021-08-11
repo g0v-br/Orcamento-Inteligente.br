@@ -1,6 +1,6 @@
 import { formatAmount, formatPercentage, printf } from "@/utils/utils.js";
 
-describe('Numeber formatting', () => {
+describe('Number formatting', () => {
   it('format 1000 to 1,000', () => {
     expect(formatAmount(1000)).toMatch("1,000")
   })

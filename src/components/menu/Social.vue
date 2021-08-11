@@ -22,24 +22,9 @@
             <i class="fab fa-facebook"></i>
           </network>
           </div>
-          <div class="social-link line-link">
-          <network network="line">
-            <i class="fab fa-line"></i>
-          </network>
-          </div>
           <div class="social-link linkedin-link">
           <network network="linkedin">
             <i class="fab fa-linkedin"></i>
-          </network>
-          </div>
-          <div class="social-link ok-link">
-          <network network="odnoklassniki">
-            <i class="fab fa-odnoklassniki"></i>
-          </network>
-          </div>
-          <div class="social-link pinintrest-link">
-          <network network="pinterest">
-            <i class="fab fa-pinterest"></i>
           </network>
           </div>
           <div class="social-link reddit-link">
@@ -47,24 +32,9 @@
             <i class="fab fa-reddit"></i>
           </network>
           </div>
-          <div class="social-link skype-link">
-          <network network="skype">
-            <i class="fab fa-skype"></i>
-          </network>
-          </div>
           <div class="social-link twitter-link">
           <network network="twitter">
             <i class="fab fa-twitter"></i>
-          </network>
-          </div>
-          <div class="social-link vk-link">
-          <network network="vk">
-            <i class="fab fa-vk"></i>
-          </network>
-          </div>
-          <div class="social-link weibo-link">
-          <network network="weibo">
-            <i class="fab fa-weibo"></i>
           </network>
           </div>
           <div class="social-link whatsapp-link">
